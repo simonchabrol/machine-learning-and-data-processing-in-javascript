@@ -36,8 +36,7 @@ var Types = ["Input", "Input", "Output"]
 var Values = ["string", "number", "string"]
 
 for (var a = 0; a < Fields.length; a++) {
-
-
+  
   var FieldsName = Fields[a]
   var TypesName = Types[a]
   var ValuesName = Values[a]
@@ -49,12 +48,10 @@ for (var a = 0; a < Fields.length; a++) {
       if (typeof TestedValues === 'string' && isNaN(TestedValues)) {
         TestBloc[Fields[a]] = TestedValues.trim().split(', ')
         TestedValues = TestedValues.trim().split(', ')
-      }
-      else if (typeof TestedValues === 'string' && !isNaN(TestedValues)) {
+      } else if (typeof TestedValues === 'string' && !isNaN(TestedValues)) {
         TestBloc[Fields[a]] = [parseInt(TestedValues)]
         TestedValues = [parseInt(TestedValues)]
-      }
-      else {
+      } else {
         TestBloc[Fields[a]] = [TestedValues]
         TestedValues = [TestedValues]
       }
@@ -87,27 +84,15 @@ for (var a = 0; a < Fields.length; a++) {
   var FieldsName = Fields[a]
   var TypesName = Types[a]
   var ValuesName = Values[a]
-
-
   if (TypesName == "Input") {
-
-
     if (ValuesName == "string") {
-
-
       var UniqueWords = []
-
-
       for (var b = 0; b < DataSet.length; b++) {
         TestBloc = DataSet[b]
         TestedValues = TestBloc[Fields[a]]
         UniqueWords = UniqueWords.concat(TestedValues)
       }
-
-
       var Words = [...new Set(UniqueWords)]
-
-
       for (var c = 0; c < DataSet.length; c++) {
         Bloc = DataSet[c]
         var ValuesWords = Bloc[Fields[a]]
@@ -123,25 +108,18 @@ for (var a = 0; a < Fields.length; a++) {
         }
       }
     }
-
-
     if (ValuesName == 'number') {
-
       var Numbers = []
       for (var f = 0; f < DataSet.length; f++) {
         Bloc = DataSet[f]
         var ValuesNumber = Bloc[Fields[a]]
         Numbers = Numbers.concat(ValuesNumber)
       }
-
       var Maximum = Math.max(...Numbers)
-
-
       var Divisor = 1
       for (var g = 0; g < Maximum.toString().length; g++) {
         Divisor = Divisor.toString().concat(0)
       }
-
       for (var h = 0; h < DataSet.length; h++) {
         Bloc = DataSet[h]
         ValuesNumbers = Bloc[Fields[a]]
@@ -149,7 +127,6 @@ for (var a = 0; a < Fields.length; a++) {
       }
     }
   }
-
   if (TypesName == 'Output') {
     if (ValuesName == 'string') {
       UniqueWords = []
