@@ -1,0 +1,11 @@
+[
+    { "expected":["print","counter_view","country_list","click_counter","revenues"] },
+    { "result": ["impressions","views","country","terminal","clicks","revenues"] },
+    { "types": ["number","number","string","string","number","number"] },
+    { "column":"print", "rule":"change name", "name":"impressions" },
+    { "column":"counter_view", "rule":"change name", "name":"views" },
+    { "column":"country_list", "rule":"change name", "name":"country" },
+    { "column":"click_counter", "rule":"change name", "name":"clicks" },
+    { "column":"terminal", "rule":"set value", "value":"NULL" },
+    { "column":"revenues", "rule":"convert", "convert":"1.5" }
+]
