@@ -1,0 +1,22 @@
+curl -d {\"AuthKey\":\"Rq2E2X+wu4HyWbzWXZqPPbukqezKJO74pIdn
+c6OBIkw7NlXggFmbAqzMnbkwAyb3nAmZGAuGNk9CLHQ9fVN5LWZp61DCsP8vs6PlRwU2GgE/O
+7y48HUP+7isebAMbrWf4Excs9vpL+t/GlBAQwi67biTq1ugXHOLRFOPJercaRG4Ntqn1CNazc
+9u45xyqOQQNvyzXedMfQEZJOkCf8rQVzz/V9iRjyHJtm7gWXig/G8E9QLlubcmgw9MrPwj3YE
+4eHgxQX4dmFPa6tpi8ymRT3MCs95Evc4ridz2tJCrb6aATEf5wHfI9swh9ypBLQRNqrWsNdp9
+wxro40CaCCRkzg==\"} -H "Content-Type: application/json" -X 
+POST "http://localhost:8080/auth"
+
+{"AuthToken":"MRvdCl1dnO8B1CkXftf29/0MLx0SjQJgucgWmw52pAEp3qkIerKAF2bp4Fi
+QR0x5vZeKdXke4uzW9xFd7zUam7+6qyxjvmtZWAybyQclZNrxAHXwPFBk1LqtlB0/DVsR9W+6
+dw9eHfjdw8sSye8/i3UdmaDTvQeY6/sueJZhtJm6V0hwES3EMmw4vFMYLzmmVTrc/bGldhMon
++sFOxIc+m2tyrhyu2GagUAfCCKn3JlHLIo4KjIUsLv/r8UBMiX9kYymoqrDylCF66sAtqxDfl
+tB6hN+f7GlF4uQ30Eq6McPA6LEylklNuy4IVoOSES7hyKhGXenp+IR51wLDjvqSA=="}
+
+curl -d {\"AuthToken\":\"MRvdCl1dnO8B1CkXftf29/0MLx0SjQJgucgWmw52pAEp3qkIe
+rKAF2bp4FiQR0x5vZeKdXke4uzW9xFd7zUam7+6qyxjvmtZWAybyQclZNrxAHXwPFBk1LqtlB0
+/DVsR9W+6dw9eHfjdw8sSye8/i3UdmaDTvQeY6/sueJZhtJm6V0hwES3EMmw4vFMYLzmmVTrc/
+bGldhMon+sFOxIc+m2tyrhyu2GagUAfCCKn3JlHLIo4KjIUsLv/r8UBMiX9kYymoqrDylCF66s
+AtqxDfltB6hN+f7GlF4uQ30Eq6McPA6LEylklNuy4IVoOSES7hyKhGXenp+IR51wLDjvqSA==\
+"} -H "Content-Type: application/json" -X GET "http://localhost:8080/data"
+
+{"Data":"It works"}
