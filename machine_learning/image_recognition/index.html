@@ -1,1 +1,134 @@
+<!DOCTYPE html>
+<html>
 
+<head>
+    <style>
+        th,
+        td {
+            height: 50px;
+            width: 50px;
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div style="float: left;margin-right:10px">
+        <table>
+            <p>IMAGE 1</p>
+            <tr>
+                <td id="0"></td>
+                <td id="1"></td>
+            </tr>
+            <tr>
+                <td id="2"></td>
+                <td id="3"></td>
+            </tr>
+        </table>
+    </div>
+    <div style="float: left">
+        <table>
+            <p>IMAGE 2</p>
+            <tr>
+                <td id="4"></td>
+                <td id="5"></td>
+            </tr>
+            <tr>
+                <td id="6"></td>
+                <td id="7"></td>
+            </tr>
+        </table>
+    </div>
+    <form style="clear: both;" onsubmit="training();return false">
+        <br>
+        <input type="submit" value="Train">
+    </form>
+    <div id="status">
+
+    </div>
+    <div id="new_image" style="display:none;">
+        <div style="clear:both;">
+            <table>
+                <br>
+                <p>TEST IMAGE</p>
+                <tr>
+                    <td id="8"></td>
+                    <td id="9"></td>
+                </tr>
+                <tr>
+                    <td id="10"></td>
+                    <td id="11"></td>
+                </tr>
+            </table>
+        </div>
+        <form style="clear:both;" onsubmit="test(); return false">
+            <br>
+            <input type="submit" value="Test">
+        </form>
+        <div id="result">
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io.connect();
+        socket.on('training_done', function () {
+            document.getElementById('status').innerHTML = "<p>Training done</p>"
+            var element = document.getElementById('new_image')
+            element.style = "clear:both;"
+        })
+        socket.on('test_done', function (result) {
+            console.log(result)
+            document.getElementById('result').innerHTML = "<p> IMAGE " + result + "</p>"
+        })
+        for (var i = 0; i < 12; i++) {
+            document.getElementById(i).onclick = reply_click
+        }
+        function reply_click() {
+            element = document.getElementById(this.id)
+            if (element.style.backgroundColor === 'white') {
+                element.style.backgroundColor = 'black'
+            } else {
+                element.style.backgroundColor = 'white'
+            }
+        }
+        function training() {
+            var IMG1 = []
+            var IMG2 = []
+            for (var j = 0; j < 4; j++) {
+                element = document.getElementById(j)
+                if (element.style.backgroundColor === 'white') {
+                    IMG1.push(0)
+                } else {
+                    IMG1.push(1)
+                }
+            }
+            for (var j = 4; j < 8; j++) {
+                element = document.getElementById(j)
+                if (element.style.backgroundColor === 'white') {
+                    IMG2.push(0)
+                } else {
+                    IMG2.push(1)
+                }
+            }
+            socket.emit('data', IMG1, IMG2)
+        }
+        function test() {
+            var IMG3 = []
+            for (var j = 8; j < 12; j++) {
+                element = document.getElementById(j)
+                if (element.style.backgroundColor === 'white') {
+                    IMG3.push(0)
+                } else {
+                    IMG3.push(1)
+                }
+            }
+            socket.emit('test', IMG3)
+        }
+  </script>
+</body>
+
+</html>
