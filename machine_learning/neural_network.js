@@ -86,10 +86,6 @@ function TrainDeepNeuralNetwork (Input, Output, Print) {
   }
 
   OutputNodeFinal = Math.tanh(OutputNode)
-  if (Print === 1499) {
-    console.log('{ ' + Input + ' }, Output : ' + OutputNodeFinal)
-  }
-
   var TargetCalculated = OutputNodeFinal - Output
 
   for (var i = 0; i < Nodes.length; i++) {
@@ -134,7 +130,7 @@ function TrainDeepNeuralNetwork (Input, Output, Print) {
   }
 }
 
-for (var i = 0; i < 1500; i++) {
+for (var i = 0; i < 5000; i++) {
    for (var j = 0; j < Input.length; j++) {
       TrainDeepNeuralNetwork(Input[j], Output[j],i)
       Nodes = []
@@ -143,3 +139,52 @@ for (var i = 0; i < 1500; i++) {
       GenerateDeepNeuralNetwork(NNeurons,Depth,1)
    }
 }
+
+for (var i = 0; i < Input.length; i++) {
+  function ForwardNeuralNetwork (Input,Output) {
+    for (var i = 0; i < Nodes.length; i++) {
+       if (i === 0) {
+         for (var j = 0; j < Nodes[i].length; j++) {
+            for (var k = 0; k < Input.length; k++) {
+               Nodes[i][j] += Weights[i][j][k] * Input[k]
+            }
+         }
+         for (var j = 0; j < Nodes[1].length; j++) {
+             NodesFinal[i][j] += Math.tanh(Nodes[i][j])
+         }
+       } else {
+          for (var j = 0; j < Nodes[i].length; j++) {
+             for (var k = 0; k < NodesFinal[i-1].length; k++) {
+                 Nodes[i][j] += Weights[i][j][k] * NodesFinal[i-1][k]
+             }
+           }
+           for (var j = 0; j < Nodes[i].length; j++) {
+               NodesFinal[i][j] += Math.tanh(Nodes[i][j])
+           } 
+       }
+    }  
+    
+    OutputNode = 0
+    
+    for (var i = 0; i < Output.length; i++) {
+        for (var j = 0; j < NodesFinal[NodesFinal.length-1].length; j++) {
+          OutputNode += Weights[Weights.length - 1][i][j] * NodesFinal[NodesFinal.length - 1][j]
+        }
+    }
+  
+    OutputNodeFinal = Math.tanh(OutputNode)
+    console.log('Input : '  + Input  + ', Output : ' + OutputNodeFinal)
+  }
+  ForwardNeuralNetwork(Input[i],Output[i]) 
+  Nodes = []
+  NodesFinal = []
+  WeightsError = []
+  GenerateDeepNeuralNetwork(NNeurons,Depth,1)
+}
+
+/*
+ Input : 2,2, Output : -0.9815489958441728
+ Input : 1,2, Output : 0.9681158019603502
+ Input : 2,1, Output : 0.9878456250708599
+ Input : 1,1, Output : -0.9970001967489629
+*/
