@@ -79,10 +79,6 @@ for (var a = 0; a < Input[0].length; a++) {
   }
 }
 
-/*
- Median absolute deviation
-*/
-
 for (var c = 0; c < Input[0].length; c++) {
   List = []
   for (var d = 0; d < Input.length; d++) {
