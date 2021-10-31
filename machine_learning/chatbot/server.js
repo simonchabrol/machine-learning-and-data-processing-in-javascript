@@ -54,7 +54,7 @@ var server = http.createServer(function (req, res) {
   })
 }).listen(4040)
 
-var io = require('socket.io').listen(server)
+var io = require('socket.io')(server)
 
 io.sockets.on('connection', function (socket) {
   socket.on('message', function (message) {
