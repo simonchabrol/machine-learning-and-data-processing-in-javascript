@@ -81,8 +81,7 @@ function Request() {
                 break
             case 'DELETE':
                 if (Action+' '+Request[1] === 'DELETE ALL') {
-                    var writeStream = fs.createWriteStream("./DB.txt")
-                    writeStream.end()
+                    CreateDB()
                     Req()
                     break
                 } else {
