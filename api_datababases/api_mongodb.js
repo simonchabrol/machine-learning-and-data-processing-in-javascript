@@ -38,7 +38,7 @@ app.get('/database', function (req, res) {
     MongoClient.connect(url, function(err, db) {
         if (err) console.log(err)
         var dbo = db.db("mydb");
-        dbo.collection("table").find({}).toArray(function(err, result) 
+        dbo.collection("table").find({}).toArray(function(err, result) {
           if (err) throw err
           res.send(result)
           db.close()
