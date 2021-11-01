@@ -78,7 +78,7 @@ http.createServer(function (request, response) {
             }))
           }
         } else {
-          response.end('Wrong token)
+          response.end('Wrong token')
         }
       } catch (err) {
         console.log(err)
