@@ -1,0 +1,150 @@
+<canvas id="myChart" width="300" height="100"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+
+    var Input = [
+        [0.2550251256281406, 0.8894472361809045],
+        [0.2131490787269681, 0.8559463986599665],
+        [0.2298994974874371, 0.7554438860971524],
+        [0.5816582914572864, 0.7428810720268006],
+        [0.4392797319932998, 0.8056951423785594],
+        [0.46859296482412055, 0.897822445561139],
+        [0.5607202680067002, 0.964824120603015],
+        [0.6193467336683417, 0.8685092127303182],
+        [0.28015075376884413, 0.8601340033500837],
+        [0.46021775544388605, 0.6465661641541038],
+        [0.34715242881072017, 0.8894472361809045],
+        [0.1587102177554438, 0.4413735343383584],
+        [0.34715242881072017, 0.27386934673366825],
+        [0.38065326633165825, 0.12311557788944714],
+        [1.0967336683417086, 0.8266331658291457],
+        [1.285175879396985, 0.6507537688442211],
+        [1.36892797319933, 0.36599664991624786],
+        [0.7868509212730318, 0.12311557788944714],
+        [0.7826633165829145, 0.2780569514237855],
+        [0.8831658291457286, 0.3492462311557788],
+        [0.9501675041876047, 0.22780569514237847],
+        [1.1427973199329984, 0.23618090452261298],
+        [0.9376046901172529, 0.13149078726968166],
+        [0.8706030150753769, 0.22780569514237847],
+        [1.0087939698492463, 0.303182579564489],
+        [1.0841708542713568, 0.16917922948073694],
+        [1.038107202680067, 0.23618090452261298],
+        [0.4895309882747068, 0.7512562814070352],
+        [0.5355946398659966, 0.8559463986599665],
+        [0.3178391959798994, 0.9899497487437185]]
+
+    var X = []
+    var Y = []
+
+    for (var i = 0; i < Input.length; i++) {
+        X.push(Input[i][0])
+        Y.push(Input[i][1])
+    }
+
+    var RegressionDataX = []
+    var RegressionDataY = []
+
+    var XSum = 0
+    var XMean = 0
+
+    var YSum = 0
+    var YMean = 0
+
+    var XDeviation = []
+    var XDeviationSum = 0
+
+    var YDeviation = []
+    var YDeviationSum = 0
+
+    var XYDeviationProduct = []
+    var XYDeviationProductSum = 0
+
+    for (var i = 0; i < X.length; i++) {
+        XSum = XSum + X[i]
+        YSum = YSum + Y[i]
+    }
+    XMean = XSum / X.length
+    YMean = YSum / Y.length
+
+    for (var i = 0; i < X.length; i++) {
+        XDeviation.push(X[i] - XMean)
+        YDeviation.push(Y[i] - YMean)
+    }
+
+    for (var i = 0; i < X.length; i++) {
+        XYDeviationProduct.push(XDeviation[i] * YDeviation[i])
+        XYDeviationProductSum = XYDeviationProductSum + XYDeviationProduct[i]
+    }
+
+
+    for (var i = 0; i < X.length; i++) {
+        XDeviationSum = XDeviationSum + Math.pow(XDeviation[i], 2)
+        YDeviationSum = YDeviationSum + Math.pow(YDeviation[i], 2)
+    }
+
+    var CoeffLine = XYDeviationProductSum / XDeviationSum
+
+    var CoeffZeroX = YMean - CoeffLine * XMean
+
+    var Sign = function Value() {
+        if (CoeffLine > 0) {
+            return ' +'
+        } else {
+            return ''
+        }
+    }
+
+    var ScoreDetermination = Math.pow((1 / X.length)
+        * XYDeviationProductSum
+        / ((Math.sqrt(XDeviationSum / X.length)) * (Math.sqrt(YDeviationSum / X.length))), 2)
+
+
+    for (var i = 0; i < X.length; i++) {
+        RegressionDataX.push(X[i])
+        RegressionDataY.push(CoeffZeroX + CoeffLine * X[i])
+    }
+    
+    var Dataset = []
+
+    for (var i = 0; i < X.length; i++) {
+        Dataset.push({ x: X[i], y: Y[i] })
+    }
+
+    var RegressionDataset = []
+
+    for (var i = 0; i < X.length; i++) {
+        RegressionDataset.push({ x: RegressionDataX[i], y: RegressionDataY[i] })
+    }
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                borderColor: 'rgb(0, 0, 255)',
+                backgroundColor: 'rgb(0, 0, 255)',
+                label: 'Original dataset',
+                data: Dataset,
+            }, {
+                borderColor: 'rgb(255, 0, 0)',
+                backgroundColor: 'rgb(255, 0, 0)',
+                label: 'Linear regression',
+                data: RegressionDataset,
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
+            },
+            title: {
+                display: true,
+                text: 'Trend line is : ' + CoeffZeroX + Sign() + ' ' + CoeffLine + ' * X | Determination score is : ' + ScoreDetermination
+            }
+        }
+    })
+</script>
