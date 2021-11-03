@@ -5,9 +5,13 @@ var Input = [[1, 0, 0, 1, 0, 1],
              [0, 1, 1, 0, 1, 1]]       
 
 var Output = [[1], [1], [1], [0], [0]]
-var Weights = []
+
+var LearningRate = 0.001
+
 var InitialSum
 var FinalSum
+
+var Weights = []
 
 for (var i = 0; i < Input[0].length; i++) {   
    Weights.push(Math.random())
@@ -27,12 +31,12 @@ function Perceptron (Input, Output) {
       FinalSum = 0
    }
 
-  while (TargetCaculated !== 0) {
+  while (TargetCalculated !== 0) {
 
     var TargetCalculated = Output - FinalSum
 
     for (var i = 0; i < Input.length; i++) {
-       Weights[i] = Weights[i] + TargetCalculated * Input[i] * 0.001
+       Weights[i] = Weights[i] + TargetCalculated * Input[i] * LearningRate
     }
 
     InitialSum = 0 
