@@ -14,7 +14,7 @@ var YDeviation = []
 var YDeviationSum = 0
 
 var XYDeviationProduct = []
-var XYDeviationProduct= 0
+var XYDeviationProductSum = 0
 
 for (var i = 0; i < X.length; i++) {
    XSum = XSum + X[i]
