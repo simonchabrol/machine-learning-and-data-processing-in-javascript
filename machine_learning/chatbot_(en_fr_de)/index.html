@@ -1,0 +1,41 @@
+<html>
+   <head>
+       <meta charset="utf-8" />
+       <title>ChatBOT</title>
+       <style>
+           #zone_chat strong {
+               color: white;
+               background-color: black;
+               padding: 2px;
+           }
+       </style>
+    </head>
+
+   <body>
+       <p><strong>Wikipedia ChatBOT</strong></p>
+       
+       <form action="/" method="post" id="send_message">
+           <input type="text" id="message" placeholder="Your message..." size="50" autofocus />
+           <input type="submit" id="send" value="Send" />
+       </form>
+
+       <section id="chat">
+       </section>
+
+       // Ne pas oublier de corriger les balises "script" en <script> ou </script>
+       <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+       <script src="/socket.io/socket.io.js"></script>
+       <script>
+           var socket = io.connect()
+           socket.on('message_bot', function(message) {
+               document.getElementById('chat').innerHTML += '<p><strong>Bot</strong> ' + message + '</p>'
+           })
+           $("#send_message").submit(function (event) {
+               var message = document.getElementById('message').value
+               document.getElementById('chat').innerHTML += '<p><strong>You</strong> ' + message + '</p>'
+               socket.emit('message', message)
+               event.preventDefault()
+           })
+        </script>
+   </body>
+</html>
