@@ -47,24 +47,3 @@ console.log(VerticalList)
     [ 0, 1, 1, 1, 1 ]
 ]
 */
-
-for (var i = 1; i < VerticalList.length; i++) {
-  for (var j = i+1; j < VerticalList.length; j++) {
-     if (VerticalList[i].toString() === VerticalList[j].toString()) {
-        VerticalList.splice(j,1)
-        j--
-     }
-   }
-}
-
-console.log(VerticalList)
-
-/*
-[
-  ["Moutarde", "Pain", "Oignons"], 
-  [1, 0, 0],
-  [0, 1, 1],
-  [1, 1, 1], 
-  [1, 0, 1]
-]
-*/
