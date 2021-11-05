@@ -5,7 +5,6 @@ var Data = [['Lait', 'Moutarde'],
             ['Pain', 'Oignons', 'Moutarde'],
             ['Steak', 'Pain', 'Oignons', 'Moutarde']]
 
-
 var Threshold = 0.6
 
 var UniqueValues = []
