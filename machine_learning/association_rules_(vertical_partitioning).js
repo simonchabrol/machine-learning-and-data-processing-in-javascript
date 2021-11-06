@@ -69,7 +69,7 @@ for (var j = 1; j < VerticalList.length; j++) {
     if (Drop === 0) {
       ItemSum += 1
       for (var k = j + 1; k < VerticalList.length; k++) {
-       if (k !== i) {
+       if (k !== j) {
         for (var l = 0; l < VerticalList[k].length; l++) {
           if (VerticalList[k][l] !== VerticalList[j][l] && VerticalList[j][l] === 1) {
             break
