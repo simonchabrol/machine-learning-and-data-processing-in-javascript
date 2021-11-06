@@ -69,6 +69,7 @@ for (var j = 1; j < VerticalList.length; j++) {
     if (Drop === 0) {
       ItemSum += 1
       for (var k = j + 1; k < VerticalList.length; k++) {
+       if (k !== i) {
         for (var l = 0; l < VerticalList[k].length; l++) {
           if (VerticalList[k][l] !== VerticalList[j][l] && VerticalList[j][l] === 1) {
             break
@@ -76,6 +77,7 @@ for (var j = 1; j < VerticalList.length; j++) {
             ItemSum += 1
           }
         }
+       }
       }
       var ItemSupport = ItemSum / (VerticalList.length - 1)
       if (ItemSupport > Threshold && ItemSum !== 0) {
