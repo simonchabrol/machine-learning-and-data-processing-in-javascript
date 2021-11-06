@@ -60,7 +60,7 @@ for (var j = 1; j < VerticalList.length; j++) {
   if (VerticalList[j].indexOf(1) !== VerticalList[j].lastIndexOf(1)) {
     if (Rules.length !== 0) {
       for (var k = 0; k < Rules.length; k++) {
-        if (Rules[k][0].toString() === VerticalList[j][0].toString()) {
+        if (Rules[k][0].toString() === VerticalList[j].toString()) {
           Drop = 1
           break
         }
