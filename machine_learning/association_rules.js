@@ -83,18 +83,18 @@ for (var i = 0; i < Combinations.length; i++) {
     var Lift = (Confidence / (ElementCount / Data.length))
     if (Confidence > Threshold && Lift > 1) {
       console.log('Rule : { ' + OtherElement + ' } => { ' + ElementToCheck[j] + ' }')
-      console.log('Confidence : ' + Confidence)
+      console.log('Confidence : ' + Confidence * 100)
       console.log('Lift : ' + Lift + '\n')
     }
   }
 }
 
 /*
-Rule : { Oignons } => { Pain }
-Confidence : 0.7999999999999999
-Lift : 1.2
+ Rule : { Oignons } => { Pain }
+ Confidence : 80
+ Lift : 1.2
 
-Rule : { Pain } => { Oignons }
-Confidence : 1
-Lift : 1.2
+ Rule : { Pain } => { Oignons }
+ Confidence : 100
+ Lift : 1.2
 */
