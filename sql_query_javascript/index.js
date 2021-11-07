@@ -12,11 +12,15 @@ var EXPList = [
     'first=2 AND last=1', // Expected : [ 2, 2, 1 ]
     'first=2', // Expected : [ 1, 2, 2 ], [ 1, 2, 3 ], [ 2, 2, 1 ]
     'last=3', // [ 1, 2, 3 ]
-    'id=1 OR id=2 AND last=2 OR last=3' // [ 1, 2, 2 ], [ 1, 2, 3 ], [ 1, 1, 4 ], [ 2, 1, 2 ]
+    'id=1 OR id=2 AND last=2 OR last=3', // [ 1, 2, 2 ], [ 1, 2, 3 ], [ 1, 1, 4 ], [ 2, 1, 2 ]
+    'id=1 AND first>1', // Expected : [ 1, 2, 2 ], [ 1, 2, 3 ]
+    'last<3', // Expected : [ 1, 2, 2 ], [ 2, 1, 2 ], [ 2, 2, 1 ]
+    'id>=1 AND last>=2 AND last<3', // Expected : [ 1, 2, 2 ], [ 2, 1, 2 ]
+    'id!=2 AND last!=2' // Expected : [ 1, 2, 3 ], [ 1, 1, 4 ]
 ]
 
 for (var k = 0; k < EXPList.length; k++) {
-    
+
     console.log(EXPList[k])
 
     var RawEXP = EXPList[k].split(' ')
@@ -29,18 +33,52 @@ for (var k = 0; k < EXPList.length; k++) {
                 EXP.push(RawEXP[i])
             }
         } else {
-            var Value = RawEXP[i].split('=')
+            var Regex = /(>=|<=|<|>|=|!=)/i
+            var Value = RawEXP[i].split(Regex)
             if (ARR[0].indexOf(Value[0]) !== -1) {
-                EXP.push([ARR[0].indexOf(Value[0]), Value[1]])
+                EXP.push([ARR[0].indexOf(Value[0]), Value[2], Value[1]])
             }
         }
     }
 
     function Check(Arr, Condition) {
-        if (Arr[Condition[0]] == Condition[1]) {
-            return 1
-        } else {
-            return 0
+        switch (Condition[2]) {
+            case '=':
+                if (Arr[Condition[0]] == Condition[1]) {
+                    return 1
+                } else {
+                    return 0
+                }
+            case '>=':
+                if (Arr[Condition[0]] >= Condition[1]) {
+                    return 1
+                } else {
+                    return 0
+                }
+            case '>':
+                if (Arr[Condition[0]] > Condition[1]) {
+                    return 1
+                } else {
+                    return 0
+                }
+            case '<=':
+                if (Arr[Condition[0]] <= Condition[1]) {
+                    return 1
+                } else {
+                    return 0
+                }
+            case '<':
+                if (Arr[Condition[0]] < Condition[1]) {
+                    return 1
+                } else {
+                    return 0
+                }
+            case '!=':
+                if (Arr[Condition[0]] != Condition[1]) {
+                    return 1
+                } else {
+                    return 0
+                }
         }
     }
 
@@ -57,24 +95,23 @@ for (var k = 0; k < EXPList.length; k++) {
                 Operators.push('||')
             }
         }
-
         for (var j = 0; j < Operators.length; j++) {
             if (Operators[j] === '&&') {
-                Operators[j-1] = Operators[j-1] && Operators[j + 1]
-                Operators.splice(j,1)
-                Operators.splice(j,1)
-                j=0
+                Operators[j - 1] = Operators[j - 1] && Operators[j + 1]
+                Operators.splice(j, 1)
+                Operators.splice(j, 1)
+                j = 0
             }
         }
         for (var j = 0; j < Operators.length; j++) {
             if (Operators[j] === '||') {
-                Operators[j-1] = Operators[j-1] || Operators[j + 1]
-                Operators.splice(j,1)
-                Operators.splice(j,1)
-                j=0
+                Operators[j - 1] = Operators[j - 1] || Operators[j + 1]
+                Operators.splice(j, 1)
+                Operators.splice(j, 1)
+                j = 0
             }
         }
-        
+
         var Test = Operators[0]
         if (Test === 1) {
             console.log(ARR[i])
@@ -110,4 +147,21 @@ id=1 OR id=2 AND last=2 OR last=3
 [ 1, 2, 3 ]
 [ 1, 1, 4 ]
 [ 2, 1, 2 ]
+
+id=1 AND first>1
+[ 1, 2, 2 ]
+[ 1, 2, 3 ]
+
+last<3
+[ 1, 2, 2 ]
+[ 2, 1, 2 ]
+[ 2, 2, 1 ]
+
+id>=1 AND last>=2 AND last<3
+[ 1, 2, 2 ]
+[ 2, 1, 2 ]
+
+id!=2 AND last!=2
+[ 1, 2, 3 ]
+[ 1, 1, 4 ]
 */
