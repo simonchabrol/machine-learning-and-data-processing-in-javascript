@@ -66,10 +66,10 @@ for (var k = 0; k < EXPList.length; k++) {
             if (Operators[j] !== '&&' && Operators[j] !== '||') {
                 Test = Operators[j]
             } else if (Operators[j] === '||') {
-                Test |= Operators[j + 1]
+                Test = Test || Operators[j + 1]
                 j++
             } else if (Operators[j] === '&&') {
-                Test &= Operators[j + 1]
+                Test = Test && Operators[j + 1]
                 j++
             }
         }
