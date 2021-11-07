@@ -63,7 +63,7 @@ for (var k = 0; k < EXPList.length; k++) {
 
         var Test = 0
         for (var j = 0; j < Operators.length; j++) {
-            if (Operators[j] !== '&&' && Operators[j] !== '||') {
+            if (Operators[j] !== '&&' && Operators[j] !== '||' && j === 0) {
                 Test = Operators[j]
             } else if (Operators[j] === '||') {
                 Test = Test || Operators[j + 1]
