@@ -22,7 +22,6 @@ for (var k = 0; k < EXPList.length; k++) {
     var RawEXP = EXPList[k].split(' ')
 
     var EXP = []
-    var ANDOR = []
 
     for (var i = 0; i < RawEXP.length; i++) {
         if (RawEXP[i] === 'OR' || RawEXP[i] === 'AND') {
@@ -32,7 +31,6 @@ for (var k = 0; k < EXPList.length; k++) {
         } else {
             var Value = RawEXP[i].split('=')
             if (ARR[0].indexOf(Value[0]) !== -1) {
-                ANDOR.push([ARR[0].indexOf(Value[0]), Value[1]])
                 EXP.push([ARR[0].indexOf(Value[0]), Value[1]])
             }
         }
