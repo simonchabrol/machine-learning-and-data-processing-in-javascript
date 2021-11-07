@@ -58,7 +58,6 @@ for (var k = 0; k < EXPList.length; k++) {
             }
         }
 
-        var Test = 0
         for (var j = 0; j < Operators.length; j++) {
             if (Operators[j] === '&&') {
                 Operators[j-1] = Operators[j-1] && Operators[j + 1]
@@ -75,10 +74,8 @@ for (var k = 0; k < EXPList.length; k++) {
                 j=0
             }
         }
-        Test = Operators[0]
-        if (Test === 1) {
-            console.log(ARR[i],Copy.join(' ').toString())
-        }
+        
+        var Test = Operators[0]
         if (Test === 1) {
             console.log(ARR[i])
         }
