@@ -9,7 +9,7 @@ var ARR = [
 var EXPList = [
     'id=1 OR first=2 AND last=4 OR last=3', // Expected : [ 1, 2, 2 ], [ 1, 2, 3 ], [ 1, 1, 4 ]
     'id=1 OR id=2 AND last=4', // Expected : [ 1, 2, 2 ], [ 1, 2, 3 ], [ 1, 1, 4 ]
-    'first=2 and last=1', // Expected : [ 1, 2, 2 ], [ 1, 2, 3 ], [ 2, 2, 1 ]
+    'first=2 AND last=1', // Expected : [ 2, 2, 1 ]
     'first=2', // Expected : [ 1, 2, 2 ], [ 1, 2, 3 ], [ 2, 2, 1 ]
     'last=3', // [ 1, 2, 3 ]
     'id=1 OR id=2 AND last=2 OR last=3' // [ 1, 2, 2 ], [ 1, 2, 3 ], [ 1, 1, 4 ], [ 2, 1, 2 ]
@@ -99,9 +99,7 @@ id=1 OR id=2 AND last=4
 [ 1, 2, 3 ]
 [ 1, 1, 4 ]
 
-first=2 and last=1
-[ 1, 2, 2 ]
-[ 1, 2, 3 ]
+first=2 AND last=1
 [ 2, 2, 1 ]
 
 first=2
