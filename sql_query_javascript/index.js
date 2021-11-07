@@ -6,14 +6,13 @@ var ARR = [
     [2, 1, 2],
     [2, 2, 1]]
 
-
 var EXPList = [
-    'id=1 OR first=2 AND last=4 OR last=3', // Expected : [ 1, 2, 3 ], [ 1, 1, 4 ]
-    'id=1 OR id=2 AND last=4', // Expected : [ 1, 1, 4 ]
-    'first=2 and last=1', // Expected : [ 1, 1, 4 ]
+    'id=1 OR first=2 AND last=4 OR last=3', // Expected : [ 1, 2, 2 ], [ 1, 2, 3 ], [ 1, 1, 4 ]
+    'id=1 OR id=2 AND last=4', // Expected : [ 1, 2, 2 ], [ 1, 2, 3 ], [ 1, 1, 4 ]
+    'first=2 and last=1', // Expected : [ 1, 2, 2 ], [ 1, 2, 3 ], [ 2, 2, 1 ]
     'first=2', // Expected : [ 1, 2, 2 ], [ 1, 2, 3 ], [ 2, 2, 1 ]
     'last=3', // [ 1, 2, 3 ]
-    'id=1 OR id=2 AND last=2 OR last=3' // [ 1, 2, 2 ], [ 1, 2, 3 ], [ 2, 1, 2 ]
+    'id=1 OR id=2 AND last=2 OR last=3' // [ 1, 2, 2 ], [ 1, 2, 3 ], [ 1, 1, 4 ], [ 2, 1, 2 ]
 ]
 
 for (var k = 0; k < EXPList.length; k++) {
@@ -63,15 +62,24 @@ for (var k = 0; k < EXPList.length; k++) {
 
         var Test = 0
         for (var j = 0; j < Operators.length; j++) {
-            if (Operators[j] !== '&&' && Operators[j] !== '||' && j === 0) {
-                Test = Operators[j]
-            } else if (Operators[j] === '||') {
-                Test = Test || Operators[j + 1]
-                j++
-            } else if (Operators[j] === '&&') {
-                Test = Test && Operators[j + 1]
-                j++
+            if (Operators[j] === '&&') {
+                Operators[j-1] = Operators[j-1] && Operators[j + 1]
+                Operators.splice(j,1)
+                Operators.splice(j,1)
+                j=0
             }
+        }
+        for (var j = 0; j < Operators.length; j++) {
+            if (Operators[j] === '||') {
+                Operators[j-1] = Operators[j-1] || Operators[j + 1]
+                Operators.splice(j,1)
+                Operators.splice(j,1)
+                j=0
+            }
+        }
+        Test = Operators[0]
+        if (Test === 1) {
+            console.log(ARR[i],Copy.join(' ').toString())
         }
         if (Test === 1) {
             console.log(ARR[i])
@@ -82,13 +90,18 @@ for (var k = 0; k < EXPList.length; k++) {
 
 /*
 id=1 OR first=2 AND last=4 OR last=3
+[ 1, 2, 2 ]
 [ 1, 2, 3 ]
 [ 1, 1, 4 ]
 
 id=1 OR id=2 AND last=4
+[ 1, 2, 2 ]
+[ 1, 2, 3 ]
 [ 1, 1, 4 ]
 
 first=2 and last=1
+[ 1, 2, 2 ]
+[ 1, 2, 3 ]
 [ 2, 2, 1 ]
 
 first=2
@@ -102,5 +115,6 @@ last=3
 id=1 OR id=2 AND last=2 OR last=3
 [ 1, 2, 2 ]
 [ 1, 2, 3 ]
+[ 1, 1, 4 ]
 [ 2, 1, 2 ]
 */
