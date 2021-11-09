@@ -140,8 +140,6 @@ for (var k = 0; k < EXPList.length; k++) {
                     if (OpenParenthesis[l] - ClosedParenthesis[l] === -2) {
                         Operators.splice(OpenParenthesis[l], 1)
                         Operators.splice(ClosedParenthesis[l] - 1, 1)
-                        OpenParenthesis.splice(l, 1)
-                        ClosedParenthesis.splice(l, 1)
                         CheckParenthesis()
                     }
                 }
@@ -156,8 +154,6 @@ for (var k = 0; k < EXPList.length; k++) {
                     if (OpenParenthesis[l] - ClosedParenthesis[l] === -2) {
                         Operators.splice(OpenParenthesis[l], 1)
                         Operators.splice(ClosedParenthesis[l] - 1, 1)
-                        OpenParenthesis.splice(l, 1)
-                        ClosedParenthesis.splice(l, 1)
                         CheckParenthesis()
                     }
                 }
