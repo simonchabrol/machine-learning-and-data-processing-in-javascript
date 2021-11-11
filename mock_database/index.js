@@ -234,7 +234,6 @@ function SearchDB(Mode, Instruction) {
                 })
             }
         }
-
         Header(ChooseDb, Result)
         Request()
     } catch (error) {
@@ -242,15 +241,15 @@ function SearchDB(Mode, Instruction) {
         Request()
     }
 }
+
 function InsertDB(Instruction) {
-    var Values
     try {
         var Data = Instruction.split(' ')
         var Text = Data[2].toString()
         var ChooseDb = Data[Data.indexOf('INTO') + 1]
         Data.splice(Data.indexOf('INTO') + 1, 1)
         Data.splice(Data.indexOf('INTO'), 1)
-        Values = JSON.parse(Text)
+        var Values = JSON.parse(Text)
         function Result(Head) {
             var ToPush = []
             for (var i = 0; i < Values.length; i++) {
@@ -272,11 +271,11 @@ function InsertDB(Instruction) {
             }
         }
         Header(ChooseDb, Result)
+        Request()
     } catch (error) {
         console.log('Check syntax')
         return Request()
     }
-    Request()
 }
 
 /*
