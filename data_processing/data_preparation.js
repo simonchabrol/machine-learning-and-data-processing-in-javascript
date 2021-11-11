@@ -35,8 +35,11 @@ var Fields = ["Communes de livraison", "Colis", "Statut"]
 var Types = ["Input", "Input", "Output"]
 var Values = ["string", "number", "string"]
 
+var InputColumns = []
+var OutputColumns = []
+
 for (var a = 0; a < Fields.length; a++) {
-  
+
   var FieldsName = Fields[a]
   var TypesName = Types[a]
   var ValuesName = Values[a]
@@ -93,6 +96,7 @@ for (var a = 0; a < Fields.length; a++) {
         UniqueWords = UniqueWords.concat(TestedValues)
       }
       var Words = [...new Set(UniqueWords)]
+      InputColumns.push(Words)
       for (var c = 0; c < DataSet.length; c++) {
         Bloc = DataSet[c]
         var ValuesWords = Bloc[Fields[a]]
@@ -109,6 +113,7 @@ for (var a = 0; a < Fields.length; a++) {
       }
     }
     if (ValuesName == 'number') {
+      InputColumns.push(Fields[a])
       var Numbers = []
       for (var f = 0; f < DataSet.length; f++) {
         Bloc = DataSet[f]
@@ -143,6 +148,7 @@ for (var a = 0; a < Fields.length; a++) {
           for (var l = 0; l < ValuesWords.length; l++) {
             if (ValuesWords[l] === Words[k]) {
               Output[j] = k
+              OutputColumns.push(Words[k])
             }
           }
         }
@@ -151,11 +157,13 @@ for (var a = 0; a < Fields.length; a++) {
   }
 }
 console.log(DataSet)
+console.log('Input columns : ' + InputColumns.flat())
 console.log('Input: ' + JSON.stringify(Input))
+console.log('Output columns : ' + OutputColumns.flat())
 console.log('Output: ' + JSON.stringify(Output))
 
 /*
- [
+[
   {
     'Communes de livraison': [ 'Bobigny', 'Aubervilliers' ],
     Colis: [ 150 ],
@@ -171,7 +179,9 @@ console.log('Output: ' + JSON.stringify(Output))
     Colis: [ 80 ],
     Statut: [ 'Echec' ]
   }
- ]
- Input: [[1,1,0,0,0,0,0.15],[0,0,1,1,0,0,0.165],[0,0,1,1,1,1,0.08]]
- Output: [0,0,1]
+]
+Input columns : Bobigny,Aubervilliers,Courneuve,Drancy,Saint Denis,Pantin,Colis
+Input: [[1,1,0,0,0,0,0.15],[0,0,1,1,0,0,0.165],[0,0,1,1,1,1,0.08]]
+Output columns : Réussite,Réussite,Echec
+Output: [0,0,1]
 */
