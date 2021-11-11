@@ -160,11 +160,11 @@ for (var test = 0; test < Input.length; test++) {
     for (var i = 0; i < OutputNodes.length; i++) {
         OutputNodes[i] = Math.tanh(OutputNodes[i])
     }
-    console.log('Ouput : ' + OutputNodes)
+    console.log('Output : ' + OutputNodes)
 }
 
 /*
 Input : -1,-1,1,-1
 Hidden nodes : -0.999341945077083,0.998613934560652
-Ouput : -0.9972045390209111,-0.9972038710445926,0.997203075781853,-0.9972075142899121
+Output : -0.9972045390209111,-0.9972038710445926,0.997203075781853,-0.9972075142899121
 */
