@@ -83,7 +83,6 @@ function Request() {
                                 var json = JSON.parse(line)
                                 console.log(json)
                             })
-
                             lineReader.on('close', function () { })
                             Req()
                             break
@@ -274,7 +273,7 @@ function InsertDB(Instruction) {
         Request()
     } catch (error) {
         console.log('Check syntax')
-        return Request()
+        Request()
     }
 }
 
