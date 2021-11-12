@@ -35,7 +35,7 @@ function Result(Sum) {
         i++
         Process(Folder[i], Sum, Result)
     } else {
-        console.log('Aggregated revenue is : ' + Sum)
+        console.log('Total revenue is : ' + Sum)
     }
 }
 
@@ -72,4 +72,5 @@ Line : 6;400;IT;F
 Line : 7;200;FR;G
 Line : 8;100;FR;H
 ./files/data_3.csv revenue is : 1800
+Total revenue is : 5400
 */
