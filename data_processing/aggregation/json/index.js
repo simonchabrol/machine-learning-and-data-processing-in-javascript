@@ -7,7 +7,7 @@ var i = 0
 function Process(File, PreviousRevenue) {
 
     var lineReader = readline.createInterface({
-        input: fs.createReadStream('./files/data_1.json')
+        input: fs.createReadStream('./files/' + File)
     })
 
     var Sum = 0
@@ -66,5 +66,14 @@ Revenue found : 400
 Revenue found : 300
 Revenue found : 100
 ./files/data_1.json revenue is : 1800
-Aggregated revenue is : 1800
+Revenue found : 100
+Revenue found : 200
+Revenue found : 200
+Revenue found : 300
+Revenue found : 300
+Revenue found : 200
+Revenue found : 400
+Revenue found : 100
+./files/data_2.json revenue is : 1800
+Aggregated revenue is : 3600
 */
