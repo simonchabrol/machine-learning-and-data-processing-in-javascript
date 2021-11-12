@@ -1,0 +1,23 @@
+[
+    {
+        "id":1,
+        "name":"A",
+"revenue":100,"country":"FR"
+    },
+    { "id":2, "name":"B","revenue":200,"country":"FR"}, { "id":3,"name":"C","revenue":200,"country":"DE"},
+    {
+        "id":4,
+        "name":"D",
+        "revenue":300,
+        "country":"GB"
+    },
+    {"id":5,"name":"E",
+        "revenue":300,"country":"DE"},{"id":6,"name":"F","revenue":400,"country":"IT"},{"id":7,"name":"G", "revenue":200,
+            "country":"FR"},
+    {
+        "id":8,
+        "name":"H",
+        "revenue":100,
+        "country":"FR"
+    }
+  ]
