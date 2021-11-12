@@ -6,11 +6,9 @@ function Header(File, callback) {
     try {
         if (fs.existsSync(File)) {
             var LineCounter = 0
-
             var lineReader = readline.createInterface({
                 input: fs.createReadStream('./' + File)
             })
-
             lineReader.on('line', function (line) {
                 if (LineCounter !== 2) {
                     Head.push(JSON.parse(line))
@@ -19,11 +17,9 @@ function Header(File, callback) {
                     lineReader.close()
                 }
             })
-
             lineReader.on('close', function () {
                 callback(Head)
             })
-
         } else {
             console.log('Unable to open : ' + File)
         }
