@@ -50,7 +50,7 @@ function Result(Sum) {
         i++
         Process(Folder[i], Sum, Result)
     } else {
-        console.log('Aggregated revenue is : ' + Sum)
+        console.log('Total revenue is : ' + Sum)
     }
 }
 
@@ -75,5 +75,5 @@ Revenue found : 200
 Revenue found : 400
 Revenue found : 100
 ./files/data_2.json revenue is : 1800
-Aggregated revenue is : 3600
+Total revenue is : 3600
 */
