@@ -1,5 +1,5 @@
-var fs = require("fs");
-var readline = require("readline");
+var fs = require("fs")
+var readline = require("readline")
 
 function Header(File, callback) {
     var Head = []
@@ -8,7 +8,7 @@ function Header(File, callback) {
             var LineCounter = 0
 
             var lineReader = readline.createInterface({
-                input: fs.createReadStream(File)
+                input: fs.createReadStream('./' + File)
             })
 
             lineReader.on('line', function (line) {
@@ -43,11 +43,18 @@ function Request() {
         var Request = Instruction.split(' ')
         var Action = Request[0]
         switch (Action) {
+            case 'ALL':
+                var Folder = fs.readdirSync('./')
+                for (var i = 0; i < Folder.length; i++) {
+                    console.log(Folder[i])
+                }
+                Req()
+                break
             case 'INIT':
                 try {
-                    if (!fs.existsSync(Request[1])) {
+                    if (!fs.existsSync('./' + Request[1])) {
                         var ToInit = JSON.parse(Request[2])
-                        var writeStream = fs.createWriteStream(Request[1])
+                        var writeStream = fs.createWriteStream('./' + Request[1])
                         for (var i = 0; i < ToInit.length; i++) {
                             writeStream.write(JSON.stringify(ToInit[i]) + '\r\n')
                         }
@@ -74,9 +81,9 @@ function Request() {
             case 'SELECT':
                 if (Action + ' ' + Request[1] === 'SELECT ALL') {
                     try {
-                        if (fs.existsSync(Request[3])) {
+                        if (fs.existsSync('./' + Request[3])) {
                             var lineReader = readline.createInterface({
-                                input: fs.createReadStream(Request[3])
+                                input: fs.createReadStream('./' + Request[3])
                             })
 
                             lineReader.on('line', function (line) {
@@ -106,8 +113,8 @@ function Request() {
             case 'DELETE':
                 if (Action + ' ' + Request[1] === 'DELETE ALL') {
                     try {
-                        if (fs.existsSync(Request[3])) {
-                            fs.unlinkSync(Request[3])
+                        if (fs.existsSync('./' + Request[3])) {
+                            fs.unlinkSync('./' + Request[3])
                             Req()
                             break
                         } else {
@@ -179,7 +186,7 @@ function SearchDB(Mode, Instruction) {
             }
             if (Mode === 'SELECT') {
                 var lineReader = readline.createInterface({
-                    input: fs.createReadStream(ChooseDb)
+                    input: fs.createReadStream('./' + ChooseDb)
                 })
                 var Results = []
                 lineReader.on('line', function (line) {
@@ -204,9 +211,9 @@ function SearchDB(Mode, Instruction) {
                     console.log(Results)
                 })
             } else if (Mode === 'DELETE') {
-                var writeStream = fs.createWriteStream(ChooseDb + '.tmp')
+                var writeStream = fs.createWriteStream('./' + ChooseDb + '.tmp')
                 var lineReader = readline.createInterface({
-                    input: fs.createReadStream(ChooseDb)
+                    input: fs.createReadStream('./' + ChooseDb)
                 })
                 var Results = []
                 lineReader.on('line', function (line) {
@@ -228,8 +235,8 @@ function SearchDB(Mode, Instruction) {
                     }
                 })
                 lineReader.on('close', function () {
-                    fs.unlinkSync(ChooseDb)
-                    fs.renameSync(ChooseDb + '.tmp', ChooseDb)
+                    fs.unlinkSync('./' + ChooseDb)
+                    fs.renameSync('./' + ChooseDb + '.tmp', ChooseDb)
                 })
             }
         }
@@ -242,13 +249,14 @@ function SearchDB(Mode, Instruction) {
 }
 
 function InsertDB(Instruction) {
+    var Values
     try {
         var Data = Instruction.split(' ')
         var Text = Data[2].toString()
         var ChooseDb = Data[Data.indexOf('INTO') + 1]
         Data.splice(Data.indexOf('INTO') + 1, 1)
         Data.splice(Data.indexOf('INTO'), 1)
-        var Values = JSON.parse(Text)
+        Values = JSON.parse(Text)
         function Result(Head) {
             var ToPush = []
             for (var i = 0; i < Values.length; i++) {
@@ -262,7 +270,7 @@ function InsertDB(Instruction) {
                 }
             }
             if (ToPush.length === Head[0].length) {
-                var writeStream = fs.createWriteStream(ChooseDb, { flags: 'a' })
+                var writeStream = fs.createWriteStream('./' + ChooseDb, { flags: 'a' })
                 writeStream.write(JSON.stringify(ToPush) + '\r\n')
                 writeStream.end()
             } else {
