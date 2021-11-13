@@ -63,7 +63,10 @@ for (var i = 0; i < 2000; i++) {
 
 for (var w = 0; w < Visible.length; w++) {
     console.log('\nInput : ' + Visible[w])
-    OutputNodes = [0, 0, 0]
+    var OutputNodes = []
+    for (var i = 0; i < Visible[w].length; i++) {
+        OutputNodes.push(0)
+    }
     for (var i = 0; i < OutputNodes.length; i++) {
         Sum = 0
         for (var j = 0; j < Hidden[w].length; j++) {
@@ -75,12 +78,41 @@ for (var w = 0; w < Visible.length; w++) {
     console.log('Output : ' + OutputNodes)
 }
 
+var UniqueClasses = [...new Set(Hidden)]
+
+for (var w = 0; w < Visible.length; w++) {
+    var HiddenNodes = []
+    for (var i = 0; i < UniqueClasses[0].length; i++) {
+        HiddenNodes.push(0)
+    }
+    for (var i = 0; i < HiddenNodes.length; i++) {
+        Sum = 0
+        for (var j = 0; j < Visible[w].length; j++) {
+            Sum += Visible[w][j] * Weights[i][j]
+        }
+        HiddenNodes[i] += Math.round(Math.tanh(Sum))
+    }
+    for (var j = 0; j < UniqueClasses.length; j++) {
+        if (HiddenNodes.toString() === UniqueClasses[j].toString()) {
+            console.log('\nInput : ' + Visible[w])
+            console.log('Ouput : ' + HiddenNodes)
+            break
+        }
+    }
+}
+
 /*
 Input : -1,1,1
 Hidden : -1,1
-Output : -0.9996569747148706,0.9994821047354884,0.9990081522345488
+Output : -0.9999997365876823,0.9999997210149819,0.9999997646007991
 
 Input : 1,-1,-1
 Hidden : 1,-1
-Output : 0.9996569747148706,-0.9994821047354884,-0.9990081522345488
+Output : 0.9999997365876823,-0.9999997210149819,-0.9999997646007991
+
+Input : -1,1,1
+Ouput : -1,1
+
+Input : 1,-1,-1
+Ouput : 1,-1
 */
