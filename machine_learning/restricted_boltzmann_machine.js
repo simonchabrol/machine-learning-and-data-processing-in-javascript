@@ -48,7 +48,7 @@ function RBM(Hidden, Output) {
         for (var j = 0; j < Hidden.length; j++) {
             if (Positive[j][i] - Negative[j][i] === 1) {
                 Weights[j][i] += 0.001
-            } else if (Positive[j][i] - Negative[j][i] === 0) {
+            } else if (Positive[j][i] - Negative[j][i] === -1) {
                 Weights[j][i] -= 0.001
             }
         }
