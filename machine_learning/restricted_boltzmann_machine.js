@@ -25,7 +25,7 @@ for (var i = 0; i < Hidden[0].length; i++) {
     }
 }
 
-function RBM(Hidden, Output) {
+function RBM (Hidden, Output) {
     for (var i = 0; i < Output.length; i++) {
         for (var j = 0; j < Hidden.length; j++) {
             if (Hidden[j] * Output[i] === 1) {
@@ -37,7 +37,7 @@ function RBM(Hidden, Output) {
     }
     for (var i = 0; i < Output.length; i++) {
         for (var j = 0; j < Hidden.length; j++) {
-            if (Hidden[j] * Output[i] === 0) {
+            if ((Hidden[j] * Output[i] === -1)) {
                 Negative[j][i] = 1
             } else {
                 Negative[j][i] = 0
@@ -78,11 +78,9 @@ for (var w = 0; w < Visible.length; w++) {
     console.log('Output : ' + OutputNodes)
 }
 
-var UniqueClasses = [...new Set(Hidden)]
-
 for (var w = 0; w < Visible.length; w++) {
     var HiddenNodes = []
-    for (var i = 0; i < UniqueClasses[0].length; i++) {
+    for (var i = 0; i < Hidden[0].length; i++) {
         HiddenNodes.push(0)
     }
     for (var i = 0; i < HiddenNodes.length; i++) {
@@ -92,8 +90,8 @@ for (var w = 0; w < Visible.length; w++) {
         }
         HiddenNodes[i] += Math.round(Math.tanh(Sum))
     }
-    for (var j = 0; j < UniqueClasses.length; j++) {
-        if (HiddenNodes.toString() === UniqueClasses[j].toString()) {
+    for (var j = 0; j < Hidden.length; j++) {
+        if (HiddenNodes.toString() === Hidden[j].toString()) {
             console.log('\nInput : ' + Visible[w])
             console.log('Ouput : ' + HiddenNodes)
             break
@@ -104,11 +102,11 @@ for (var w = 0; w < Visible.length; w++) {
 /*
 Input : -1,1,1
 Hidden : -1,1
-Output : -0.9999997365876823,0.9999997210149819,0.9999997646007991
+Output : -0.9999998054316085,0.9999998227967452,0.999999819880107
 
 Input : 1,-1,-1
 Hidden : 1,-1
-Output : 0.9999997365876823,-0.9999997210149819,-0.9999997646007991
+Output : 0.9999998054316085,-0.9999998227967452,-0.999999819880107
 
 Input : -1,1,1
 Ouput : -1,1
