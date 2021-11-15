@@ -25,7 +25,8 @@ var WikiIntent = {
     /sur le (.*)/,
     /sur la (.*)/,
     /sur (.*)/,
-    /wikipedia (.*)/ ],
+    /wikipedia (.*)/ 
+  ],
   'Responses': '\nVoici ce que dit Wikipedia sur '
 }
 
