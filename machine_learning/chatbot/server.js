@@ -8,23 +8,25 @@ var WikiIntent = {
     'fait une recherche sur wikipedia au sujet de Barack Obama',
     'est-ce que tu peux chercher des informations sur marseille ?',
     'cherche des informations concernant maupassant'],
-  'Regex': [/sujet des(.*)/,
-    /sujet de la(.*)/,
-    /sujet de(.*)/,
-    /sujet du(.*)/,
-    /concernant les(.*)/,
-    /concernant la(.*)/,
-    /concernant le(.*)/,
-    /concernant(.*)/,
-    /concerne les(.*)/,
-    /concerne la(.*)/,
-    /concerne le(.*)/,
-    /concerne(.*)/,
-    /sur les(.*)/,
-    /sur le(.*)/,
-    /sur la(.*)/,
-    /sur(.*)/,
-    /wikipedia(.*)/],
+  'Regex': [
+    /sujet des (.*)/,
+    /sujet de la (.*)/,
+    /sujet de (.*)/,
+    /sujet du (.*)/,
+    /concernant les (.*)/,
+    /concernant la (.*)/,
+    /concernant le (.*)/,
+    /concernant (.*)/,
+    /concerne les (.*)/,
+    /concerne la (.*)/,
+    /concerne le (.*)/,
+    /concerne (.*)/,
+    /sur les (.*)/,
+    /sur le (.*)/,
+    /sur la (.*)/,
+    /sur (.*)/,
+    /wikipedia (.*)/
+  ],
   'Responses': '\nVoici ce que dit Wikipedia sur '
 }
 
@@ -101,11 +103,9 @@ io.sockets.on('connection', function (socket) {
       for (a = 0; a < WikiIntent.Regex.length; a++) {
         var RegularExpression = WikiIntent.Regex[a]
         var Test = (message.toLowerCase()).match(RegularExpression)
-
         if ((Test !== null) && (Test[1] !== undefined && Test[1] !== '')) {
           var Word = Test[1].toLowerCase()
-          var Prep = Word.replace(/[?]|\b(((sur|dans|avec) wikipedia)|en|anglais|francais|français|allemand)\b/g, '')
-          var Result = Prep.trim()
+          var Result = Word.replace(/[?]|\b(((sur|dans|avec) wikipedia)|en|anglais|francais|français|allemand)\b/g, '')
           if (Result !== '') {
             https.get('https://fr.wikipedia.org/w/api.php?action=query&formatversion=2&titles=' + Result + '&redirects=1&prop=extracts&exintro=1&explaintext=1&format=json', function (res) {
               var Data = ''
