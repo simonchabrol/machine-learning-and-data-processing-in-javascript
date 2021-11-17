@@ -3,42 +3,39 @@ var Input = [[5.1,3.5,1.4,0.2],[4.9,3,1.4,0.2],[4.7,3.2,1.3,0.2],[4.6,3.1,1.5,0.
 var Output = Input
 
 for (var j = 0; j < Input[0].length; j++) {
-  var Results = []
-  for (var j = 0; j < Input[0].length; j++) {
-   var Results = []
-   for (var w = 0; w < Output[0].length; w++) {
-    var InputAverage = 0
-    var OutputAverage = 0
-
-    for (var i = 0; i < Input.length; i++) {
-     InputAverage += Input[i][j]
-    InputAverage = InputAverage / Input.length
-
-    for (var i = 0; i < Output.length; i++) {
-      OutputAverage += Output[i][w]
-    }
-    OutputAverage = OutputAverage / Output.length
-
-    var InputStandardDeviation = 0
-    for (var i = 0; i < Input.length; i++) {
-      InputStandardDeviation += Math.pow((Input[i][j]-InputAverage),2)
-    }
-    InputStandardDeviation = Math.sqrt((1/(Input.length-1))*InputStandardDeviation)
-
-    var OutputStandardDeviation = 0
-    for (var i = 0; i < Output.length; i++) {
-      OutputStandardDeviation += Math.pow((Output[i][w]-OutputAverage), 2)
-    }
-    OutputStandardDeviation = Math.sqrt((1/(Output.length-1))*OutputStandardDeviation)
-
-    }
-    var PearsonCoefficient = 0
-    for (var i = 0; i < Input.length; i++) {
-      PearsonCoefficient += ((Input[i][j]-InputAverage)/InputStandardDeviation) * ((Output[i][w] - OutputAverage) / OutputStandardDeviation)
-    }
-    PearsonCoefficient = (1/(Input.length-1))*PearsonCoefficient
-    Results.push(Math.abs(PearsonCoefficient.toFixed(5)))
-  }
-  console.log(Results.toString())
+    var Results = []
+    for (var w = 0; w < Output[0].length; w++) {
+     var InputAverage = 0
+     var OutputAverage = 0
+ 
+     for (var i = 0; i < Input.length; i++) {
+      InputAverage += Input[i][j]
+     }
+     InputAverage = InputAverage / Input.length
+ 
+     for (var i = 0; i < Output.length; i++) {
+       OutputAverage += Output[i][w]
+     }
+     OutputAverage = OutputAverage / Output.length
+ 
+     var InputStandardDeviation = 0
+     for (var i = 0; i < Input.length; i++) {
+       InputStandardDeviation += Math.pow((Input[i][j]-InputAverage),2)
+     }
+     InputStandardDeviation = Math.sqrt((1/(Input.length-1))*InputStandardDeviation)
+ 
+     var OutputStandardDeviation = 0
+     for (var i = 0; i < Output.length; i++) {
+       OutputStandardDeviation += Math.pow((Output[i][w]-OutputAverage), 2)
+     }
+     OutputStandardDeviation = Math.sqrt((1/(Output.length-1))*OutputStandardDeviation)
+ 
+     var PearsonCoefficient = 0
+     for (var i = 0; i < Input.length; i++) {
+       PearsonCoefficient += ((Input[i][j]-InputAverage)/InputStandardDeviation) * ((Output[i][w] - OutputAverage) / OutputStandardDeviation)
+     }
+     PearsonCoefficient = (1/(Input.length-1))*PearsonCoefficient
+     Results.push(Math.abs(PearsonCoefficient.toFixed(5)))
+   }
+   console.log(Results.toString())
  }
-}
