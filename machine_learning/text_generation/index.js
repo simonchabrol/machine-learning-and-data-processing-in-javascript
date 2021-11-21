@@ -70,7 +70,7 @@ io.sockets.on('connection', function (socket) {
           NewSentence = NewSentence.concat(FirstWord)
           NextWordList = Dictionary[UniqueWords.indexOf(FirstWord)]
           if (NextWordList !== undefined) {
-            if (NextWordList[0] === '' || i + 1 === 10) {
+            if (NextWordList[0] === undefined || i + 1 === 10) {
               var FinalSentence = NewSentence.join(' ')
               Message = Message.split(' ')
               var WordToRemove = Message[Message.length - 1]
@@ -82,16 +82,6 @@ io.sockets.on('connection', function (socket) {
               break
             }
           } else {
-            if (NewSentence.length !== 0) {
-              FinalSentence = NewSentence.join(' ')
-              Message = Message.split(' ')
-              WordToRemove = Message[Message.length - 1]
-              Index = NewSentence.indexOf(WordToRemove)
-              NewSentence.splice(Index, 1)
-              FinalSentence = [...Message.concat(NewSentence)]
-              FinalSentence = FinalSentence.join(' ')
-              socket.emit('suggestion', FinalSentence)
-            }
             break
           }
         }
