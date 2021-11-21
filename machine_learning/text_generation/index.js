@@ -1,4 +1,4 @@
-const http = require('http') 
+const http = require('http')
 const fs = require('fs')
 
 var UniqueWords = []
@@ -22,7 +22,7 @@ var Sentences = [
   'funeral held for legendary journalist today',
   'woman arrested after allegedly kicking dog in viral video']
 
-function CorpusData () {
+function CorpusData() {
   var Words = []
   for (var i = 0; i < Sentences.length; i++) {
     var ListWords = Sentences[i].split(' ')
@@ -34,40 +34,22 @@ function CorpusData () {
   }
   for (var j = 0; j < UniqueWords.length; j++) {
     var FirstWord = UniqueWords[j]
-    var Count = []
-    console.log(FirstWord)
     for (var k = 0; k < Sentences.length; k++) {
       var SplitSentence = Sentences[k].split(' ')
       for (var l = 0; l < SplitSentence.length; l++) {
         if ((SplitSentence[l] === FirstWord) && (l + 1 !== SplitSentence.length)) {
           Dictionary[j] = Dictionary[j].concat(SplitSentence[l + 1])
-          if (Dictionary[j].indexOf(FirstWord) === -1) {
-            Count.push(1)
-          } else {
-            Count[Dictionary[j].indexOf(FirstWord)] += 1
-          }
         }
       }
     }
-    var Max = Math.max(...Count)
-    var Occurences = Count.filter(function (Value) {
-      return Value === Max
-    })
-    if (Occurences.length < 2 && Max !== 0 && Count.length !== 0) {
-      var indexOfMax = Count.indexOf(Max)
-      var UniqueWord = Dictionary[j][indexOfMax]
-      Dictionary[j] = []
-      Dictionary[j][0] = UniqueWord
-    } else {
-      Dictionary[j] = ['']
-    }
   }
+
 }
 
 var server = http.createServer(function (req, res) {
   CorpusData()
   fs.readFile('./index.html', 'utf-8', function (error, content) {
-    res.writeHead(200, {'Content-Type': 'text/html'})
+    res.writeHead(200, { 'Content-Type': 'text/html' })
     res.end(content)
   })
 }).listen(4040)
@@ -88,17 +70,21 @@ io.sockets.on('connection', function (socket) {
           FirstWord = NextWordList[0]
           NewSentence = NewSentence.concat(FirstWord)
           NextWordList = Dictionary[UniqueWords.indexOf(FirstWord)]
-          if (NextWordList[0] === '' || i+1 === 10) {
-            var FinalSentence = NewSentence.join(' ')
-            Message = Message.split(' ')
-            var WordToRemove = Message[Message.length-1]
-            var Index = NewSentence.indexOf(WordToRemove)
-            NewSentence.splice(Index,1)
-            FinalSentence = [...Message.concat(NewSentence)]
-            FinalSentence = FinalSentence.join(' ')
-            socket.emit('suggestion', FinalSentence)
+          if (NextWordList !== undefined) {
+            if (NextWordList[0] === '' || i + 1 === 10) {
+              var FinalSentence = NewSentence.join(' ')
+              Message = Message.split(' ')
+              var WordToRemove = Message[Message.length - 1]
+              var Index = NewSentence.indexOf(WordToRemove)
+              NewSentence.splice(Index, 1)
+              FinalSentence = [...Message.concat(NewSentence)]
+              FinalSentence = FinalSentence.join(' ')
+              socket.emit('suggestion', FinalSentence)
+              break
+            }
+          } else {
             break
-          } 
+          }
         }
       }
     }
