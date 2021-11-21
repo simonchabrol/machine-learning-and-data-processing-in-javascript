@@ -43,7 +43,6 @@ function CorpusData() {
       }
     }
   }
-
 }
 
 var server = http.createServer(function (req, res) {
@@ -70,6 +69,7 @@ io.sockets.on('connection', function (socket) {
           FirstWord = NextWordList[0]
           NewSentence = NewSentence.concat(FirstWord)
           NextWordList = Dictionary[UniqueWords.indexOf(FirstWord)]
+          console.log('New sentence : ' + NewSentence, NextWordList, i + 1)
           if (NextWordList !== undefined) {
             if (NextWordList[0] === '' || i + 1 === 10) {
               var FinalSentence = NewSentence.join(' ')
@@ -83,6 +83,16 @@ io.sockets.on('connection', function (socket) {
               break
             }
           } else {
+            if (NewSentence.length !== 0) {
+              FinalSentence = NewSentence.join(' ')
+              Message = Message.split(' ')
+              WordToRemove = Message[Message.length - 1]
+              Index = NewSentence.indexOf(WordToRemove)
+              NewSentence.splice(Index, 1)
+              FinalSentence = [...Message.concat(NewSentence)]
+              FinalSentence = FinalSentence.join(' ')
+              socket.emit('suggestion', FinalSentence)
+            }
             break
           }
         }
