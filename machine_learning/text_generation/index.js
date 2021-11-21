@@ -66,7 +66,7 @@ io.sockets.on('connection', function (socket) {
     if (NextWordList !== undefined) {
       if (NextWordList[0] !== '') {
         for (var i = 0; i < 10; i++) {
-          FirstWord = NextWordList[0]
+          FirstWord = NextWordList[Math.floor(Math.random() * (NextWordList.length - 0) + 0)]
           NewSentence = NewSentence.concat(FirstWord)
           NextWordList = Dictionary[UniqueWords.indexOf(FirstWord)]
           if (NextWordList !== undefined) {
