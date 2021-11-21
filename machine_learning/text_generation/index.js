@@ -69,7 +69,6 @@ io.sockets.on('connection', function (socket) {
           FirstWord = NextWordList[0]
           NewSentence = NewSentence.concat(FirstWord)
           NextWordList = Dictionary[UniqueWords.indexOf(FirstWord)]
-          console.log('New sentence : ' + NewSentence, NextWordList, i + 1)
           if (NextWordList !== undefined) {
             if (NextWordList[0] === '' || i + 1 === 10) {
               var FinalSentence = NewSentence.join(' ')
