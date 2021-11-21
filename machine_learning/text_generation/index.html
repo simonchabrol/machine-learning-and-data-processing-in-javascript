@@ -1,0 +1,24 @@
+<html>
+  <meta charset="utf8">
+  <title>Generator</title>
+  <body>
+    <p><strong>Type something here :</strong></p>
+    <textarea type="text" id="input" rows="10" cols="50" oninput="Translate()"></textarea>
+    <br>
+    <p><strong>Generated content :</strong></p>
+    <textarea disabled rows="10" cols="50" id="suggestion"></textarea>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io.connect();
+        function Translate() {
+            var content = document.getElementById("input").value
+            socket.emit('message', content)
+            socket.on('suggestion', function (FinalSentence) {
+                document.getElementById("suggestion").innerHTML = FinalSentence
+            })
+        }
+    </script>
+  </body>
+</html>
