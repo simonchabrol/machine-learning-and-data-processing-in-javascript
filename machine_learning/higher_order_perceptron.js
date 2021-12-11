@@ -66,7 +66,7 @@ for (var i = 0; i < HigherOrder.length; i++) {
     }
 }
 
-var LearningRate = 0.0001
+// var LearningRate = 0.0001
 
 var InitialSum
 var FinalSum
@@ -98,7 +98,7 @@ function Perceptron(Input, Output) {
         var TargetCalculated = Output - FinalSum
 
         for (var i = 0; i < HigherOrder.length; i++) {
-            Weights[i] = Weights[i] + TargetCalculated * HigherOrder[i] //* LearningRate
+            Weights[i] = Weights[i] + TargetCalculated * HigherOrder[i] // * LearningRate
         }
 
         InitialSum = 0
