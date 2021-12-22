@@ -14,10 +14,6 @@ var Output = [
     [1]
 ]
 
-var Margin = Input.length ^ (1 / 2)
-// var Margin = Math.sqrt(Input.length)/2
-// var Margin = Math.sqrt(Input.length)
-
 var TrainError = []
 var Coeff = []
 
