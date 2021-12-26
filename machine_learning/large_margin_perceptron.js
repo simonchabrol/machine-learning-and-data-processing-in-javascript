@@ -97,9 +97,9 @@ for (var i = 0; i < Input.length; i++) {
     for (var a = 0; a < TestValue.length; a++) {
         InitialSum = InitialSum + (TestValue[a] * Weights[a])
     }
-    if (InitialSum > Margin / 2) {
+    if (InitialSum > 0) {
         FinalSum = 1
-    } else if (InitialSum < -Margin / 2) {
+    } else if (InitialSum < 0) {
         FinalSum = -1
     } else {
         FinalSum = 0
