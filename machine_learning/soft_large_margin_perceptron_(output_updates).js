@@ -165,7 +165,6 @@ for (var train = 0; train < 100; train++) {
         }
     }
     if (TrainingError === 0 && Stop === 1) {
-        console.log(train)
         break
     }
     if (TrainingError === 0 && Stop === 0) {
