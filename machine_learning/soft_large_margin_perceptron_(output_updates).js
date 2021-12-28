@@ -187,7 +187,7 @@ for (var i = 0; i < Input.length; i++) {
     } else {
         FinalSum = 0
     }
-    console.log('{ Input : [' + TestValue + '], Result : ' + FinalSum + ' }', InitialSum)
+    console.log('{ Input : [' + TestValue + '], Result : ' + FinalSum + ' }')
     if (FinalSum != OriginalOutput[i]) {
         Wrong += 1
     }
