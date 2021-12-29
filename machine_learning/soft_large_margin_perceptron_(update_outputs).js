@@ -27,31 +27,7 @@ var OriginalOutput = [...Output]
 
 var Margin = Input.length ^ (1 / 2)
 var Margin = Math.sqrt(Input.length) / 2
-// var Margin = Math.sqrt(Input.length)
-
-var TrainError = []
-var Coeff = []
-
-for (var i = 0; i < Input.length; i++) {
-    TrainError.push(0)
-    Coeff.push(0)
-}
-
-var Weights = []
-
-for (var i = 0; i < Input[0].length; i++) {
-    Weights.push(1)
-}
-
-var EuclideanWeights = 0
-
-var Sum = 0
-
-for (var i = 0; i < Weights.length; i++) {
-    Sum = Sum + Math.pow(Weights[i], 2)
-}
-
-EuclideanWeights = Math.sqrt(Sum)
+//var Margin = Math.sqrt(Input.length)
 
 var LearningRate = 0.1
 
@@ -111,13 +87,24 @@ function Perceptron(Input, Output, Index) {
 
 var Stop = 0
 for (var train = 0; train < 100; train++) {
-    Weights = []
+    var Weights = []
     for (var i = 0; i < Input[0].length; i++) {
         Weights.push(1)
     }
-    Coeff = []
+    var EuclideanWeights = 0
+
+    var Sum = 0
+
+    for (var i = 0; i < Weights.length; i++) {
+        Sum = Sum + Math.pow(Weights[i], 2)
+    }
+
+    EuclideanWeights = Math.sqrt(Sum)
+    var Coeff = []
+    var TrainError = []
     for (var b = 0; b < Input.length; b++) {
         Coeff.push(0)
+        TrainError.push(0)
     }
     for (var a = 0; a < 4000; a++) {
         for (var b = 0; b < Input.length; b++) {
