@@ -46,6 +46,12 @@ async function IndexValues () {
 
 // IndexValues().catch(console.log)
 
+const app = express()
+app.use(express.json())
+app.set('port', 4040)
+console.log('Server listening on port', app.get('port'))
+app.listen(app.get('port'))
+
 app.get('/', function (req, res) {
    res.send('Hello world !')
 })
