@@ -26,11 +26,11 @@ http.createServer(function (req, res) {
             console.log(data)
           })
           res.on('end', function() {
-             console.log('File transfer is done')
+             console.log('File downloaded')
           })
         })
         request.on('error', function(error) {
-          console.error(error)
+          console.error('An error occured : ' + error)
         })
         request.end()
         res.end()
