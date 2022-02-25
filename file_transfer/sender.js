@@ -12,7 +12,7 @@ function TestIP(i) {
            Next()
         } else {
             if (hostname[0] !== undefined) {
-              CheckHostName(hostname[0])
+              CheckHostName(hostname[0],'192.168.1.' + i)
             } else {
               Next()
             }
@@ -20,54 +20,50 @@ function TestIP(i) {
     })
 }
 
-function CheckHostName(hostname) {
-    dns.resolve4(hostname, function (err,adresses) {
-        if (err) {
-           Next()
-        } else {
-           console.log('\n',hostname,JSON.stringify(adresses))
-           var rl = readline.createInterface({
-               input: process.stdin,
-               output: process.stdout
-           })
-           rl.question('This device ? (Y)', function(response) {
-               if (response.toUpperCase() === 'Y') {
-                 console.log('Checking if software is installed...')
-                 var Options = {
-                   host:hostname,
-                   path:'/',
-                   port:8085,
-                   method:'POST',
-                   headers: {
-                      'Content-Type':'application/json'
-                   }
-                 }
-                 var Data = JSON.stringify(
-                   {Host:os.hostname()}
-                 )
-                 var req = http.request(Options, function(res) {
-                     res.on('data', function() { })
-                     res.on('end', function() {
-                        console.log(hostname + ' is going to start transfer')
-                        rl.close()
-                     })
-                 })
-                 req.on('error', function(error) {
-                    console.log('An error occured : ' + error)
-                    rl.close()
-                 })
-                 req.write(Data)
-                 req.end()
-               } else {
-                 console.log('\nLooking for devices...')
-                 rl.close()
-               }
-           })
-           rl.on('close', function() {
-               Next()
-           })
-        }
-    })
+function CheckHostName(hostname,adresses) {
+  console.log('\n',hostname,adresses)
+  var rl = readline.createInterface({
+       input: process.stdin,
+       output: process.stdout
+  })
+  rl.question('This device ? (Y)', function(response) {
+   if (response.toUpperCase() === 'Y') {
+      console.log('Checking if software is installed...')
+      var Options = {
+          host:hostname,
+          path:'/',
+          port:8085,
+          method:'POST',
+          headers: {
+             'Content-Type':'application/json'
+           }
+      }
+      var Data = JSON.stringify(
+         {
+           Host:os.hostname()
+         }
+      )
+      var req = http.request(Options, function(res) {
+         res.on('data', function() { })
+         res.on('end', function() {
+               console.log(hostname + ' is going to start transfer')
+              rl.close()
+         })
+      })
+      req.on('error', function(error) {
+         console.log('An error occured : ' + error)
+         rl.close()
+      })
+      req.write(Data)
+      req.end()
+    } else {
+      console.log('\nLooking for devices...')
+      rl.close()
+    }
+  })
+  rl.on('close', function() {
+      Next()
+  })
 }
 
 function Next() {
