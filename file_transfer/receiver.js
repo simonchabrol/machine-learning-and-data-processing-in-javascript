@@ -16,7 +16,7 @@ http.createServer(function (req, res) {
           input: process.stdin,
           output: process.stdout,
         })
-        rl.question("This token " + Code + " ? (Y)", function (response) {
+        rl.question("This token " + Tokeb + " ? (Y)", function (response) {
           if (response.toUpperCase() === "Y") {
             console.log("Device ready for transfer")
             var options = {
