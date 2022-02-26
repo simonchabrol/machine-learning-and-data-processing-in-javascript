@@ -35,14 +35,15 @@ http.createServer(function (req, res) {
               })
               res.on('end', function () {
                 console.log('File transfer is done')
+                rl.close()
               })
             })
             request.on('error', function (error) {
               console.error('An error occured : ' + error)
+              rl.close()
             })
             request.end()
             res.end()
-            rl.close()
           } else {
             res.setTimeout(1)
             rl.close()
