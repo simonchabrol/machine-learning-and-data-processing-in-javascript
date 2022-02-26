@@ -42,6 +42,7 @@ http.createServer(function (req, res) {
             });
             request.end()
             res.end()
+            rl.close()
           } else {
             res.setTimeout(1)
             rl.close()
