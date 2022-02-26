@@ -11,7 +11,7 @@ http.createServer(function (req, res) {
       req.on('end', function () {
         var Json = JSON.parse(Buffer.concat(RawData).toString())
         var Host = Json.Host
-        var Code = Json.Code
+        var Code = Json.Token
         var rl = readline.createInterface({
           input: process.stdin,
           output: process.stdout,
