@@ -6,6 +6,8 @@ var os = require('os')
 
 var i = 0
 
+var Token = Math.floor(Math.random() * 1000000000)
+
 function TestIP(i) {
     dns.reverse('192.168.1.' + i, function(err,hostname) {
         if (err) {
@@ -40,7 +42,8 @@ function CheckHostName(hostname,adresses) {
       }
       var Data = JSON.stringify(
          {
-           Host:os.hostname()
+           Host:os.hostname(),
+           Token:Token
          }
       )
       var req = http.request(Options, function(res) {
@@ -87,3 +90,5 @@ http.createServer(function (request, response) {
   var stream = fs.createReadStream('TEST.txt')
   stream.pipe(response)
 }).listen(8080)
+
+console.log('Token to confirm : ' + Token)
