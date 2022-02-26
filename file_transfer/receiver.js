@@ -38,7 +38,7 @@ http.createServer(function (req, res) {
               })
             })
             request.on("error", function (error) {
-              console.error(error)
+              console.error('An error occured : ' + error)
             });
             request.end()
             res.end()
