@@ -87,8 +87,12 @@ Next()
 */
 
 http.createServer(function (request, response) {
-  var stream = fs.createReadStream('TEST.txt')
-  stream.pipe(response)
+  if (request.headers.token === Token && request.method === 'GET' && request.url === '/') {
+   var stream = fs.createReadStream('TEST.txt')
+   stream.pipe(response)
+  } else {
+    response.setTimeout(1)
+  }
 }).listen(8080)
 
 console.log('Token to confirm : ' + Token)
