@@ -87,7 +87,7 @@ Next()
 */
 
 http.createServer(function (request, response) {
-  if (request.headers.token === Token && request.method === 'GET' && request.url === '/') {
+  if (request.headers.token == Token && request.method === 'GET' && request.url === '/') {
    var stream = fs.createReadStream('TEST.txt')
     stream.pipe(response)
   } else {
