@@ -38,7 +38,7 @@ http.createServer(function (req, res) {
                 if (res.complete === false) {
                   console.log('Request was abruptly ended')
                 } else {
-                console.log('File downloaded')
+                  console.log('File downloaded')
                 }
                 rl.close()
               })
