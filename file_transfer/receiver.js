@@ -37,7 +37,7 @@ http.createServer(function (req, res) {
                 if (res.complete === false) {
                   console.log('File is not fully downloaded')
                 } else {
-                console.log('File downloaded')
+                  console.log('File downloaded')
                 }
                 rl.close()
               })
