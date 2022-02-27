@@ -11,12 +11,12 @@ http.createServer(function (req, res) {
       req.on('end', function () {
         var Json = JSON.parse(Buffer.concat(RawData).toString())
         var Host = Json.Host
-        var Code = Json.Token
+        var Token = Json.Token
         var rl = readline.createInterface({
           input: process.stdin,
           output: process.stdout,
         })
-        rl.question('This code ' + Code + ' ? (Y)', function (response) {
+        rl.question('This code ' + Token + ' ? (Y)', function (response) {
           if (response.toUpperCase() === 'Y') {
             console.log('Device ready for transfer')
             var options = {
@@ -24,20 +24,21 @@ http.createServer(function (req, res) {
               port: 8080,
               path: '/',
               method: 'GET',
+              headers: {'token': Token}
             }
 
             var request = http.request(options, function (res) {
               console.log('Incoming data...')
               var fileStream = fs.createWriteStream('NewTextFile.txt')
-              res.on('data', function (data) {
-                fileStream.write(data)
-                console.log(data)
+              res.on('data', function (data,error) {
+                  fileStream.write(data)
+                  console.log(data)
               })
               res.on('close', function () {
                 if (res.complete === false) {
-                  console.log('File is not fully downloaded')
+                  console.log('Request was abruptly ended')
                 } else {
-                  console.log('File downloaded')
+                console.log('File downloaded')
                 }
                 rl.close()
               })
