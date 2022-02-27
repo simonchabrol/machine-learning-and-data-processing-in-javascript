@@ -31,8 +31,8 @@ http.createServer(function (req, res) {
               console.log('Incoming data...')
               var fileStream = fs.createWriteStream('NewTextFile.txt')
               res.on('data', function (data,error) {
-                  fileStream.write(data)
-                  console.log(data)
+                fileStream.write(data)
+                console.log(data)
               })
               res.on('close', function () {
                 if (res.complete === false) {
