@@ -33,8 +33,12 @@ http.createServer(function (req, res) {
                 fileStream.write(data)
                 console.log(data)
               })
-              res.on('end', function () {
-                console.log('File transfer is done')
+              res.on('close', function () {
+                if (res.complete === false) {
+                  console.log('File is not fully downloaded')
+                } else {
+                console.log('File downloaded')
+                }
                 rl.close()
               })
             })
