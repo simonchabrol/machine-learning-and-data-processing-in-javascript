@@ -23,10 +23,10 @@ var dataframe = {
   show: function (a) {
     if (this.file !== undefined) {
       var Lines = require("fs").readFileSync(this.file, "utf-8").split("\n")
-      this.ListLines = []
+      this.SHOW = []
       for (var i = 0; i < a; i++) {
         //console.log(Lines[i])
-        this.ListLines.push(Lines[i])
+        this.SHOW.push(Lines[i])
       }
       return this
     }
@@ -46,13 +46,13 @@ var dataframe = {
           }
         }
       }
-      this.ListLines = []
+      this.SELECT = []
       for (var i = 0; i < Lines.length; i++) {
         var NewLine = []
         for (var j = 0; j < Index.length; j++) {
            NewLine.push((Lines[i].split(';'))[Index[j]])
         }
-        this.ListLines.push(NewLine.join(';'))
+        this.SELECT.push(NewLine.join(';'))
       }
       return this
     }
