@@ -32,6 +32,32 @@ var dataframe = {
     }
     return this
   },
+  
+   select: function (a) {
+    var Columns = a.split(';')
+    if (this.file !== undefined) {
+      var Lines = require("fs").readFileSync(this.file, "utf-8").split("\n")
+      var Headers = Lines[0].split(';')
+      var Index = []
+      for (var j = 0; j < Columns.length; j++) {
+        for (var i = 0; i < Headers.length; i++) {
+          if (Headers[i] == Columns[j]) {
+            Index.push(i)
+          }
+        }
+      }
+      this.ListLines = []
+      for (var i = 0; i < Lines.length; i++) {
+        var NewLine = []
+        for (var j = 0; j < Index.length; j++) {
+           NewLine.push((Lines[i].split(';'))[Index[j]])
+        }
+        this.ListLines.push(NewLine.join(';'))
+      }
+      return this
+    }
+    return this
+  },
 
   distinct: function (a) {
     if (this.file !== undefined) {
