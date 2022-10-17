@@ -23,10 +23,10 @@ var dataframe = {
   show: function (a) {
     if (this.file !== undefined) {
       var Lines = require("fs").readFileSync(this.file, "utf-8").split("\n")
-      this.SHOW = []
+      this['SHOW'] = []
       for (var i = 0; i < a; i++) {
         //console.log(Lines[i])
-        this.SHOW.push(Lines[i])
+        this['SHOW'].push(Lines[i].split(';'))
       }
       return this
     }
