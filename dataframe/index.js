@@ -1,7 +1,7 @@
 const dataframe = require('./dataframe')
 
 /*
-console.log((dataframe.from("data.csv").show(6)).SHOW)
+console.log((dataframe.from("data.csv").show(6))['SHOW'])
 console.log((dataframe.from("data.csv").distinct("name"))['DISTINCT(name)'])
 console.log((dataframe.from("data.csv").countd("name"))['COUNT DISTINCT(name)'])
 console.log((dataframe.from("data.csv").count("name"))['COUNT(name)'])
