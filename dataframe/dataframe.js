@@ -52,7 +52,7 @@ var dataframe = {
         for (var j = 0; j < Index.length; j++) {
            NewLine.push((Lines[i].split(';'))[Index[j]])
         }
-        this.SELECT.push(NewLine.join(';'))
+        this.SELECT.push(NewLine)
       }
       return this
     }
