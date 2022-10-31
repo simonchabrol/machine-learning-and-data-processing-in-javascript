@@ -98,6 +98,8 @@ for (var a = 0; a < Types.length; a++) {
           break
         }
       }
+      Subject = ''
+      break
     }
   }
   console.log('\nSentence : ' + Test[b])
