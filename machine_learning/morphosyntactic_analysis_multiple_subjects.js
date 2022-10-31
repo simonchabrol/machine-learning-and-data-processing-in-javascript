@@ -1,8 +1,8 @@
 var Sentences = [
-    'je cherche des informations en L:italien sur S:paris sur wikipedia',
+    'je cherche des W:informations en L:italien sur S:paris sur wikipedia',
     'fais une recherche en L:français au sujet de S:guy S:de S:maupassant sur wikipedia',
-    'cherche un article qui parle de S:londres avec wikipedia L:allemand',
-    'cherche des informations sur wikipedia au sujet de S:marseille en L:anglais'
+    'cherche un W:article qui parle de S:londres avec wikipedia L:allemand',
+    'cherche des W:informations sur wikipedia au sujet de S:marseille en L:anglais'
 ]
 
 var Types = ['L:','S:']
@@ -79,17 +79,24 @@ for (var a = 0; a < Types.length; a++) {
             } else {
               d = Find.indexOf(Words[c][a][0])
               e = Find.indexOf(Words[c][a][1])
-              Subject = Find.slice(d+1,e)
-              break
+              if (e > d) {
+                Subject = Find.slice(d+1,e)
+                break
+              }
             }
         }
     } else {
-      if (Find.includes(Words[c][a][0]) === true) {
+      if (Find.includes(Words[c][a][0]) === true && Words[c][a][1] !== undefined) {
         Subject = Find.splice(Find.indexOf(Words[c][a][0])+1)
         break
-      } else {
-        Subject = ''
-        break
+      } else if (Find.includes(Words[c][a][0]) === true && Words[c][a][1] === undefined) {
+        if (Find.indexOf(Words[c][a][0])+2 < Find.length) {
+          Subject = Find.splice(Find.indexOf(Words[c][a][0])+2)
+          break
+        } else {
+          Subject = Find.splice(Find.indexOf(Words[c][a][0])+1)
+          break
+        }
       }
     }
   }
