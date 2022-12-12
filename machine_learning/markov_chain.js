@@ -156,7 +156,7 @@ for (var i = 0; i < Sentences.length; i++) {
        }
        if (True !== 0) {
           UniquePairs.push(Words.trim())
-          UniquePairs = [...new Set(UniquePairs)]
+          UniquePairs = [...UniquePairs]
        }
     }
 }
