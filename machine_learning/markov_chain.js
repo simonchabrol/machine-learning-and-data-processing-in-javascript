@@ -184,6 +184,24 @@ for (var i = 0; i < UniquePairs.length; i++) {
     }
 }
 
+for (var i = 0; i < UniquePairs.length; i++) {
+    if (UniquePairs.indexOf(UniquePairs[i]) !== UniquePairs.lastIndexOf(UniquePairs[i])) {
+        var Indexes = []
+        for (var j = 0; j < UniquePairs.length; j++) {
+            if (UniquePairs[j] === UniquePairs[i]) {
+                Indexes.push(j)
+            }
+        }
+        for (var j = 1; j < Indexes.length; j++) {
+           for (var k = 0; k < UniqueWords.length; k++) {
+              ProbabilityMatrix[0][k] += ProbabilityMatrix[Indexes[j]][k]
+           }
+           UniquePairs.splice(Indexes[j],1)
+           ProbabilityMatrix.splice(Indexes[j],1)
+        }
+    }
+}
+
 var FirstWord = 'police search'
 var NewSentence = ''
 for (var i = UniquePairs.indexOf(FirstWord); i < UniquePairs.length; i++) {
