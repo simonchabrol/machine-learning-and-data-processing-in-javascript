@@ -194,7 +194,7 @@ for (var i = 0; i < UniquePairs.length; i++) {
         }
         for (var j = 1; j < Indexes.length; j++) {
            for (var k = 0; k < UniqueWords.length; k++) {
-              ProbabilityMatrix[0][k] += ProbabilityMatrix[Indexes[j]][k]
+              ProbabilityMatrix[Indexes[0]][k] += ProbabilityMatrix[Indexes[j]][k]
            }
            UniquePairs.splice(Indexes[j],1)
            ProbabilityMatrix.splice(Indexes[j],1)
