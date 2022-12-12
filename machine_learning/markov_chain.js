@@ -51,7 +51,6 @@ for (var i = 0; i < UniqueWords.length; i++) {
 }
 
 for (var j = NextWord.length-1; j > -1; j--) {
-    console.log(NextWord[j],NextWord[j-1])
     if (NextWord[j] !== null) {
        if (NextWord[j-1] !== null && NextWord[j-1] !== undefined) {
          var a = UniqueWords.indexOf(NextWord[j])
