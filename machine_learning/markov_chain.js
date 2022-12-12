@@ -198,6 +198,9 @@ for (var i = 0; i < UniquePairs.length; i++) {
            }
            UniquePairs.splice(Indexes[j],1)
            ProbabilityMatrix.splice(Indexes[j],1)
+           for (var k = 1; k < Indexes.length; k++) {
+              Indexes[k] -= 1
+           }
         }
     }
 }
