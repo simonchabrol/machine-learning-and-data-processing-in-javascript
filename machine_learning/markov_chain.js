@@ -19,14 +19,23 @@ var Sentences = [
     'woman arrested after allegedly kicking dog in viral video'
 ]
 
-
 var UniqueWords = []
+var NextWord = []
 
 for (var i = 0; i < Sentences.length; i++) {
     UniqueWords.push(...new Set(Sentences[i].split(' ')))
     UniqueWords = [...new Set(UniqueWords)]
     Sentences[i] = Sentences[i].split(' ')
+    for (var j = 0; j < Sentences[i].length; j++) {
+       if (Sentences[i][j+1] !== undefined) {
+         NextWord.push(Sentences[i][j+1])
+       } 
+       if (Sentences[i][j+1] === undefined) {
+         NextWord.push(null)
+       }
+    }
 }
+
 
 var ProbabilityMatrix = []
 
