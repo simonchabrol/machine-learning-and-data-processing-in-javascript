@@ -50,6 +50,19 @@ for (var i = 0; i < UniqueWords.length; i++) {
     }
 }
 
+for (var j = NextWord.length-1; j > -1; j--) {
+    console.log(NextWord[j],NextWord[j-1])
+    if (NextWord[j] !== null) {
+       if (NextWord[j-1] !== null && NextWord[j-1] !== undefined) {
+         var a = UniqueWords.indexOf(NextWord[j])
+         var b = UniqueWords.indexOf(NextWord[j-1])
+         if (ProbabilityMatrix[b][a] === 0) {
+           ProbabilityMatrix[b][a] += 1
+         }
+       }
+    }
+}
+
 for (var i = 0; i < UniqueWords.length; i++) {
     for (var j = 0; j < UniqueWords.length; j++) {
         ProbabilityMatrix[i][j] /= Sentences.length
