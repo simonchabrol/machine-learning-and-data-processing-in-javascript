@@ -239,7 +239,7 @@ for (var i = UniquePairs.indexOf(FirstWord); i < UniquePairs.length; i++) {
                 for (var l = K-1; l > 0; l--) {
                     FirstWord = FirstWord.concat(Values[Values.length - l] + ' ')
                 } 
-                FirstWord = FirstWord.concat(Choices[Results.indexOf(Max)])
+                FirstWord = FirstWord.concat(Choices[Take])
             }
         } else {
             NewSentence = NewSentence.concat(' ' + FirstWord)
