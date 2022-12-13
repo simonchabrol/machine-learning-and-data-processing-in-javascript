@@ -83,7 +83,7 @@ for (var i = UniqueWords.indexOf(FirstWord); i < UniqueWords.length; i++) {
     var Results = []
     var Choices = []
     i = UniqueWords.indexOf(FirstWord)
-    if (i + 1 < UniqueWords.length && i !== -1) {
+    if (i + 1 <= UniqueWords.length && i !== -1) {
         for (var j = 0; j < UniqueWords.length; j++) {
             if (ProbabilityMatrix[i][j] !== 0) {
                 Results.push(ProbabilityMatrix[i][j])
@@ -95,6 +95,9 @@ for (var i = UniqueWords.indexOf(FirstWord); i < UniqueWords.length; i++) {
             if (Results.indexOf(Max) === Results.lastIndexOf(Max)) {
                 NewSentence = NewSentence.concat(' ' + FirstWord)
                 FirstWord = Choices[Results.indexOf(Max)]
+                if (i + 1 === UniqueWords.length) {
+                   i = UniqueWords.indexOf(FirstWord)
+                }
             } else {
                 var Take = -1
                 while (Results[Take] !== Max) {
