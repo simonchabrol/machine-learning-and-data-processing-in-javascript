@@ -4,7 +4,7 @@ var readline = require("readline")
 function Header(File, callback) {
     var Head = []
     try {
-        if (fs.existsSync(File)) {
+        if (fs.existsSync('./databases/' + File)) {
             var LineCounter = 0
 
             var lineReader = readline.createInterface({
