@@ -240,7 +240,7 @@ function SearchDB(Mode, Instruction) {
                 })
                 lineReader.on('close', function () {
                     fs.unlinkSync('./databases/' + ChooseDb)
-                    fs.renameSync('./databases/' + ChooseDb + '.tmp', ChooseDb)
+                    fs.renameSync('./databases/' + ChooseDb + '.tmp', './databases/' + ChooseDb)
                 })
             }
         }
