@@ -65,5 +65,26 @@ http.createServer(function (request, response) {
     request.on('error', function (error) {
       console.error(error)
     })
+  } else if (request.url === '/jobs' && request.method === 'POST') {
+      var Data = []
+      request.on('data', function (data) {
+        Data.push(data)
+      })
+      request.on('end', function () {
+        Data = JSON.parse(Buffer.concat(Data).toString())
+        console.log('Jobs received : ' + Data.Jobs )
+        response.end()
+        var NewJobs = Data.Jobs
+        if (Jobs.length === 0 && Running.length === 0) {
+          Jobs = Jobs.concat(NewJobs)
+          Counter = 0
+          RunJob()
+        } else {
+          Jobs = Jobs.concat(NewJobs)
+        }
+      })
+      request.on('error', function (error) {
+        console.error(error)
+      })
   }
 }).listen(4000)
