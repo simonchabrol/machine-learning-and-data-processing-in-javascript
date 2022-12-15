@@ -1,0 +1,154 @@
+<canvas id="myChart" width="300" height="100"></canvas> 
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+
+    var Data = [[0.14, 0.02], [0.14, 0.02], [0.13, 0.02], [0.15, 0.02], [0.14, 0.02], [0.17, 0.04], [0.14, 0.03], [0.15, 0.02], [0.14, 0.02], [0.15, 0.01], [0.15, 0.02], [0.16, 0.02], [0.14, 0.01], [0.11, 0.01], [0.12, 0.02], [0.15, 0.04], [0.13, 0.04], [0.14, 0.03], [0.17, 0.03], [0.15, 0.03], [0.17, 0.02], [0.15, 0.04], [0.1, 0.02], [0.17, 0.05], [0.19, 0.02], [0.16, 0.02], [0.16, 0.04], [0.15, 0.02], [0.14, 0.02], [0.16, 0.02], [0.16, 0.02], [0.15, 0.04], [0.15, 0.01], [0.14, 0.02], [0.15, 0.02], [0.12, 0.02], [0.13, 0.02], [0.14, 0.01], [0.13, 0.02], [0.15, 0.02], [0.13, 0.03], [0.13, 0.03], [0.13, 0.02], [0.16, 0.06], [0.19, 0.04], [0.14, 0.03], [0.16, 0.02], [0.14, 0.02], [0.15, 0.02], [0.14, 0.02], [0.47, 0.14], [0.45, 0.15], [0.49, 0.15], [0.4, 0.13], [0.46, 0.15], [0.45, 0.13], [0.47, 0.16], [0.33, 0.1], [0.46, 0.13], [0.39, 0.14], [0.35, 0.1], [0.42, 0.15], [0.4, 0.1], [0.47, 0.14], [0.36, 0.13], [0.44, 0.14], [0.45, 0.15], [0.41, 0.1], [0.45, 0.15], [0.39, 0.11], [0.48, 0.18], [0.4, 0.13], [0.49, 0.15], [0.47, 0.12], [0.43, 0.13], [0.44, 0.14], [0.48, 0.14], [0.5, 0.17], [0.45, 0.15], [0.35, 0.1], [0.38, 0.11], [0.37, 0.1], [0.39, 0.12], [0.51, 0.16], [0.45, 0.15], [0.45, 0.16], [0.47, 0.15], [0.44, 0.13], [0.41, 0.13], [0.4, 0.13], [0.44, 0.12], [0.46, 0.14], [0.4, 0.12], [0.33, 0.1], [0.42, 0.13], [0.42, 0.12], [0.42, 0.13], [0.43, 0.13], [0.3, 0.11], [0.41, 0.13], [0.6, 0.25], [0.51, 0.19], [0.59, 0.21], [0.56, 0.18], [0.58, 0.22], [0.66, 0.21], [0.45, 0.17], [0.63, 0.18], [0.58, 0.18], [0.61, 0.25], [0.51, 0.2], [0.53, 0.19], [0.55, 0.21], [0.5, 0.2], [0.51, 0.24], [0.53, 0.23], [0.55, 0.18], [0.67, 0.22], [0.69, 0.23], [0.5, 0.15], [0.57, 0.23], [0.49, 0.2], [0.67, 0.2], [0.49, 0.18], [0.57, 0.21], [0.6, 0.18], [0.48, 0.18], [0.49, 0.18], [0.56, 0.21], [0.58, 0.16], [0.61, 0.19], [0.64, 0.2], [0.56, 0.22], [0.51, 0.15], [0.56, 0.14], [0.61, 0.23], [0.56, 0.24], [0.55, 0.18], [0.48, 0.18], [0.54, 0.21], [0.56, 0.24], [0.51, 0.23], [0.51, 0.19], [0.59, 0.23], [0.57, 0.25], [0.52, 0.23], [0.5, 0.19], [0.52, 0.2], [0.54, 0.23], [0.51, 0.18]]
+    
+
+    var Average = 0
+    var NewAverage = 0
+
+    var kMeans = 3
+
+    var Centroids = []
+    var Clusters = []
+    var Distances = []
+
+
+    var DataCopy = [...Data]
+
+    for (var i = 0; i < kMeans; i++) {
+        var Take = Math.floor(Math.random() * DataCopy.length)
+        if (Data[0].length === 1) {
+            Centroids.push([DataCopy[Take]])
+        } else {
+            Centroids.push(DataCopy[Take])
+        }
+        Clusters.push([])
+        Distances.push([])
+        DataCopy.splice(Take, 1)
+    }
+
+    var Done = 0
+
+    while (Done !== 1) {
+        var PrevAverage = Average
+        for (var i = 0; i < Data.length; i++) {
+            var TestValue = Data[i]
+            var CentroidDistance = []
+            for (var j = 0; j < Centroids.length; j++) {
+                var TestCentroid = Centroids[j]
+                var Sum = 0
+                for (var k = 0; k < TestCentroid.length; k++) {
+                    Sum += Math.abs(TestCentroid[k] - TestValue[k])
+                }
+                CentroidDistance.push(Sum)
+            }
+            var Min = Math.min(...CentroidDistance)
+            for (var j = 0; j < Clusters.length; j++) {
+                if (CentroidDistance[j] === Min) {
+                    Clusters[j].push(TestValue)
+                }
+            }
+        }
+        for (var j = 0; j < Clusters.length; j++) {
+            var Cluster = Clusters[j]
+            Cluster.sort(function (a, b) {
+                var c
+                a.some(function (d, i) {
+                    return c = d - b[i]
+                })
+                return c
+            })
+            var FirstValue = Cluster[0]
+            var LastValue = Cluster[Cluster.length - 1]
+            Sum = 0
+            for (var l = 0; l < FirstValue.length; l++) {
+                Sum += Math.abs(FirstValue[l] - LastValue[l])
+            }
+            Distances[j].push(Sum)
+        }
+        Average = 0
+        Sum = 0
+        for (var j = 0; j < Distances.length; j++) {
+            Sum += Distances[j][0]
+        }
+        Average = Sum / kMeans
+        for (var j = 0; j < Clusters.length; j++) {
+            Cluster = Clusters[j]
+            var NextCentroid = []
+            for (var k = 0; k < Cluster[0].length; k++) {
+                Sum = 0
+                for (var l = 0; l < Cluster.length; l++) {
+                    Sum += Cluster[l][k]
+                }
+                NextCentroid.push(Sum / Cluster.length)
+            }
+            if (Data[0].length === 1) {
+                Centroids[j] = [NextCentroid]
+            } else {
+                Centroids[j] = NextCentroid
+            }
+        }
+        if (Average === PrevAverage) {
+            console.log(Clusters)
+            Done = 1
+        } else {
+            Clusters = []
+            Distances = []
+            for (var i = 0; i < kMeans; i++) {
+                Clusters.push([])
+                Distances.push([])
+            }
+        }
+    }
+
+    var ClassesNames = []
+
+    for (var i = 0; i < kMeans; i++) {
+        ClassesNames.push('Cluster ' + i)
+    }
+
+    var NumClasses = kMeans
+
+    var Classes = []
+
+    for (var i = 0; i < NumClasses; i++) {
+        Classes.push([])
+    }
+
+    for (var i = 0; i < Classes.length; i++) {
+        for (var j = 0; j < Clusters[i].length; j++) {
+            Classes[i].push({ x: Clusters[i][j][0], y: Clusters[i][j][1] })
+        }
+    }
+
+    var DataSets = []
+    var Colors = ['rgb(0, 0, 255)', 'rgb(0, 255, 0)', 'rgb(255, 0, 0)']
+
+    for (var i = 0; i < Classes.length; i++) {
+        DataSets.push({
+            borderColor: Colors[i],
+            backgroundColor: Colors[i],
+            label: ClassesNames[i],
+            data: Classes[i],
+        })
+    }
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: DataSets
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
+            }
+        }
+    })
+</script>
