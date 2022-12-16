@@ -1,7 +1,7 @@
 var http = require('http')
 var fs = require('fs')
 
-var Conf = JSON.parse(fs.readFileSync('main.json'))
+var Conf = JSON.parse(fs.readFileSync('CONF.json'))
 
 http.createServer(function (request, response) {
  var Requested = (request.url).split('/')
@@ -19,6 +19,6 @@ http.createServer(function (request, response) {
     request.pipe(proxyRequest)
   } 
     else {
-    response.end('Unable to find app or website : /' + requested[1])
+    response.end('Unable to find app or website : /' + Requested[1])
   }
 }).listen(80)
