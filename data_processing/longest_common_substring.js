@@ -1,9 +1,12 @@
-var List1 = ["ABBA","thisisatest","thisisthebesttest","mylittleneuron","testted"]
-var List2 = ["DBACE","testing123testing","thisisnotthebest","alittleneuron","tedtest"]
+var List1 = ["ABBA","thisisatest","thisisthebesttest","mylittleneuron","testted","bcaaaade","beginning-middle-ending","bbb","1234"]
+var List2 = ["DBACE","testing123testing","thisisnotthebest","alittleneuron","tedtest","dfaaaadf","beginning-diddle-dum-ending","bbb","12345"]
 
 for (var k = 0; k < List1.length; k++) {
  var arr1 = List1[k]
  var arr2 = List2[k]
+
+ arr1 = ' ' + arr1
+ arr2 = ' ' + arr2
 
  var Column1 = arr1.split('')
  var Column2 = arr2.split('')
@@ -37,17 +40,48 @@ for (var k = 0; k < List1.length; k++) {
  }	
 
  var LCS = []
-
- for (var i = Index[0]; i > -1; i--) {
+ function Process () {
+  for (var i = Index[0]; i > -1; i--) {
     for (var j = Index[1]; j > -1; j--) {
        if (LCSmatrix[i][j] >= 1) {
          LCS.push(Column1[i])
          i--
        } else {
-         break
+         return
        }
     }
+  }
  }
+ Process()
  console.log('List : ' + arr1,arr2)
  console.log('LCS : ' + LCS.reverse().join('') + '\n')
 }
+
+/*
+List :  ABBA  DBACE
+LCS : BA
+
+List :  thisisatest  testing123testing
+LCS : test
+
+List :  thisisthebesttest  thisisnotthebest
+LCS : thebest
+
+List :  mylittleneuron  alittleneuron
+LCS : littleneuron
+
+List :  testted  tedtest
+LCS : test
+
+List :  bcaaaade  dfaaaadf
+LCS : aaaad
+
+List :  beginning-middle-ending  beginning-diddle-dum-ending
+LCS : beginning-
+
+List :  bbb  bbb
+LCS : bbb
+
+List :  1234  12345
+LCS : 1234
+*/
