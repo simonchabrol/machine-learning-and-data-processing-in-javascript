@@ -28,12 +28,10 @@ for (var k = 0; k < List1.length; k++) {
     }
  }
 
- var Result = -1;
  var Index
  for (var i=0;i < arr1.length; i++){
     for(var j=0; j < arr2.length; j++){
 	if(Result < LCSmatrix[i][j]){
-            Result = LCSmatrix[i][j]
             Index = [i,j]
         }
     }
