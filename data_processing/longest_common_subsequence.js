@@ -47,16 +47,15 @@ for (var k = 0; k < List1.length; k++) {
  var j = arr2.length-1
 
  while (i > 0 && j > 0) {
-
-        if (LCSmatrix[i][j] === LCSmatrix[i][j-1]) {
-           j--
-        } else if (LCSmatrix[i][j] === LCSmatrix[i-1][j]) {
-           i--
-        } else {
-           LCS.push(arr1[i])
-           i--
-           j--
-        }
+    if (LCSmatrix[i][j] === LCSmatrix[i][j-1]) {
+      j--
+    } else if (LCSmatrix[i][j] === LCSmatrix[i-1][j]) {
+      i--
+    } else {
+      LCS.push(arr1[i])
+      i--
+      j--
+    }
  }
 
  console.log('List : ' + arr1,arr2)
