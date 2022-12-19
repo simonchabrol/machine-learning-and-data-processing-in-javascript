@@ -1,7 +1,6 @@
 var List1 = ["bcaaaade","AGCGA","ABBA","thisisatest","thisisthebesttest","mylittleneuron","testted","bcaaaade","beginning-middle-ending","bbb","1234"]
 var List2 = ["deaaaabc","CAGATAGAG","DBACE","testing123testing","thisisnotthebest","alittleneuron","tedtest","dfaaaadf","beginning-diddle-dum-ending","bbb","12345"]
 
-
 for (var k = 0; k < List1.length; k++) {
  var arr1 = List1[k]
  var arr2 = List2[k]
