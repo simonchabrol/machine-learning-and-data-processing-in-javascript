@@ -4,7 +4,7 @@ var List2 = ["saturday","sitting","alittleneuron","cat","manger"]
 function LevenshteinDistance (arr1,arr2) {
     var m = arr1.length
     var n = arr2.length
-    
+
     var Matrix = []
 
     for (var i = 0; i < m; i++) {
@@ -15,11 +15,11 @@ function LevenshteinDistance (arr1,arr2) {
     }
 
     for (var i = 1; i < m; i++) {
-      Matrix[i][0] = i
+       Matrix[i][0] = i
     }
 
     for (var j = 1; j < n; j++) {
-      Matrix[0][j] = j
+       Matrix[0][j] = j
     }
 
     var SubstitutionCost = 0
@@ -34,7 +34,6 @@ function LevenshteinDistance (arr1,arr2) {
          Matrix[i][j] = Math.min(Matrix[i-1][j]+1,
                                  Matrix[i][j-1]+1,
                                  Matrix[i-1][j-1]+SubstitutionCost)
-     
       }
     }
 
@@ -47,6 +46,7 @@ for (var k = 0; k < List1.length; k++) {
    console.log('Distance : ' + LevenshteinDistance(List1[k],List2[k]))
    console.log('')
 }
+
 /*
 List : sunday saturday
 Distance : 3
