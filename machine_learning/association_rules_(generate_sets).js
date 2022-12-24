@@ -14,7 +14,7 @@ var NewSets = []
 var Combinations = []
 var CombinationsSupport = []
 
-function GenerateCandidate (n) {
+function GenerateSets (n) {
    if (n === 0) {
     for (var i = 0; i < Data.length; i++) {
         UniqueValues = [...new Set(UniqueValues.concat(Data[i]))]
@@ -105,7 +105,7 @@ var n = 0
 var Stop = 0
 
 do {
-  GenerateCandidate(n)
+  GenerateSets(n)
   if (n >= 2) {
     NewPairs = NewSets
     NewSets = []
