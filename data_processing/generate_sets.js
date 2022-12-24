@@ -5,58 +5,66 @@ var Data = [['Lait', 'Moutarde'],
             ['Pain', 'Oignons', 'Moutarde'],
             ['Steak', 'Pain', 'Oignons', 'Moutarde']]
 
+
 var UniqueValues = []
-
-for (var i = 0; i < Data.length; i++) {
-    UniqueValues = [...new Set(UniqueValues.concat(Data[i]))]
-}
-
 var NewPairs = []
-
-for (var i = 0; i < UniqueValues.length; i++) {
-  for (var j = i + 1; j < UniqueValues.length; j++) {
-    NewPairs.push([UniqueValues[i],UniqueValues[j]])
-  }
-}
-
-console.log(NewPairs)
-
 var NewSets = []
-var Pass = 1
 
-function GenerateSets () {
-  for (var i = 0; i < NewPairs.length; i++) {
-    for (var j = i + 1; j < NewPairs.length; j++) {
-       var FirstArr = ''
-       var SecondArr = ''
-       for (var k = 0; k < Pass; k++) {
-          FirstArr = FirstArr + ' ' + NewPairs[i][k]
-          SecondArr = SecondArr + ' ' + NewPairs[j][k]
-       }
-        if (FirstArr === SecondArr) { 
-           var Temp = [...new Set(NewPairs[i].concat(NewPairs[j]))]
-           NewSets.push(Temp)
-        }
-    }
-  }
-
-  for (var i = 0; i < NewSets.length; i++) {
-    for (var j = i + 1; j < NewSets.length; j++) {
-      if (NewSets[i].toString() === NewSets[j].toString()) {
-         NewSets.splice(j,1)
-         j--
+function GenerateCandidate (n) {
+   if (n === 0) {
+    for (var i = 0; i < Data.length; i++) {
+        UniqueValues = [...new Set(UniqueValues.concat(Data[i]))]
+    }   
+    return UniqueValues
+   } else if (n === 1) {
+    for (var i = 0; i < UniqueValues.length; i++) {
+      for (var j = i + 1; j < UniqueValues.length; j++) {
+        NewPairs.push([UniqueValues[i],UniqueValues[j]])
       }
     }
-  }
- return NewSets
+    return NewPairs
+   } else {
+    for (var i = 0; i < NewPairs.length; i++) {
+      for (var j = i + 1; j < NewPairs.length; j++) {
+         var FirstArr = ''
+         var SecondArr = ''
+         for (var k = 0; k < n-1; k++) {
+            FirstArr = FirstArr + ' ' + NewPairs[i][k]
+            SecondArr = SecondArr + ' ' + NewPairs[j][k]
+         }
+         if (FirstArr === SecondArr) { 
+             var Temp = [...new Set(NewPairs[i].concat(NewPairs[j]))]
+             NewSets.push(Temp)
+         }
+      }
+    }
+    for (var i = 0; i < NewSets.length; i++) {
+      for (var j = i + 1; j < NewSets.length; j++) {
+        if (NewSets[i].toString() === NewSets[j].toString()) {
+           NewSets.splice(j,1)
+           j--
+        }
+      }
+    }
+    if (NewSets.length !== 0) {
+      return NewSets
+    } else {
+      return Stop = 1
+    }
+   }
 }
 
-for (var i = 0; i < 3; i++) {
-  console.log(GenerateSets())
-  NewPairs = NewSets
-  NewSets = []
-  Pass += 1
-}
+var n = 0
+var Stop = 0
+
+do {
+  console.log(GenerateCandidate(n))
+  if (n >= 2) {
+    NewPairs = NewSets
+    NewSets = []
+  }
+  n++
+} while (Stop === 0)
 
 /*
 [
