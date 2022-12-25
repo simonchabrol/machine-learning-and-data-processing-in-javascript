@@ -1,0 +1,38 @@
+<canvas id="myChart" width="300" height="100" ></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+
+    var R = [1,2,3]
+    var Data = []
+    for (var j = 0; j < R.length; j++) {
+       for (var i = 0; i < 360; i++) {
+          var Random = Math.random() * (R[j]+0.4 - R[j]) + R[j]
+          Data.push({x:(Random)*Math.sin(i),y:(Random)*Math.cos(i)})
+       }
+    }
+    
+    var DataSet = [{
+        borderColor: 'rgb(0, 0, 255)',
+        backgroundColor: 'rgb(0, 0, 255)',
+        label: 'TEST DATA',
+        data: Data,
+    }]
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        responsive:true,
+        data: {
+            datasets: DataSet
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
+            }
+        }
+    })
+</script>
