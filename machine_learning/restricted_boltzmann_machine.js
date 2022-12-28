@@ -93,7 +93,7 @@ for (var w = 0; w < Visible.length; w++) {
     for (var j = 0; j < Hidden.length; j++) {
         if (HiddenNodes.toString() === Hidden[j].toString()) {
             console.log('\nInput : ' + Visible[w])
-            console.log('Ouput : ' + HiddenNodes)
+            console.log('Output : ' + HiddenNodes)
             break
         }
     }
@@ -109,8 +109,8 @@ Hidden : 1,-1
 Output : 0.9999998054316085,-0.9999998227967452,-0.999999819880107
 
 Input : -1,1,1
-Ouput : -1,1
+Output : -1,1
 
 Input : 1,-1,-1
-Ouput : 1,-1
+Output : 1,-1
 */
