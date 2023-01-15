@@ -70,7 +70,7 @@ for (var w = 0; w < Classes.length; w++) {
           (CountOne / Input.length) * (CountZero / Input.length)
         )
       ))
-    Results.push(Math.abs(BiserialCoefficient).toFixed(2))
+    Results.push(BiserialCoefficient.toFixed(2))
   }
   console.log([ClassCompared.toString()], [Results.toString()])
   if (ClassesLength !== 0) {
