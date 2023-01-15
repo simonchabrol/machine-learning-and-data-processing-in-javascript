@@ -35,7 +35,7 @@ for (var j = 0; j < Input[0].length; j++) {
        PearsonCoefficient += ((Input[i][j]-InputAverage)/InputStandardDeviation) * ((Output[i][w] - OutputAverage) / OutputStandardDeviation)
      }
      PearsonCoefficient = (1/(Input.length-1))*PearsonCoefficient
-     Results.push(Math.abs(PearsonCoefficient.toFixed(5)))
+     Results.push(PearsonCoefficient.toFixed(5))
    }
    console.log(Results.toString())
  }
