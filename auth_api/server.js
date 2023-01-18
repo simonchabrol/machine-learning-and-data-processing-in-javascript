@@ -21,7 +21,7 @@ function decryption (Content) {
 var Key = crypto.randomBytes(30)
 var encryptKey = Buffer.from(Key)
 var encryptedKey = crypto.publicEncrypt(publicKey,encryptKey)
-var encryptedKeyBase64 = encryptKey.toString('base64')
+var encryptedKeyBase64 = encryptedKey.toString('base64')
 
 http.createServer(function (request, response) {
   if (request.method === 'POST' && request.url === '/auth') {
