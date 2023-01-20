@@ -31,9 +31,6 @@
             }
             AllDistance.push(Count)
         }
-        var Min = Math.min(...AllDistance.filter(function (Min) {
-            return Min !== 0
-        }))
         var AverageDistance = 0
         for (var l = 0; l < AllDistance.length; l++) {
            AverageDistance += AllDistance[l]
