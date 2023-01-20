@@ -1,0 +1,39 @@
+
+<canvas id="myChart" width="300" height="100" ></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+    
+    var Data = []
+
+    var max = 1
+    var min = 0
+
+    for (var i = 0; i < 100; i++) {
+          Data.push({x:Math.random()*(max-min)+min,y:Math.random()*(max-min)+min})
+    }
+    
+    var DataSet = [{
+        borderColor: 'rgb(0, 0, 255)',
+        backgroundColor: 'rgb(0, 0, 255)',
+        label: 'TEST DATA',
+        data: Data,
+    }]
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        responsive:true,
+        data: {
+            datasets: DataSet
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
+            }
+        }
+    })
+</script>
