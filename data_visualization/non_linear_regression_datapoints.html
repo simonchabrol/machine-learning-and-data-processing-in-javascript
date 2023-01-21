@@ -1,0 +1,58 @@
+<canvas id="myChart" width="300" height="100" ></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+    
+    var Data = []
+    var Input = []
+
+    var max = 1
+    var min = 0
+
+    for (var i = 0; i < 10; i++) {
+          var x = Math.random()
+          var y = Math.random()
+          Data.push({x:x,y:y})
+          Input.push([x,y])
+    }
+
+    Input.sort(function (a,b) {
+       var c
+       a.some(function (d,i) {
+         return c = d - b[i]
+       })
+       return c
+    })
+
+    for (var i = 0; i < Input.length-1; i++) {
+        for (var j = 0; j < 10; j++) {
+           x = Math.random()*(Input[i+1][0]-Input[i][0])+Input[i][0]
+           y = Input[i][1] + (x - Input[i][0]) * ( (Input[i+1][1] - Input[i][1]) /  (Input[i+1][0] - Input[i][0]) )
+           Data.push({x:x,y:y})
+        }
+    }
+    
+    var DataSet = [{
+        borderColor: 'rgb(0, 0, 255)',
+        backgroundColor: 'rgb(0, 0, 255)',
+        label: 'TEST DATA',
+        data: Data,
+    }]
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        responsive:true,
+        data: {
+            datasets: DataSet
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
+            }
+        }
+    })
+</script>
