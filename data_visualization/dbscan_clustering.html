@@ -1,4 +1,4 @@
-// DBscan algorithm as described by Wikipedia : https://en.wikipedia.org/wiki/DBSCAN
+// DBSCAN algorithm as described by Wikipedia : https://en.wikipedia.org/wiki/DBSCAN
 
 <canvas id="myChart" width="300" height="100"></canvas>
 
@@ -53,7 +53,7 @@
        Label.push(undefined)
     }
 
-    function DBscan (Input, Epsilon, MinPoints) {
+    function DBSCAN (Input, Epsilon, MinPoints) {
         var Cluster = 0
         for (var i = 0; i < Input.length; i++) {
             if (Label[i] !== undefined) { 
@@ -99,7 +99,7 @@
         return Neighbors
     }
 
-    DBscan(Input,Epsilon,MinPoints)
+    DBSCAN(Input,Epsilon,MinPoints)
 
     var ClassNames = []
 
