@@ -34,7 +34,9 @@ for (var i = 0; i < TestInput.length; i++) {
       for (var k = 0; k < TestValue.length; k++) {
         Count = Count + Math.pow(TestValue[k] - TestedInput[k],2)
       }
-      Counting.push(Math.sqrt(Count))
+      if (Count !== 0) {
+        Counting.push(Math.sqrt(Count))
+      }
     }
 
     Array.min = function(array, kNearest ){
