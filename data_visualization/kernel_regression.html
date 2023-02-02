@@ -47,12 +47,6 @@ for (var i = 0; i < Input.length; i++) {
 var RegressionDataX = []
 var RegressionDataY = []
 
-var Xcopy = [...X] 
-
-Xcopy.sort(function(a,b) { 
-  return b - a 
-})
-
 var Gammma
 
 var Middle = X.length / 2 
@@ -63,7 +57,7 @@ if (X.length % 2) {
     Gamma = ((Middle - 1) + Middle) / 2 
 }
 
-TestX = X
+var TestX = X
 
 for (var i = 0; i < TestX.length; i++) {
   var Scores = []
