@@ -1,0 +1,29 @@
+<canvas id="canvas" width="500" height="500" style="border:1px solid grey"></canvas>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.6.2/jquery.min.js" type="text/javascript"></script>
+<script>
+    $("#canvas").click(function (event) {
+        DrawDots(event)
+    })
+
+    var PointSize = 2
+    var PointList = []
+
+    function DrawDots(event) {
+        var Data = canvas.getBoundingClientRect()
+
+        var x = event.clientX - Data.left
+        var y = event.clientY - Data.top
+
+        PointList.push([x / 100, y / 100])
+        console.log(JSON.stringify(PointList))
+
+        var ctx = document.getElementById("canvas").getContext("2d")
+
+        ctx.fillStyle = "#ff2626"
+
+        ctx.beginPath()
+        ctx.arc(x, y, PointSize, 0, Math.PI * 2, true)
+        ctx.fill()
+    } 
+
+</script>
