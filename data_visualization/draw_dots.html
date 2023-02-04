@@ -24,6 +24,8 @@
         ctx.beginPath()
         ctx.arc(x, y, PointSize, 0, Math.PI * 2, true)
         ctx.fill()
+        
+        document.getElementById("result").innerHTML = JSON.stringify(PointList)
     } 
-
 </script>
+<div id="result"></div>
