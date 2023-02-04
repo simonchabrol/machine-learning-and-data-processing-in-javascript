@@ -14,7 +14,7 @@
         var x = event.clientX - Data.left
         var y = event.clientY - Data.top
 
-        PointList.push([x / 100, y / 100])
+        PointList.push([x / 100, Math.abs(y-500) / 100])
         console.log(JSON.stringify(PointList))
 
         var ctx = document.getElementById("canvas").getContext("2d")
