@@ -96,14 +96,14 @@ var Used = []
 for (var i = 0; i < Used.length+1; i++) {
    var Sum = 0
    var ToUse = undefined
-   for (var Key1 in ListOfList) {
-     for (var Key2 in ListOfList[Key1]) {
+   for (var Key1 in ListOfLists) {
+     for (var Key2 in ListOfLists[Key1]) {
        if (Used.includes(Key2) === false && ToUse === undefined) {
           Used.push(Key2)
           ToUse = Key2
        }
        if (Key2 === ToUse) {
-         Sum += ListOfList[Key1][Key2]
+         Sum += ListOfLists[Key1][Key2]
        }
      }
    }
