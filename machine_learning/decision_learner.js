@@ -5,7 +5,7 @@ var Output = ["Iris-setosa","Iris-setosa","Iris-setosa","Iris-setosa","Iris-seto
 var TestData = []
 var TestDataOutput = []
 
-var TestSize = (Input.length-1)/3
+var TestSize = Input.length/3
 var InputSize = Input.length-1
 
 for (var i = 0; i < TestSize; i++) {
@@ -16,6 +16,7 @@ for (var i = 0; i < TestSize; i++) {
    Output.splice(Select,1)
    TestSize = TestSize - 1
    InputSize = InputSize - 1
+   i--
 }
 
 var Attributes = []
