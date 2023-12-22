@@ -91,7 +91,6 @@ for (var i = 0; i < RulesOutput.length; i++) {
 var Predict = TestData
 
 var CountError = 0
-var LengthCounter = 0
 
 for (var i = 0; i < Predict.length; i++) {
    var Push = 0
