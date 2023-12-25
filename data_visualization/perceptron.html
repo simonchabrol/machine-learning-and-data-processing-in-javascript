@@ -1,0 +1,124 @@
+
+<canvas id="myChart" width="300" height="100"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+
+ var Centroids = []
+
+ var Input = []
+ var Output = []
+
+ var Data = []
+
+ var NumClass = 2
+
+ var max = 1
+ var min = 0
+
+ for (var i = 0; i < NumClass; i++) {
+  Centroids.push([Math.random()*(max-min)+min,Math.random()*(max-min)+min])
+ }
+
+ var Radius = 0.1
+
+ for (var i = 0; i < Centroids.length; i++) {
+    var x = Centroids[i][0]
+    var y = Centroids[i][1]
+    for (var j = 0; j < 20; j++) {
+         Input.push([Math.random()*((x+Radius)-(x-Radius))+(x-Radius),Math.random()*((y+Radius)-(y-Radius))+(y-Radius),1])
+         Data.push({x:Math.random()*((x+Radius)-(x-Radius))+(x-Radius),y:Math.random()*((y+Radius)-(y-Radius))+(y-Radius)})
+         Output.push([i])
+    }
+ }
+
+ var LearningRate = 1
+
+ var InitialSum
+ var FinalSum
+
+ var Weights = []
+
+ for (var i = 0; i < Input[0].length; i++) {   
+   Weights.push(Math.random())
+ }
+
+ function Perceptron (Input, Output) {   
+   InitialSum = 0
+
+   for (var i = 0; i < Input.length; i++) {
+     InitialSum = InitialSum + (Input[i] * Weights[i])   
+   }
+
+   if ( InitialSum > 0) {
+      FinalSum = 1
+   }
+   else {
+      FinalSum = 0
+   }
+
+   while (TargetCalculated !== 0) {
+
+    var TargetCalculated = Output - FinalSum
+
+    for (var i = 0; i < Input.length; i++) {
+       Weights[i] = Weights[i] + TargetCalculated * Input[i] * LearningRate
+    }
+
+    InitialSum = 0 
+    for (var i = 0; i < Input.length; i++) {   
+       InitialSum = InitialSum + (Input[i] * Weights[i]) 
+    } 
+    if ( InitialSum > 0) {
+       FinalSum = 1
+    }
+    else {
+      FinalSum = 0
+    }
+   }
+ }
+
+ for (var a = 0; a < 1500; a++) {
+  for (var b = 0; b < Input.length; b++) {  
+     Perceptron(Input[b], Output[b])
+  }
+ }
+
+ var DecisionBoundary = []
+
+ for (var i = 0; i < Data.length; i++) {
+  var Slope = -(Weights[2]/Weights[1])/(Weights[2]/Weights[0])  
+  var Intercept = -Weights[2]/Weights[1]
+  var y = (Slope*Data[i].x) + Intercept
+  DecisionBoundary.push({x:Data[i].x,y:y})
+ }
+
+ var DataSet = [{
+        borderColor: 'rgb(0, 0, 255)',
+        backgroundColor: 'rgb(0, 0, 255)',
+        label: 'DATA',
+        data: Data,
+    },{
+        borderColor: 'rgb(0, 255, 0)',
+        backgroundColor: 'rgb(0, 255, 0)',
+        label: 'DECISION BOUNDARY',
+        data: DecisionBoundary,
+ }]
+
+ var ctx = document.getElementById('myChart').getContext('2d');
+ var scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        responsive:true,
+        data: {
+            datasets: DataSet
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
+            }
+        } 
+ })
+</script>
