@@ -35,7 +35,7 @@ for (var i = 0; i < Input[0].length; i++) {
   }
 }
 
-function SplitDataSet (i,j,Threshold,ThresholdClass) {
+function SplitDataSet (i,Threshold,ThresholdClass) {
     var Result = 0
     var Right = 0
     for (var k = 0; k < Input.length; k++) {
@@ -57,7 +57,7 @@ function SplitDataSet (i,j,Threshold,ThresholdClass) {
 
 for (var i = 0; i < Threshold.length; i++) {
   for (var j = 0; j < Threshold[i].length; j++) {
-     var Right = SplitDataSet(i,j,Threshold[i][j],ThresholdClass[i][j])
+     var Right = SplitDataSet(i,Threshold[i][j],ThresholdClass[i][j])
      if (Right/Input.length < 0.5) {
        Threshold[i].splice(j,1)
        ThresholdClass[i].splice(j,1)
