@@ -1,0 +1,317 @@
+<canvas id="myChart" width="300" height="100" ></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+
+  var Input = []
+  var Output = []
+
+  var R = [1,2]
+
+  var Input = []
+  var Output = []
+
+  for (var j = 0; j < R.length; j++) {
+      for (var i = 0; i < 100; i++) {
+          var Random = Math.random() * (R[j]+0.4 - R[j]) + R[j]
+          Input.push([(Random)*Math.sin(i)+3,(Random)*Math.cos(i)+3])
+          if (j === 0) {
+             Output.push(-1)
+          } else {
+             Output.push(1)
+          }
+      } 
+  }
+
+  /*
+
+  var Input = [
+   [1.23,2.95],
+   [1.24,3.56],
+   [1.39,3.28],
+   [1.83,3.58]]  
+
+  var Output = [
+    1,1,-1,1
+  ]
+
+  */
+
+  /*
+
+  */
+
+
+  /*
+
+  var Input = [
+    [0.84,1.99],
+    [1.18,2.56],
+    [0.87,3.21],
+    [1.06,3.72],
+    [2.07,3.51],
+    [3.03,3.51],
+    [1.85,2.85],
+    [2.4,2.92],
+    [2.77,2.77],
+    [2.62,2.41],
+    [2.04,2.53],
+    [1.99,2.34]]
+  var Output = [
+    1,1,1,1,1,1,-1,-1,-1,-1,-1,-1
+  ]
+
+  */
+
+  /*
+
+  var Input = [[2.41,2.93],[2.24,3.23],[2.49,3.44],[2.76,3.3],[2.81,2.89],[2.7,2.76],[2.13,2.65],[3.92,2],[4.19,2.97],[4.07,4.03],[3.17,4.57],[2.19,4.63],[1.44,4.34],[0.87,3.39],[1.24,2.02],[2.01,1.48],[3.13,1.39]]
+  
+  var Output = [1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+
+  */
+
+  var Input = [[2.5,2.57],[2.4,2.5],[2.44,2.46],[2.57,2.42],[2.68,2.45],[2.76,2.57],[2.74,2.61],[2.39,2.72],[2.25,2.56],[2.27,2.45],[2.38,2.36],[2.47,2.36],[2.59,2.4],[2.63,2.62],[2.55,2.78],[2.33,2.68],[2.34,2.57],[2.47,2.44],[2.64,2.43],[2.73,2.59],[2.59,2.7],[2.53,2.7],[2.5,2.52],[2.58,2.5],[2.6,2.54],[2.61,2.56],[2.52,2.5],[2.43,2.41],[2.4,2.32],[2.4,2.3],[2.19,2.35],[2.28,2.37],[2.44,2.3],[2.62,2.24],[2.63,2.26],[2.63,2.32],[3.47,0.88],[3.2,0.77],[2.93,0.66],[2.11,0.71],[1.6,1.02],[1.27,1.26],[0.87,1.96],[0.83,3.13],[1.26,3.8],[1.79,4.16],[2.81,4.39],[3.35,4.2],[3.54,3.72],[4.04,2.74],[4.17,1.68]]
+  
+  var Output = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+
+  var TestData = []
+  var TestDataOutput = []
+
+  var TestSize = Input.length/3
+  var InputSize = Input.length
+
+  for (var i = 0; i < TestSize; i++) {
+    var Select = Math.floor(Math.random()*(InputSize-0)+0)
+    TestData.push(Input[Select])
+    TestDataOutput.push(Output[Select])
+    Input.splice(Select,1)
+    Output.splice(Select,1)
+    TestSize = TestSize - 1
+    InputSize = InputSize - 1
+    i--
+  }
+
+  var Weights = []
+
+  for (var i = 0; i < Input.length; i++) {
+     Weights.push(1/Input.length)
+  }
+
+  var UniqueClasses = [...new Set(Output)]
+
+  var Threshold = []
+  var ThresholdBeta = []
+  var ThresholdPolarity = []
+
+  for (var i = 0; i < Input[0].length; i++) {
+     Threshold.push([])
+     ThresholdBeta.push([])
+     ThresholdPolarity.push([])
+  }
+
+  for (var i = 0; i < Input[0].length; i++) {
+   for (var j = 0; j < Input.length; j++) {
+      Threshold[i].push(Input[j][i])
+   }
+  }
+
+  function Sort (a,b) {
+    return a - b 
+  }
+
+  Threshold[0] = Threshold[0].sort(Sort)
+  Threshold[1] = Threshold[1].sort(Sort)
+
+  var NewValue = [[],[]]
+
+  for (var i = 0; i < Threshold.length; i++) {
+     for (var j = 0; j < Threshold[i].length; j++) {
+       if (j+1 !== Threshold[i].length) {
+          NewValue[i].push((Threshold[i][j]+Threshold[i][j+1])/2)
+       }
+     }
+  }
+
+  Threshold[0] = Threshold[0].concat(NewValue[0])
+  Threshold[1] = Threshold[1].concat(NewValue[1])
+
+  for (var i = 0; i < Threshold.length; i++) {
+     var Max = Math.max(...Threshold[i])-1
+     var Min = Math.min(...Threshold[i])+1
+     for (var j = Min; j < Max; j+=0.01) {
+        Threshold[i].push(j)
+     }
+  }
+
+  for (var i = 0; i < Threshold.length; i++) {
+     for (var j = 0; j < Threshold[i].length; j++) {
+       if (j+1 !== Threshold[i].length) {
+          NewValue[i].push((Threshold[i][j]+Threshold[i][j+1])/2)
+       }
+     }
+  }
+
+  Threshold[0] = Threshold[0].concat(NewValue[0])
+  Threshold[1] = Threshold[1].concat(NewValue[1])
+
+  function SplitDataSet (i,Threshold) {
+     var Wrong = 0
+     var Value = 0
+     var ActualOutput = []
+      for (var k = 0; k < Input.length; k++) {
+         if ( Input[k][i] > Threshold ) {
+            Value = 1
+         } else {
+            Value = -1
+         }
+
+         if (Value === Output[k]) {
+            ActualOutput.push([Output[k],Value])
+         } else {
+            Wrong += 1
+            ActualOutput.push([Output[k],Value])
+         }
+      }
+
+      if (Result/Input.length < 0.5) {
+         Wrong = 0
+         Value = 0
+         ActualOutput = []
+         for (var k = 0; k < Input.length; k++) {
+           if ( Input[k][i] > Threshold) {
+             Value = -1
+           } else {
+             Value = 1
+           }
+
+           if (Value === Output[k]) {
+              ActualOutput.push([Output[k],Value])
+           } else {
+              Wrong += 1
+              ActualOutput.push([Output[k],Value])
+           }
+         }
+         return [Wrong,-1,ActualOutput]
+      } else {
+        return [Wrong,1,ActualOutput]
+      }
+  }
+
+  for (var i = 0; i < Threshold.length; i++) {
+   for (var j = 0; j < Threshold[i].length; j++) {
+     var Result = SplitDataSet(i,Threshold[i][j])
+     var MissClassificationRate = 0
+     for (var k = 0; k < Result[2].length; k++) {
+        if (Result[2][k][0] === Result[2][k][1]) {
+           MissClassificationRate += 0 * Weights[k]
+        } else {
+           MissClassificationRate += 1 * Weights[k]
+        }
+     }
+     var SumWeights = 0
+     for (var k = 0; k < Result[2].length; k++) {
+        SumWeights += Weights[k]
+     }
+     var ClassifierError = (MissClassificationRate/SumWeights)
+     var Beta = 1/2 * Math.log( (1 - ClassifierError) / ClassifierError)
+     ThresholdBeta[i].push(Beta)
+     ThresholdPolarity[i].push(Result[1])
+     for (var k = 0; k < Weights.length; k++) {
+        Weights[k] *= Math.exp(-Beta * ( Result[2][k][0] * Result[2][k][1] ) )
+     }
+     var Sum = 0
+     for (var k = 0; k < Weights.length; k++) {
+        Sum += Weights[k]
+     }
+     for (var k = 0; k < Weights.length; k++) {
+        Weights[k] /= Sum
+     }
+   }
+  }
+
+  var TestData = Input
+  var TestDataOutput = Output
+
+  var CountError = 0
+
+  var OneData = []
+  var ZeroData = []
+  var NoClassData = []
+  var OriginalInput = []
+
+  for (var i = 0; i < TestData.length; i++) {
+   var Points = 0
+   for (var j = 0; j < Threshold.length; j++) {
+      for (var k = 0; k < Threshold[j].length; k++) {
+          if (Input[i][j] > Threshold[j][k]) {
+            Points += ThresholdPolarity[j][k] * ThresholdBeta[j][k]
+          } else {
+            if (ThresholdPolarity[j][k] === 1) {
+              Points += -1 * ThresholdBeta[j][k] 
+            } else {
+              Points += 1 * ThresholdBeta[j][k] 
+            }
+          }
+      }
+   }
+   var CalculatedOutput
+   if (Points !== 0) {
+      if (Points > 0) {
+        CalculatedOutput = 1
+        OneData.push({x:TestData[i][0],y:TestData[i][1]})
+      } else {
+        ZeroData.push({x:TestData[i][0],y:TestData[i][1]})
+        CalculatedOutput = -1
+      }
+      console.log(TestData[i],CalculatedOutput,TestDataOutput[i],Points)
+   } else {
+      CalculatedOutput = 'No class'
+      console.log(TestData[i],'No class',TestDataOutput[i],Points)
+      NoClassData.push({x:TestData[i][0],y:TestData[i][1]})
+   }
+   if (CalculatedOutput !== TestDataOutput[i]) {
+      CountError += 1
+   }
+  }
+  console.log(CountError/TestData.length)
+
+  for (var i = 0; i < Input.length; i++) {
+    OriginalInput.push({x:Input[i][0],y:Input[i][1]})
+  }
+
+   var DataSet = [{
+            borderColor: 'rgb(0, 0, 255)',
+            backgroundColor: 'rgb(0, 0, 255)',
+            label: '1',
+            data: OneData,
+        },{
+            borderColor: 'rgb(0, 255, 0)',
+            backgroundColor: 'rgb(0, 255, 0)',
+            label: '-1',
+            data: ZeroData,
+        },{
+            borderColor: 'rgb(255, 0, 0)',
+            backgroundColor: 'rgb(255, 0, 0)',
+            label: 'No class',
+            data: NoClassData,
+        }]
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var scatterChart = new Chart(ctx, {
+            type: 'scatter',
+            responsive:true,
+            data: {
+                datasets: DataSet
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        type: 'linear',
+                        position: 'bottom'
+                    }]
+                }
+            }
+        })
+
+</script>
