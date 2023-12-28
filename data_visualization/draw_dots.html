@@ -14,8 +14,6 @@
     function DrawDots(event) {
         var Data = canvas.getBoundingClientRect()
 
-        console.log(Data)
-
         var x = event.clientX - Data.top
         var y = event.clientY - Data.left
   
@@ -24,23 +22,28 @@
 
         var ctx = document.getElementById("canvas").getContext("2d")
 
-        ctx.fillStyle = "#ff2626"
+        if (OutputValue === 1) {
+           ctx.fillStyle = "#ff2626"
+        } else {
+           ctx.fillStyle = "#ff2626"
+        }
 
         ctx.beginPath()
         ctx.arc(x, y, PointSize, 0, Math.PI * 2, true)
         ctx.fill()
 
-        document.getElementById("result").innerHTML = JSON.stringify([PointList,Output])
-        document.getElementById('button').onclick = function() { 
-               if (OutputValue = 1) {
-                  OutputValue = -1
-               } else {
-                  OutputValue = 1
-               }
+        document.getElementById("result").innerHTML = JSON.stringify([PointList,Output]) 
+    }
+
+    function changeOutput() { 
+        if (OutputValue === 1) {
+           OutputValue = -1
+        } else {
+           OutputValue = 1
         }
-     } 
+    }
 
  </script>
- <input id="button" type="submit" name="button" value="Change output"/>
- <div id="result" style="border:1px solid grey; width:500px" ></div>
+ <input id="button" type="submit" name="button" value="Change output" onclick="changeOutput()"/>
+ <div id="result" style="border:1px solid grey; width:500px; overflow: scroll" ></div>
 </div>
