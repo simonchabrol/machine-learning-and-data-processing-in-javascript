@@ -134,11 +134,6 @@ var Input = [
    }
   }
 
-  var Sum = 0
-  for (var i = 0; i < Weights.length; i++) {
-     Sum += Weights[i]
-  }
-
   var TestData = Input
   var TestDataOutput = Output
 
