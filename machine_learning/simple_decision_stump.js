@@ -83,7 +83,7 @@ var Input = [
          Value = 0
          ActualOutput = []
          for (var k = 0; k < Input.length; k++) {
-           if ( Input[k][i] >= Threshold) {
+           if ( Input[k][i] > Threshold) {
              Value = -1
            } else {
              Value = 1
