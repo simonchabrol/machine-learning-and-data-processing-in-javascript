@@ -7,16 +7,20 @@
     })
 
     var PointSize = 2
+    var OutputValue = 1
     var PointList = []
+    var Output = []
 
     function DrawDots(event) {
         var Data = canvas.getBoundingClientRect()
+
+        console.log(Data)
 
         var x = event.clientX - Data.top
         var y = event.clientY - Data.left
   
         PointList.push([x / 100, Math.abs(y-500) / 100])
-        console.log(JSON.stringify(PointList))
+        Output.push(OutputValue)
 
         var ctx = document.getElementById("canvas").getContext("2d")
 
@@ -26,9 +30,17 @@
         ctx.arc(x, y, PointSize, 0, Math.PI * 2, true)
         ctx.fill()
 
-        document.getElementById("result").innerHTML = JSON.stringify(PointList)
-    } 
+        document.getElementById("result").innerHTML = JSON.stringify([PointList,Output])
+        document.getElementById('button').onclick = function() { 
+               if (OutputValue = 1) {
+                  OutputValue = -1
+               } else {
+                  OutputValue = 1
+               }
+        }
+     } 
 
  </script>
+ <input id="button" type="submit" name="button" value="Change output"/>
  <div id="result" style="border:1px solid grey; width:500px" ></div>
 </div>
