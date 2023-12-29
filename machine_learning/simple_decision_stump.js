@@ -78,7 +78,7 @@ var Input = [
          }
       }
 
-      if (Result/Input.length < 0.5) {
+      if (Wrong/Input.length >= 0.5) {
          Wrong = 0
          Value = 0
          ActualOutput = []
