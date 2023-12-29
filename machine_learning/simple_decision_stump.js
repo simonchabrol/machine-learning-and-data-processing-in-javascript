@@ -143,7 +143,7 @@ var Input = [
    var Points = 0
    for (var j = 0; j < Threshold.length; j++) {
       for (var k = 0; k < Threshold[j].length; k++) {
-          if (Input[i][j] > Threshold[j][k]) {
+          if (TestData[i][j] > Threshold[j][k]) {
             Points += ThresholdPolarity[j][k] * ThresholdCorrect[j][k]
           } else {
             if (ThresholdPolarity[j][k] === 1) {
