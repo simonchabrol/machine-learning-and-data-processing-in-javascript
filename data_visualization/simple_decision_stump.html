@@ -3,42 +3,38 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script>
 
-  var Input = [[2.5,2.57],[2.4,2.5],[2.44,2.46],[2.57,2.42],[2.68,2.45],[2.76,2.57],[2.74,2.61],[2.39,2.72],[2.25,2.56],[2.27,2.45],[2.38,2.36],[2.47,2.36],[2.59,2.4],[2.63,2.62],[2.55,2.78],[2.33,2.68],[2.34,2.57],[2.47,2.44],[2.64,2.43],[2.73,2.59],[2.59,2.7],[2.53,2.7],[2.5,2.52],[2.58,2.5],[2.6,2.54],[2.61,2.56],[2.52,2.5],[2.43,2.41],[2.4,2.32],[2.4,2.3],[2.19,2.35],[2.28,2.37],[2.44,2.3],[2.62,2.24],[2.63,2.26],[2.63,2.32],[3.47,0.88],[3.2,0.77],[2.93,0.66],[2.11,0.71],[1.6,1.02],[1.27,1.26],[0.87,1.96],[0.83,3.13],[1.26,3.8],[1.79,4.16],[2.81,4.39],[3.35,4.2],[3.54,3.72],[4.04,2.74],[4.17,1.68]]
-  var Output = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+  var Input = []
+  var Output = []
 
-  var TestData = []
-  var TestDataOutput = []
+  var R = [1,2]
 
-  var TestSize = Input.length/3
-  var InputSize = Input.length
+  var Input = []
+  var Output = []
 
-  for (var i = 0; i < TestSize; i++) {
-    var Select = Math.floor(Math.random()*(InputSize-0)+0)
-    TestData.push(Input[Select])
-    TestDataOutput.push(Output[Select])
-    Input.splice(Select,1)
-    Output.splice(Select,1)
-    TestSize = TestSize - 1
-    InputSize = InputSize - 1
-    i--
+  for (var j = 0; j < R.length; j++) {
+      for (var i = 0; i < 100; i++) {
+          var Random = Math.random() * (R[j]+0.4 - R[j]) + R[j]
+          Input.push([(Random)*Math.sin(i)+3,(Random)*Math.cos(i)+3])
+          if (j === 0) {
+             Output.push(-1)
+          } else {
+             Output.push(1)
+          }
+      } 
   }
-
+  
   var Weights = []
-
+  
   for (var i = 0; i < Input.length; i++) {
      Weights.push(1/Input.length)
   }
 
-  var UniqueClasses = [...new Set(Output)]
-
   var Threshold = []
   var ThresholdBeta = []
-  var ThresholdPolarity = []
 
   for (var i = 0; i < Input[0].length; i++) {
      Threshold.push([])
      ThresholdBeta.push([])
-     ThresholdPolarity.push([])
   }
 
   for (var i = 0; i < Input[0].length; i++) {
@@ -47,111 +43,41 @@
    }
   }
 
-  function Sort (a,b) {
-    return a - b 
-  }
-
-  Threshold[0] = Threshold[0].sort(Sort)
-  Threshold[1] = Threshold[1].sort(Sort)
-
-  var NewValue = [[],[]]
-
-  for (var i = 0; i < Threshold.length; i++) {
-     for (var j = 0; j < Threshold[i].length; j++) {
-       if (j+1 !== Threshold[i].length) {
-          NewValue[i].push((Threshold[i][j]+Threshold[i][j+1])/2)
-       }
-     }
-  }
-
-  Threshold[0] = Threshold[0].concat(NewValue[0])
-  Threshold[1] = Threshold[1].concat(NewValue[1])
-
-  for (var i = 0; i < Threshold.length; i++) {
-     var Max = Math.max(...Threshold[i])-1
-     var Min = Math.min(...Threshold[i])+1
-     for (var j = Min; j < Max; j+=0.01) {
-        Threshold[i].push(j)
-     }
-  }
-
-  NewValue = [[],[]]
-
-  for (var i = 0; i < Threshold.length; i++) {
-     for (var j = 0; j < Threshold[i].length; j++) {
-       if (j+1 !== Threshold[i].length) {
-          NewValue[i].push((Threshold[i][j]+Threshold[i][j+1])/2)
-       }
-     }
-  }
-
-  Threshold[0] = Threshold[0].concat(NewValue[0])
-  Threshold[1] = Threshold[1].concat(NewValue[1])
-
   function SplitDataSet (i,Threshold) {
-     var Wrong = 0
      var Value = 0
      var ActualOutput = []
       for (var k = 0; k < Input.length; k++) {
-         if ( Input[k][i] > Threshold ) {
+         if ( Input[k][i] >= Threshold ) {
             Value = 1
          } else {
             Value = -1
          }
-
-         if (Value === Output[k]) {
-            ActualOutput.push([Output[k],Value])
-         } else {
-            Wrong += 1
-            ActualOutput.push([Output[k],Value])
-         }
+         ActualOutput.push([Output[k],Value])
       }
-
-      if (Wrong/Input.length >= 0.5) {
-         Wrong = 0
-         Value = 0
-         ActualOutput = []
-         for (var k = 0; k < Input.length; k++) {
-           if ( Input[k][i] > Threshold) {
-             Value = -1
-           } else {
-             Value = 1
-           }
-
-           if (Value === Output[k]) {
-              ActualOutput.push([Output[k],Value])
-           } else {
-              Wrong += 1
-              ActualOutput.push([Output[k],Value])
-           }
-         }
-         return [Wrong,-1,ActualOutput]
-      } else {
-        return [Wrong,1,ActualOutput]
-      }
+      return ActualOutput
   }
 
   for (var i = 0; i < Threshold.length; i++) {
    for (var j = 0; j < Threshold[i].length; j++) {
      var Result = SplitDataSet(i,Threshold[i][j])
      var MissClassificationRate = 0
-     for (var k = 0; k < Result[2].length; k++) {
-        if (Result[2][k][0] === Result[2][k][1]) {
+     for (var k = 0; k < Result.length; k++) {
+        if (Result[k][0] === Result[k][1]) {
            MissClassificationRate += 0 * Weights[k]
         } else {
            MissClassificationRate += 1 * Weights[k]
         }
      }
      var SumWeights = 0
-     for (var k = 0; k < Result[2].length; k++) {
+     for (var k = 0; k < Result.length; k++) {
         SumWeights += Weights[k]
      }
      var ClassifierError = (MissClassificationRate/SumWeights)
+     console.log(ClassifierError)
      var Beta = 1/2 * Math.log( (1 - ClassifierError) / ClassifierError)
      ThresholdBeta[i].push(Beta)
-     ThresholdPolarity[i].push(Result[1])
      for (var k = 0; k < Weights.length; k++) {
-        Weights[k] *= Math.exp(-Beta * ( Result[2][k][0] * Result[2][k][1] ) )
+        Weights[k] *= Math.exp(-Beta * ( Result[k][0] * Result[k][1] ) )
      }
      var Sum = 0
      for (var k = 0; k < Weights.length; k++) {
@@ -177,14 +103,10 @@
    var Points = 0
    for (var j = 0; j < Threshold.length; j++) {
       for (var k = 0; k < Threshold[j].length; k++) {
-          if (TestData[i][j] > Threshold[j][k]) {
-            Points += ThresholdPolarity[j][k] * ThresholdBeta[j][k]
+          if (TestData[i][j] >= Threshold[j][k]) {
+            Points += 1 * ThresholdBeta[j][k] 
           } else {
-            if (ThresholdPolarity[j][k] === 1) {
-              Points += -1 * ThresholdBeta[j][k] 
-            } else {
-              Points += 1 * ThresholdBeta[j][k] 
-            }
+            Points += -1 * ThresholdBeta[j][k] 
           }
       }
    }
@@ -207,13 +129,8 @@
       CountError += 1
    }
   }
-  console.log(CountError/TestData.length)
 
-  for (var i = 0; i < Input.length; i++) {
-    OriginalInput.push({x:Input[i][0],y:Input[i][1]})
-  }
-
-   var DataSet = [{
+  var DataSet = [{
             borderColor: 'rgb(0, 0, 255)',
             backgroundColor: 'rgb(0, 0, 255)',
             label: '1',
@@ -230,8 +147,8 @@
             data: NoClassData,
         }]
 
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var scatterChart = new Chart(ctx, {
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var scatterChart = new Chart(ctx, {
             type: 'scatter',
             responsive:true,
             data: {
