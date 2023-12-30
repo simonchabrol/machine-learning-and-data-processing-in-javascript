@@ -39,7 +39,7 @@ var Input = [
      var Value = 0
      var ActualOutput = []
       for (var k = 0; k < Input.length; k++) {
-         if ( Input[k][i] >= Threshold ) {
+         if ( Input[k][i] > Threshold ) {
             Value = 1
          } else {
             Value = -1
@@ -89,7 +89,7 @@ var Input = [
    var Points = 0
    for (var j = 0; j < Threshold.length; j++) {
       for (var k = 0; k < Threshold[j].length; k++) {
-          if (TestData[i][j] >= Threshold[j][k]) {
+          if (TestData[i][j] > Threshold[j][k]) {
             Points += 1 * ThresholdBeta[j][k] 
           } else {
             Points += -1 * ThresholdBeta[j][k] 
