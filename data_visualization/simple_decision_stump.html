@@ -73,7 +73,6 @@
         SumWeights += Weights[k]
      }
      var ClassifierError = (MissClassificationRate/SumWeights)
-     console.log(ClassifierError)
      var Beta = 1/2 * Math.log( (1 - ClassifierError) / ClassifierError)
      ThresholdBeta[i].push(Beta)
      for (var k = 0; k < Weights.length; k++) {
@@ -129,6 +128,7 @@
       CountError += 1
    }
   }
+  console.log(CountError/TestData.length)
 
   var DataSet = [{
             borderColor: 'rgb(0, 0, 255)',
