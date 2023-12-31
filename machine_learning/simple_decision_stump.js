@@ -35,6 +35,19 @@ var Input = [
    }
   }
 
+  var NewValue = [[],[]]
+
+  for (var i = 0; i < Threshold.length; i++) {
+    for (var j = 0; j < Threshold[0].length; j++) {
+       if (j+1 !== Threshold[0].length) {
+         NewValue[i].push(Threshold[i][j]+Threshold[i][j+1]/2)
+       }
+    }
+  }
+
+  Threshold[0] = Threshold[0].concat(NewValue[0])
+  Threshold[1] = Threshold[1].concat(NewValue[1])
+
   function SplitDataSet (i,Threshold) {
      var Value = 0
      var ActualOutput = []
