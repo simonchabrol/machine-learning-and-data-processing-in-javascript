@@ -58,7 +58,6 @@ function GetBestSplit(Input,Output) {
 }
 
 function ID3(Input, Output, Attributes) {
-  console.log("ID3 : " + Input,Output)
   if (Output.length === 1) {
     return { Type:'Result', Output: Output[0] }
   }
