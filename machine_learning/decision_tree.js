@@ -21,13 +21,13 @@ function SplitDataSet(Index, Input, Value, Output) {
   return [Left, Right]
 }
 
-function GetBestSplit(Input,Output) {
+function GetBestSplit(Input,Output,Attributes) {
   var Splits = []
 
   for (var i = 0; i < Input.length; i++) {
-    for (var j = 0; j < Input[0].length; j++) {
-      var Result = SplitDataSet(j, Input, Input[i][j], Output)
-      Splits.push({ Index: j, Value: Input[i][j], Groups: Result })
+    for (var j = 0; j < Attributes.length; j++) {
+      var Result = SplitDataSet(Attributes[j], Input, Input[i][Attributes[j]], Output)
+      Splits.push({ Index: Attributes[j], Value: Input[i][Attributes[j]], Groups: Result })
     }
   }
 
@@ -59,7 +59,7 @@ function GetBestSplit(Input,Output) {
 
 function ID3(Input, Output, Attributes) {
   if (Output.length === 1) {
-    return { Type:'Result', Output: Output[0] }
+    return { type:'result', output: Output[0] }
   }
   if (Attributes.length === 0) {
     var Sum = 0
@@ -72,10 +72,12 @@ function ID3(Input, Output, Attributes) {
     } else {
       FinalSum = -1
     }
-    return { Type:'Result', Output: FinalSum }
+    return { type:'result', output: FinalSum }
   }
-  var BestAttribute = GetBestSplit(Input, Output)
-  Attributes.splice(BestAttribute.Index,1)
+  var BestAttribute = GetBestSplit(Input, Output, Attributes)
+  console.log('Best split is : ' + JSON.stringify(BestAttribute))
+  var Index = Attributes.indexOf(BestAttribute.Index)
+  Attributes.splice(Index,1)
   AttributesMinusBest = Attributes
   var UniqueValues = []
   for (var i = 0; i < Input.length; i++) {
@@ -85,6 +87,7 @@ function ID3(Input, Output, Attributes) {
 
   var node = {
     name: BestAttribute.Value,
+    index: BestAttribute.Index
   }
 
   node.vals = UniqueValues.map(function (v) {
@@ -108,3 +111,32 @@ function ID3(Input, Output, Attributes) {
 
 var Root = ID3(Input, Output, Attributes)
 console.log(Root)
+
+function Predict(Root,Input) {
+    while (Root.type !== "result") {
+       var Attribute = Root.name
+       var AttributeIndex = Root.index
+       var Value = Input[AttributeIndex]
+       var ChildNode = (Root.vals).map(function (v) {
+          if(v.name == Value) {
+            return v
+          }
+       })
+       for (var i = 0; i < ChildNode.length; i++) {
+          if (ChildNode[i] !== undefined) {
+            ChildNode = ChildNode[i]
+            break
+          }
+       }
+       if (ChildNode) {
+         Root = ChildNode.child
+       } else {
+         Root = Root.vals[0].child
+       }
+    }
+    return [Input, Root.output]
+}
+
+for (var i = 0; i < Input.length; i++) {
+   console.log(JSON.stringify(Predict(Root,Input[i])))
+}
