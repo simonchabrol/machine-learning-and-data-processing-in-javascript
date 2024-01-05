@@ -1,24 +1,39 @@
-var Attributes = [0, 1]
+var Attributes = [0, 1, 2, 3]
 
 var Input = [
-  [2, 0],
-  [1, 1],
-  [0, 2],
+  [ 'Sunny', 'Hot', 'High', 'Weak' ],
+  [ 'Sunny', 'Hot', 'High', 'Strong' ],
+  [ 'Overcast', 'Hot', 'High', 'Weak' ],
+  [ 'Rain', 'Mild', 'High', 'Weak' ],
+  [ 'Rain', 'Cool', 'Normal', 'Weak' ],
+  [ 'Rain', 'Cool', 'Normal', 'Strong' ],
+  [ 'Overcast', 'Cool', 'Normal', 'Strong' ],
+  [ 'Sunny', 'Mild', 'High', 'Weak' ],
+  [ 'Sunny', 'Cool', 'Normal', 'Weak' ],
+  [ 'Rain', 'Mild', 'Normal', 'Weak' ],
+  [ 'Sunny', 'Mild', 'Normal', 'Strong' ],
+  [ 'Overcast', 'Mild', 'High', 'Strong' ],
+  [ 'Overcast', 'Hot', 'Normal', 'Weak' ],
+  [ 'Rain', 'Mild', 'High', 'Strong' ]
+ ] 
+ var Output = [
+  -1,  -1,  1,
+  1, 1, -1,
+  1, -1,  1,
+  1, 1, 1,
+  1, -1
 ]
 
-var Output = [1,-1,1]
-
 function SplitDataSet(Index, Input, Value, Output) {
-  var Left = []
-  var Right = []
+  var Result = []
   for (var i = 0; i < Input.length; i++) {
-    if (Input[i][Index] < Value) {
-      Right.push([Input[i], -1, Output[i]])
+    if (Input[i][Index] === Value) {
+      Result.push([Input[i], 1, Output[i]])
     } else {
-      Left.push([Input[i], 1, Output[i]])
+      Result.push([Input[i], -1, Output[i]])
     }
   }
-  return [Left, Right]
+  return Result
 }
 
 function GetBestSplit(Input,Output,Attributes) {
@@ -37,13 +52,11 @@ function GetBestSplit(Input,Output,Attributes) {
   for (var i = 0; i < Splits.length; i++) {
     var False = 0
 
-    var GroupsToCheck = Splits[i].Groups
+    var ResultToCheck = Splits[i].Groups
 
-    for (var j = 0; j < GroupsToCheck.length; j++) {
-      for (var k = 0; k < GroupsToCheck[j].length; k++) {
-        if (GroupsToCheck[j][k][1] !== GroupsToCheck[j][k][2]) {
-          False += 1
-        }
+    for (var j = 0; j < ResultToCheck.length; j++) {
+      if (ResultToCheck[j][1] !== ResultToCheck[j][2]) {
+        False += 1
       }
     }
     if (InitialError === undefined) {
@@ -109,15 +122,14 @@ function ID3(Input, Output, Attributes) {
 }
 
 var Root = ID3(Input, Output, Attributes)
-console.log(Root)
+console.log(JSON.stringify(Root))
 
 function Predict(Root,Input) {
     while (Root.type !== "result") {
-       var Attribute = Root.name
        var AttributeIndex = Root.index
        var Value = Input[AttributeIndex]
        var ChildNode = (Root.vals).map(function (v) {
-          if(v.name == Value) {
+          if(v.name === Value) {
             return v
           }
        })
@@ -137,5 +149,5 @@ function Predict(Root,Input) {
 }
 
 for (var i = 0; i < Input.length; i++) {
-   console.log(JSON.stringify(Predict(Root,Input[i])))
+   console.log(JSON.stringify(Predict(Root,Input[i])),Output[i])
 }
