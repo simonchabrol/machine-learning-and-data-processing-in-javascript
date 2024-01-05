@@ -75,7 +75,6 @@ function ID3(Input, Output, Attributes) {
     return { type:'result', output: FinalSum }
   }
   var BestAttribute = GetBestSplit(Input, Output, Attributes)
-  console.log('Best split is : ' + JSON.stringify(BestAttribute))
   var Index = Attributes.indexOf(BestAttribute.Index)
   Attributes.splice(Index,1)
   AttributesMinusBest = Attributes
