@@ -70,7 +70,7 @@ function GetBestSplit(Input,Output,Attributes) {
   return BestSplit
 }
 
-function ID3(Input, Output, Attributes) {
+function DecisionTree(Input, Output, Attributes) {
   if (Output.length === 1) {
     return { type:'result', output: Output[0] }
   }
@@ -115,13 +115,13 @@ function ID3(Input, Output, Attributes) {
         name: v,
         index : BestAttribute.Index
       }
-      child_node.child = ID3(Subset, SubsetOutput, AttributesMinusBest)
+      child_node.child = DecisionTree(Subset, SubsetOutput, AttributesMinusBest)
       return child_node
   })
   return node
 }
 
-var Root = ID3(Input, Output, Attributes)
+var Root = DecisionTree(Input, Output, Attributes)
 console.log(JSON.stringify(Root))
 
 function Predict(Root,Input) {
