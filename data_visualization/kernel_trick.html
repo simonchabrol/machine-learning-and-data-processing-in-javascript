@@ -3,16 +3,19 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script>
 
+    var OneData = []
+    var ZeroData = []
+
     var Input = []
     var Output = []
 
-    var R = [1, 2]
+    var R = [1, 2, 3, 4]
 
     for (var j = 0; j < R.length; j++) {
         for (var i = 0; i < 200; i++) {
             var Random = Math.random() * (R[j] + 0.4 - R[j]) + R[j]
             Input.push([(Random) * Math.sin(i), (Random) * Math.cos(i)])
-            if (j === 0) {
+            if (j === 0 || j == 2) {
                 Output.push(-1)
             } else {
                 Output.push(1)
