@@ -1,26 +1,30 @@
-<canvas id="myChart" width="300" height="100" ></canvas>
+<canvas id="myChart" width="10" height="10" ></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script>
+
 
   var Input = []
   var Output = []
 
   var R = [1,2]
 
-  var Input = []
-  var Output = []
-
   for (var j = 0; j < R.length; j++) {
       for (var i = 0; i < 100; i++) {
           var Random = Math.random() * (R[j]+0.4 - R[j]) + R[j]
-          Input.push([(Random)*Math.sin(i)+3,(Random)*Math.cos(i)+3])
+          Input.push([(Random)*Math.sin(i),(Random)*Math.cos(i)])
           if (j === 0) {
              Output.push(-1)
           } else {
              Output.push(1)
           }
       } 
+  }
+
+  var DataPoints = []
+
+  for (var i = 0; i < Input.length; i++) {
+     DataPoints.push({x:Input[i][0],y:Input[i][1]})
   }
   
   var Weights = []
@@ -101,21 +105,36 @@
    }
   }
 
-  var TestData = Input
-  var TestDataOutput = Output
-
-  var CountError = 0
-
   var OneData = []
   var ZeroData = []
-  var NoClassData = []
-  var OriginalInput = []
 
-  for (var i = 0; i < TestData.length; i++) {
+  var MaxMinColumns = [[], []]
+
+  for (var i = 0; i < Input.length; i++) {
+     for (var j = 0; j < Input[i].length; j++) {
+         MaxMinColumns[j].push(Input[i][j])
+     }
+  }
+
+  var MaxColumn1 = Math.max(...MaxMinColumns[0]) + 1
+  var MinColumn1 = Math.min(...MaxMinColumns[0]) - 1
+  var MaxColumn2 = Math.max(...MaxMinColumns[1]) + 1
+  var MinColumn2 = Math.min(...MaxMinColumns[1]) - 1
+
+  var Grid = []
+
+  for (var i = MinColumn1; i < MaxColumn1; i+=0.1) {
+     for (var j = MinColumn2; j < MaxColumn2; j+=0.1) {
+        Grid.push([i, j])
+     }
+  }
+
+
+  for (var i = 0; i < Grid.length; i++) {
    var Points = 0
    for (var j = 0; j < Threshold.length; j++) {
       for (var k = 0; k < Threshold[j].length; k++) {
-          if (TestData[i][j] > Threshold[j][k]) {
+          if (Grid[i][j] > Threshold[j][k]) {
             Points += 1 * ThresholdBeta[j][k] 
           } else {
             Points += -1 * ThresholdBeta[j][k] 
@@ -125,40 +144,32 @@
    var CalculatedOutput
    if (Points !== 0) {
       if (Points > 0) {
-        CalculatedOutput = 1
-        OneData.push({x:TestData[i][0],y:TestData[i][1]})
+        OneData.push({x:Grid[i][0],y:Grid[i][1]})
       } else {
-        ZeroData.push({x:TestData[i][0],y:TestData[i][1]})
-        CalculatedOutput = -1
+        ZeroData.push({x:Grid[i][0],y:Grid[i][1]})
       }
-      console.log(TestData[i],CalculatedOutput,TestDataOutput[i],Points)
-   } else {
-      CalculatedOutput = 'No class'
-      console.log(TestData[i],'No class',TestDataOutput[i],Points)
-      NoClassData.push({x:TestData[i][0],y:TestData[i][1]})
-   }
-   if (CalculatedOutput !== TestDataOutput[i]) {
-      CountError += 1
-   }
+   } 
   }
-  console.log(CountError/TestData.length)
 
   var DataSet = [{
-            borderColor: 'rgb(0, 0, 255)',
-            backgroundColor: 'rgb(0, 0, 255)',
+            borderColor: 'rgb(0, 0, 0)',
+            backgroundColor: 'rgb(0, 0, 0)',
+            label: 'Datapoints',
+            data: DataPoints,
+            pointRadius: 4
+        },{
+            borderColor: 'rgb(255, 0, 0)',
+            backgroundColor: 'rgb(255, 0, 0)',
             label: '1',
             data: OneData,
+            pointRadius: 1
         },{
             borderColor: 'rgb(0, 255, 0)',
             backgroundColor: 'rgb(0, 255, 0)',
             label: '-1',
             data: ZeroData,
-        },{
-            borderColor: 'rgb(255, 0, 0)',
-            backgroundColor: 'rgb(255, 0, 0)',
-            label: 'No class',
-            data: NoClassData,
-        }]
+            pointRadius: 1
+        },]
 
     var ctx = document.getElementById('myChart').getContext('2d');
     var scatterChart = new Chart(ctx, {
