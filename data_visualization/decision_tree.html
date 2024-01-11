@@ -28,8 +28,7 @@
     var Splits = []
     for (var i = 0; i < Input.length; i++) {
       for (var j = 0; j < Attributes.length; j++) {
-        var Result = SplitDataSet(Attributes[j], Input, Input[i][Attributes[j]],
-          Output)
+        var Result = SplitDataSet(Attributes[j], Input, Input[i][Attributes[j]], Output)
         Splits.push({Index: Attributes[j], Value: Input[i][Attributes[j]], Groups:Result})
       }
     }
