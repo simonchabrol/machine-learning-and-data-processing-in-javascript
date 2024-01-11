@@ -1,0 +1,245 @@
+<canvas id="myChart" width="10" height="10"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+
+  var Attributes = [0,1]
+  var Input = [[1.35,1.94],[2.06,2],[1.88,1.72],[1.39,1.87],[1.42,1.31],[1.93,1.25],[1.61,1.49],[2.28,1.54],[2.27,1.11],[1.87,0.8],[1.64,0.99],[3.08,0.89],[3.83,1.08],[3.18,1.34],[3.59,1.51],[3.98,1.86],[3.54,2.09],[3.14,1.81],[3.55,2.22],[3.94,2.62],[3.4,2.57],[3.2,2.25],[3.67,2.71],[3.64,2.91],[2.58,2.69],[2.99,2.64],[3.38,3.2],[2.6,3.14],[1.67,2.83],[1.56,2.82],[1.13,2.74],[0.97,3.37],[1.42,3.43],[1.7,3.12],[1.39,3.15],[2.12,3.38],[2.15,3.06],[2.08,2.77],[1.66,2.58],[1.27,2.51],[0.85,2.91],[0.97,3.24],[2.06,3.76],[2.64,3.74],[3.17,3.5]]
+  var Output = [1,1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
+  
+  var DataPoints = []
+
+  for (var i = 0; i < Input.length; i++) {
+    DataPoints.push({ x: Input[i][0], y: Input[i][1] })
+  }
+
+  function SplitDataSet(Index, Input, Value, Output) {
+    var Left = []
+    var Right = []
+    for (var i = 0; i < Input.length; i++) {
+      if (Input[i][Index] < Value) {
+        Right.push(Output[i])
+      } else {
+        Left.push(Output[i])
+      }
+    }
+    return [Left, Right]
+  }
+  function GetBestSplit(Input, Output, Attributes) {
+    var Splits = []
+    for (var i = 0; i < Input.length; i++) {
+      for (var j = 0; j < Attributes.length; j++) {
+        var Result = SplitDataSet(Attributes[j], Input, Input[i][Attributes[j]],
+          Output)
+        Splits.push({Index: Attributes[j], Value: Input[i][Attributes[j]], Groups:Result})
+      }
+    }
+    var InitialGini
+    var BestSplit
+    for (var i = 0; i < Splits.length; i++) {
+      var False = 0
+      var ResultToCheck = Splits[i].Groups
+      var GroupOneClassZero = 0
+      var GroupOneClassOne = 0
+      var GroupZeroClassZero = 0
+      var GroupZeroClassOne = 0
+      for (var j = 0; j < ResultToCheck.length; j++) {
+        for (var k = 0; k < ResultToCheck[j].length; k++) {
+          if (j === 0) {
+            if (ResultToCheck[j][k] === 1) {
+              GroupOneClassOne += 1
+            } else {
+              GroupOneClassZero += 1
+            }
+          } else if (j === 1) {
+            if (ResultToCheck[j][k] === 1) {
+              GroupZeroClassOne += 1
+            } else {
+              GroupZeroClassZero += 1
+            }
+          }
+        }
+      }
+      if (ResultToCheck[0].length !== 0) {
+        GroupOneClassOne = GroupOneClassOne / ResultToCheck[0].length
+        GroupOneClassZero = GroupOneClassZero / ResultToCheck[0].length
+      }
+      if (ResultToCheck[1].length !== 0) {
+        GroupZeroClassOne = GroupZeroClassOne / ResultToCheck[1].length
+        GroupZeroClassZero = GroupZeroClassZero / ResultToCheck[1].length
+      }
+      var GiniGroupOne
+      var GiniGroupZero
+      if (ResultToCheck[0].length === 0) {
+        GiniGroupOne = (1 - 0) * ResultToCheck[0].length / Input.length
+      } else {
+        GiniGroupOne = (1 - ((GroupOneClassOne * GroupOneClassOne) +
+          (GroupOneClassZero * GroupOneClassZero))) * ResultToCheck[0].length /
+          Input.length
+      }
+      if (ResultToCheck[1].length === 0) {
+        GiniGroupZero = (1 - 0) * ResultToCheck[1].length / Input.length
+      } else {
+        GiniGroupZero = (1 - ((GroupZeroClassOne * GroupZeroClassOne) +
+          (GroupZeroClassZero * GroupZeroClassZero))) * ResultToCheck[1].length /
+          Input.length
+      }
+      var Gini = GiniGroupOne + GiniGroupZero
+      if (InitialGini === undefined) {
+        InitialGini = Gini
+        BestSplit = Splits[i]
+      } else if (Gini < InitialGini) {
+        BestSplit = Splits[i]
+        InitialGini = Gini
+      }
+    }
+    return BestSplit
+  }
+  function DecisionTree(Input, Output, Attributes) {
+    function allEqual(arr) {
+      return new Set(arr).size == 1
+    }
+    if (allEqual(Output) === true) {
+      return { type: 'result', output: Output[0] }
+    }
+    if (Output.length === 1) {
+      console.log('Case 1', Input, Output)
+      return { type: 'result', output: Output[0] }
+    }
+    if (Attributes.length === 0) {
+      console.log('Case 2 : ' + Input, Output)
+      var Sum = 0
+      for (var i = 0; i < Output.length; i++) {
+        Sum += Output[i]
+      }
+      var FinalSum;
+      if (Sum > 0) {
+        FinalSum = 1
+      } else {
+        FinalSum = -1
+      }
+      return { type: 'result', output: FinalSum }
+    }
+    var BestAttribute = GetBestSplit(Input, Output, Attributes)
+    var Index = Attributes.indexOf(BestAttribute.Index)
+    Attributes.splice(Index, 1)
+    AttributesMinusBest = Attributes
+    var UniqueValues = []
+    for (var i = 0; i < Input.length; i++) {
+      UniqueValues.push(Input[i][BestAttribute.Index])
+      UniqueValues = [...new Set(UniqueValues)]
+    }
+    var node = {
+      branch: BestAttribute.Value,
+      index: BestAttribute.Index,
+      uuid: Math.random(),
+      vals: []
+    }
+    var RightSubset = []
+    var RightSubsetOutput = []
+    var LeftSubset = []
+    var LeftSubsetOutput = []
+    for (var j = 0; j < Input.length; j++) {
+      if (Input[j][BestAttribute.Index] < BestAttribute.Value) {
+        RightSubset.push(Input[j])
+        RightSubsetOutput.push(Output[j])
+      } else if (Input[j][BestAttribute.Index] >= BestAttribute.Value) {
+        LeftSubset.push(Input[j])
+        LeftSubsetOutput.push(Output[j])
+      }
+    }
+    var NodeLeft = {
+      name: BestAttribute.Value,
+      index: BestAttribute.Index,
+      uuid: Math.random(),
+      child: DecisionTree(LeftSubset, LeftSubsetOutput, AttributesMinusBest)
+    }
+    node.vals.push(NodeLeft)
+    var NodeRight = {
+      name: BestAttribute.Value,
+      index: BestAttribute.Index,
+      uuid: Math.random(),
+      child: DecisionTree(RightSubset, RightSubsetOutput, AttributesMinusBest)
+    }
+    node.vals.push(NodeRight)
+    return node
+  }
+
+  var Root = DecisionTree(Input, Output, Attributes)
+
+  var OneData = []
+  var ZeroData = []
+  var MaxMinColumns = [[], []]
+  for (var i = 0; i < Input.length; i++) {
+    for (var j = 0; j < Input[i].length; j++) {
+      MaxMinColumns[j].push(Input[i][j])
+    }
+  }
+  var MaxColumn1 = Math.max(...MaxMinColumns[0]) + 1
+  var MinColumn1 = Math.min(...MaxMinColumns[0]) - 1
+  var MaxColumn2 = Math.max(...MaxMinColumns[1]) + 1
+  var MinColumn2 = Math.min(...MaxMinColumns[1]) - 1
+  var Grid = []
+  for (var i = MinColumn1; i < MaxColumn1; i += 0.1) {
+    for (var j = MinColumn2; j < MaxColumn2; j += 0.1) {
+      Grid.push([i, j])
+    }
+  }
+  function Predict(Root, Input) {
+    while (Root.type !== "result") {
+      var AttributeIndex = Root.index
+      var Value = Input[AttributeIndex]
+      var ChildNode
+      if (Value <= Root.branch) {
+        ChildNode = Root.vals[1]
+      } else {
+        ChildNode = Root.vals[0]
+      }
+      Root = ChildNode.child
+    }
+    return Root.output
+  }
+  for (var i = 0; i < Grid.length; i++) {
+    var FinalOutput = Predict(Root, Grid[i])
+    if (FinalOutput === 1) {
+      OneData.push({ x: Grid[i][0], y: Grid[i][1] })
+    } else {
+      ZeroData.push({ x: Grid[i][0], y: Grid[i][1] })
+    }
+  }
+  console.log(JSON.stringify(Root))
+  var DataSet = [{
+    borderColor: 'rgb(0, 0, 0)',
+    backgroundColor: 'rgb(0, 0, 0)',
+    label: 'Datapoints',
+    data: DataPoints,
+    pointRadius: 4
+  }, {
+    borderColor: 'rgb(255, 0, 0)',
+    backgroundColor: 'rgb(255, 0, 0)',
+    label: '1',
+    data: OneData,
+    pointRadius: 1
+  }, {
+    borderColor: 'rgb(0, 255, 0)',
+    backgroundColor: 'rgb(0, 255, 0)',
+    label: '-1',
+    data: ZeroData,
+    pointRadius: 1
+  },]
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var scatterChart = new Chart(ctx, {
+    type: 'scatter',
+    responsive: true,
+    data: {
+      datasets: DataSet
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          type: 'linear',
+          position: 'bottom'
+        }]
+      }
+    }
+  })
+</script>
