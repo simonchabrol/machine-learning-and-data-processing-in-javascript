@@ -1,0 +1,266 @@
+<canvas id="myChart" width="10" height="10"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+
+    var Input = []
+    var Output = []
+
+    var R = [1, 2]
+
+    for (var j = 0; j < R.length; j++) {
+        for (var i = 0; i < 200; i++) {
+            var Random = Math.random() * (R[j] + 0.4 - R[j]) + R[j]
+            Input.push([(Random) * Math.sin(i), (Random) * Math.cos(i), 1])
+            if (j === 0) {
+                Output.push([-1])
+            } else {
+                Output.push([1])
+            }
+        }
+    }
+
+    var DataPoints = []
+
+    for (var i = 0; i < Input.length; i++) {
+        DataPoints.push({ x: Input[i][0], y: Input[i][1] })
+    }
+    var Depth = 2
+    var NNeurons = 4
+
+    var Weights = []
+    var WeightsError = []
+
+    var Nodes = []
+    var NodesFinal = []
+
+    var OutputNode = 0
+    var OutputNodeFinal = 0
+
+    function GenerateDeepNeuralNetwork(Neurons, Depth, Start) {
+        for (var i = 0; i < Depth; i++) {
+            Nodes.push([])
+            NodesFinal.push([])
+        }
+        for (var i = 0; i < Depth + 1; i++) {
+            if (Start !== 1) {
+                Weights.push([])
+            }
+            WeightsError.push([])
+            for (var j = 0; j < Neurons; j++) {
+                if (Start !== 1) {
+                    Weights[i].push([])
+                }
+                WeightsError[i].push([])
+                if (i === Depth && j === 0) {
+                    break
+                }
+            }
+        }
+        for (var i = 0; i < Neurons; i++) {
+            for (var j = 0; j < Weights.length; j++) {
+                for (var k = 0; k < Weights[j].length; k++) {
+                    if (Start !== 1) {
+                        Weights[j][k].push(Math.random())
+                    }
+                    WeightsError[j][k].push(0)
+                }
+            }
+        }
+        for (var i = 0; i < Neurons; i++) {
+            for (var j = 0; j < Nodes.length; j++) {
+                Nodes[j].push(0)
+                NodesFinal[j].push(0)
+            }
+        }
+    }
+
+    GenerateDeepNeuralNetwork(NNeurons, Depth, 0)
+
+    function TrainDeepNeuralNetwork(Input, Output, Print) {
+
+        for (var i = 0; i < Nodes.length; i++) {
+            if (i === 0) {
+                for (var j = 0; j < Nodes[i].length; j++) {
+                    for (var k = 0; k < Input.length; k++) {
+                        Nodes[i][j] += Weights[i][j][k] * Input[k]
+                    }
+                }
+                for (var j = 0; j < Nodes[1].length; j++) {
+                    NodesFinal[i][j] += Math.tanh(Nodes[i][j])
+                }
+            } else {
+                for (var j = 0; j < Nodes[i].length; j++) {
+                    for (var k = 0; k < NodesFinal[i - 1].length; k++) {
+                        Nodes[i][j] += Weights[i][j][k] * NodesFinal[i - 1][k]
+                    }
+                }
+                for (var j = 0; j < Nodes[i].length; j++) {
+                    NodesFinal[i][j] += Math.tanh(Nodes[i][j])
+                }
+            }
+        }
+
+        OutputNode = 0
+
+        for (var i = 0; i < Output.length; i++) {
+            for (var j = 0; j < NodesFinal[NodesFinal.length - 1].length; j++) {
+                OutputNode += Weights[Weights.length - 1][i][j] * NodesFinal[NodesFinal.length - 1][j]
+            }
+        }
+
+        OutputNodeFinal = Math.tanh(OutputNode)
+        var TargetCalculated = OutputNodeFinal - Output
+
+        for (var i = 0; i < Nodes.length; i++) {
+            if (i === 0) {
+                for (var j = 0; j < Nodes[i].length; j++) {
+                    for (var k = 0; k < Input.length; k++) {
+                        WeightsError[i][j][k] += TargetCalculated * Input[k] * (1 - (Math.pow(Math.tanh(Nodes[i][j]), 2)))
+                    }
+                }
+            } else {
+                for (var j = 0; j < Nodes[i].length; j++) {
+                    for (var k = 0; k < NodesFinal[i - 1].length; k++) {
+                        WeightsError[i][j][k] += TargetCalculated * (1 - (Math.pow(Math.tanh(Nodes[i][j]), 2))) * NodesFinal[i - 1][k]
+                    }
+                }
+            }
+        }
+        for (var i = 0; i < Output.length; i++) {
+            for (var j = 0; j < NodesFinal[NodesFinal.length - 1].length; j++) {
+                WeightsError[Weights.length - 1][i][j] += TargetCalculated * NodesFinal[NodesFinal.length - 1][j]
+            }
+        }
+        for (var i = 0; i < Nodes.length; i++) {
+            if (i === 0) {
+                for (var j = 0; j < Nodes[i].length; j++) {
+                    for (var k = 0; k < Input.length; k++) {
+                        Weights[i][j][k] -= WeightsError[i][j][k] * 0.01
+                    }
+                }
+            } else {
+                for (var j = 0; j < Nodes[i].length; j++) {
+                    for (var k = 0; k < NodesFinal[i - 1].length; k++) {
+                        Weights[i][j][k] -= WeightsError[i][j][k] * 0.01
+                    }
+                }
+            }
+        }
+        for (var i = 0; i < Output.length; i++) {
+            for (var j = 0; j < NodesFinal[NodesFinal.length - 1].length; j++) {
+                Weights[Weights.length - 1][i][j] -= WeightsError[Weights.length - 1][i][j] * 0.01
+            }
+        }
+    }
+
+    for (var i = 0; i < 1000; i++) {
+        for (var j = 0; j < Input.length; j++) {
+            TrainDeepNeuralNetwork(Input[j], Output[j], i)
+            Nodes = []
+            NodesFinal = []
+            WeightsError = []
+            GenerateDeepNeuralNetwork(NNeurons, Depth, 1)
+        }
+    }
+
+    var OneData = []
+    var ZeroData = []
+    var MaxMinColumns = [[], []]
+    for (var i = 0; i < Input.length; i++) {
+        for (var j = 0; j < Input[i].length - 1; j++) {
+            MaxMinColumns[j].push(Input[i][j])
+        }
+    }
+    var MaxColumn1 = Math.max(...MaxMinColumns[0]) + 1
+    var MinColumn1 = Math.min(...MaxMinColumns[0]) - 1
+    var MaxColumn2 = Math.max(...MaxMinColumns[1]) + 1
+    var MinColumn2 = Math.min(...MaxMinColumns[1]) - 1
+    var Grid = []
+    for (var i = MinColumn1; i < MaxColumn1; i += 0.1) {
+        for (var j = MinColumn2; j < MaxColumn2; j += 0.1) {
+            Grid.push([i, j, 1])
+        }
+    }
+
+    for (var i = 0; i < Grid.length; i++) {
+        function ForwardNeuralNetwork(Input, Output) {
+            for (var i = 0; i < Nodes.length; i++) {
+                if (i === 0) {
+                    for (var j = 0; j < Nodes[i].length; j++) {
+                        for (var k = 0; k < Input.length; k++) {
+                            Nodes[i][j] += Weights[i][j][k] * Input[k]
+                        }
+                    }
+                    for (var j = 0; j < Nodes[1].length; j++) {
+                        NodesFinal[i][j] += Math.tanh(Nodes[i][j])
+                    }
+                } else {
+                    for (var j = 0; j < Nodes[i].length; j++) {
+                        for (var k = 0; k < NodesFinal[i - 1].length; k++) {
+                            Nodes[i][j] += Weights[i][j][k] * NodesFinal[i - 1][k]
+                        }
+                    }
+                    for (var j = 0; j < Nodes[i].length; j++) {
+                        NodesFinal[i][j] += Math.tanh(Nodes[i][j])
+                    }
+                }
+            }
+
+            OutputNode = 0
+
+            for (var i = 0; i < Output.length; i++) {
+                for (var j = 0; j < NodesFinal[NodesFinal.length - 1].length; j++) {
+                    OutputNode += Weights[Weights.length - 1][i][j] * NodesFinal[NodesFinal.length - 1][j]
+                }
+            }
+
+            OutputNodeFinal = Math.tanh(OutputNode)
+            if (OutputNodeFinal > 0) {
+                OneData.push({ x: Input[0], y: Input[1] })
+            } else {
+                ZeroData.push({ x: Input[0], y: Input[1] })
+            }
+        }
+        ForwardNeuralNetwork(Grid[i], Output[0])
+        Nodes = []
+        NodesFinal = []
+        WeightsError = []
+        GenerateDeepNeuralNetwork(NNeurons, Depth, 1)
+    }
+
+    var DataSet = [{
+        borderColor: 'rgb(0, 0, 0)',
+        backgroundColor: 'rgb(0, 0, 0)',
+        label: 'Datapoints',
+        data: DataPoints,
+        pointRadius: 4
+    }, {
+        borderColor: 'rgb(255, 0, 0)',
+        backgroundColor: 'rgb(255, 0, 0)',
+        label: '1',
+        data: OneData,
+        pointRadius: 1
+    }, {
+        borderColor: 'rgb(0, 255, 0)',
+        backgroundColor: 'rgb(0, 255, 0)',
+        label: '-1',
+        data: ZeroData,
+        pointRadius: 1
+    },]
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        responsive: true,
+        data: {
+            datasets: DataSet
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
+            }
+        }
+    })
+</script>
