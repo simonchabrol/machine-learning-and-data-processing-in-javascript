@@ -24,7 +24,7 @@
     for (var i = 0; i < Input.length; i++) {
         DataPoints.push({ x: Input[i][0], y: Input[i][1] })
     }
-    var Depth = 2
+    var Depth = 1
     var NNeurons = 4
 
     var Weights = []
@@ -85,8 +85,14 @@
                         Nodes[i][j] += Weights[i][j][k] * Input[k]
                     }
                 }
-                for (var j = 0; j < Nodes[1].length; j++) {
-                    NodesFinal[i][j] += Math.tanh(Nodes[i][j])
+                if (Depth !== 1) {
+                    for (var j = 0; j < Nodes[1].length; j++) {
+                        NodesFinal[i][j] += Math.tanh(Nodes[i][j])
+                    }
+                } else {
+                    for (var j = 0; j < Nodes[0].length; j++) {
+                        NodesFinal[i][j] += Math.tanh(Nodes[i][j])
+                    }
                 }
             } else {
                 for (var j = 0; j < Nodes[i].length; j++) {
@@ -191,8 +197,14 @@
                             Nodes[i][j] += Weights[i][j][k] * Input[k]
                         }
                     }
-                    for (var j = 0; j < Nodes[1].length; j++) {
-                        NodesFinal[i][j] += Math.tanh(Nodes[i][j])
+                    if (Depth !== 1) {
+                        for (var j = 0; j < Nodes[1].length; j++) {
+                            NodesFinal[i][j] += Math.tanh(Nodes[i][j])
+                        }
+                    } else {
+                        for (var j = 0; j < Nodes[0].length; j++) {
+                            NodesFinal[i][j] += Math.tanh(Nodes[i][j])
+                        }
                     }
                 } else {
                     for (var j = 0; j < Nodes[i].length; j++) {
@@ -227,6 +239,8 @@
         WeightsError = []
         GenerateDeepNeuralNetwork(NNeurons, Depth, 1)
     }
+
+    console.log(Nodes)
 
     var DataSet = [{
         borderColor: 'rgb(0, 0, 0)',
