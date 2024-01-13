@@ -117,9 +117,6 @@
     if (UniqueOutput.length === 1) {
       return { type: 'result', output: Output[0] }
     }
-    if (Output.length === 1) {
-      return { type: 'result', output: Output[0] }
-    }
     var BestAttribute = GetBestSplit(Input, Output, Attributes)
     var Index = Attributes.indexOf(BestAttribute.Index)
     var node = {
@@ -183,7 +180,7 @@
       var AttributeIndex = Root.index
       var Value = Input[AttributeIndex]
       var ChildNode
-      if (Value <= Root.branch) {
+      if (Value < Root.branch) {
         ChildNode = Root.vals[1]
       } else {
         ChildNode = Root.vals[0]
