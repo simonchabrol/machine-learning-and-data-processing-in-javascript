@@ -25,7 +25,7 @@
         DataPoints.push({ x: Input[i][0], y: Input[i][1] })
     }
     var Depth = 1
-    var NNeurons = 4
+    var NNeurons = [4]
 
     var Weights = []
     var WeightsError = []
@@ -46,28 +46,32 @@
                 Weights.push([])
             }
             WeightsError.push([])
-            for (var j = 0; j < Neurons; j++) {
-                if (Start !== 1) {
-                    Weights[i].push([])
-                }
-                WeightsError[i].push([])
-                if (i === Depth && j === 0) {
-                    break
-                }
-            }
-        }
-        for (var i = 0; i < Neurons; i++) {
-            for (var j = 0; j < Weights.length; j++) {
-                for (var k = 0; k < Weights[j].length; k++) {
+            for (var l = 0; l < Neurons.length; l++) {
+                for (var j = 0; j < Neurons[l]; j++) {
                     if (Start !== 1) {
-                        Weights[j][k].push(Math.random())
+                        Weights[i].push([])
                     }
-                    WeightsError[j][k].push(0)
+                    WeightsError[i].push([])
+                    if (i === Depth && j === 0) {
+                        break
+                    }
                 }
             }
         }
-        for (var i = 0; i < Neurons; i++) {
-            for (var j = 0; j < Nodes.length; j++) {
+        for (var l = 0; l < Neurons.length; l++) {
+            for (var i = 0; i < Neurons[l]; i++) {
+                for (var j = 0; j < Weights.length; j++) {
+                    for (var k = 0; k < Weights[j].length; k++) {
+                        if (Start !== 1) {
+                            Weights[j][k].push(Math.random())
+                        }
+                        WeightsError[j][k].push(0)
+                    }
+                }
+            }
+        }
+        for (var j = 0; j < Nodes.length; j++) {
+            for (var l = 0; l < Neurons[j]; l++) {
                 Nodes[j].push(0)
                 NodesFinal[j].push(0)
             }
@@ -85,14 +89,8 @@
                         Nodes[i][j] += Weights[i][j][k] * Input[k]
                     }
                 }
-                if (Depth !== 1) {
-                    for (var j = 0; j < Nodes[1].length; j++) {
-                        NodesFinal[i][j] += Math.tanh(Nodes[i][j])
-                    }
-                } else {
-                    for (var j = 0; j < Nodes[0].length; j++) {
-                        NodesFinal[i][j] += Math.tanh(Nodes[i][j])
-                    }
+                for (var j = 0; j < Nodes[i].length; j++) {
+                    NodesFinal[i][j] += Math.tanh(Nodes[i][j])
                 }
             } else {
                 for (var j = 0; j < Nodes[i].length; j++) {
@@ -197,14 +195,8 @@
                             Nodes[i][j] += Weights[i][j][k] * Input[k]
                         }
                     }
-                    if (Depth !== 1) {
-                        for (var j = 0; j < Nodes[1].length; j++) {
-                            NodesFinal[i][j] += Math.tanh(Nodes[i][j])
-                        }
-                    } else {
-                        for (var j = 0; j < Nodes[0].length; j++) {
-                            NodesFinal[i][j] += Math.tanh(Nodes[i][j])
-                        }
+                    for (var j = 0; j < Nodes[i].length; j++) {
+                        NodesFinal[i][j] += Math.tanh(Nodes[i][j])
                     }
                 } else {
                     for (var j = 0; j < Nodes[i].length; j++) {
@@ -239,8 +231,6 @@
         WeightsError = []
         GenerateDeepNeuralNetwork(NNeurons, Depth, 1)
     }
-
-    console.log(Nodes)
 
     var DataSet = [{
         borderColor: 'rgb(0, 0, 0)',
