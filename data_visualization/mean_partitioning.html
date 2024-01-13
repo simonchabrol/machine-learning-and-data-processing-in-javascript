@@ -1,0 +1,162 @@
+<canvas id="myChart" width="10" height="10"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+
+    var Input = []
+
+    var Centroids = []
+
+    var NumClass = 3
+
+    var max = 1
+    var min = 0
+
+    for (var i = 0; i < NumClass; i++) {
+          Centroids.push({x:Math.random()*(max-min)+min,y:Math.random()*(max-min)+min})
+    }
+
+    var Radius = 0.1
+
+    for (var i = 0; i < Centroids.length; i++) {
+        var x = Centroids[i].x
+        var y = Centroids[i].y
+        for (var j = 0; j < 100; j++) {
+           Input.push([Math.random()*((x+Radius)-(x-Radius))+(x-Radius),Math.random()*((y+Radius)-(y-Radius))+(y-Radius)])
+        }
+    }
+
+    Input.sort(function (a, b) {
+        var c
+        a.some(function (d, i) {
+            return c = d - b[i]
+        })
+        return c
+    })
+
+    var NewInput = []
+    var Distance = []
+    var FirstValue
+
+    while (Input.length !== 0) {
+
+        for (var i = 0; i < Input.length; i++) {
+
+            if (FirstValue === undefined) {
+                FirstValue = Input[i]
+                NewInput.push(FirstValue)
+            }
+
+            var InputList = Input.filter(function (item) {
+                return item !== FirstValue
+            })
+            Input = Input.filter(function (item) {
+                return item !== FirstValue
+            })
+
+            for (var j = 0; j < InputList.length; j++) {
+                var SecondValue = InputList[j]
+                var Count = 0
+                for (var k = 0; k < SecondValue.length; k++) {
+                    Count = Count + Math.abs(FirstValue[k] - SecondValue[k])
+                }
+                Distance.push(Math.round(Count * 10) / 10)
+            }
+
+            var Min = Math.min(...Distance)
+            var Index
+            for (var m = 0; m < Distance.length; m++) {
+                if (Distance[m] === Min) {
+                    Index = m
+                    break
+                }
+            }
+
+            SecondValue = Input[Index]
+            NewInput.push(SecondValue)
+            FirstValue = SecondValue
+            Input = Input.filter(function (item) {
+                return item !== SecondValue
+            })
+            Distance = []
+        }
+    }
+
+    Distance = [0]
+    for (var i = 0; i < NewInput.length; i++) {
+        FirstValue = NewInput[i]
+        SecondValue = NewInput[i + 1]
+        Count = 0
+        if (i + 1 < NewInput.length) {
+            for (var k = 0; k < FirstValue.length; k++) {
+                Count = Count + Math.abs(FirstValue[k] - SecondValue[k])
+            }
+            Distance.push(Math.round(Count * 10) / 10)
+        }
+    }
+    var UniqueDistance = [...new Set(Distance)]
+
+    UniqueDistance.sort(function (a, b) {
+        return a - b
+    })
+    var MeanDistance
+    var Sum = 0
+
+    for (var i = 0; i < UniqueDistance.length; i++) {
+        Sum += UniqueDistance[i]
+    }
+
+    MeanDistance = Sum / UniqueDistance.length
+
+    var Class = []
+    var Pair = []
+
+    for (var i = 0; i < Distance.length; i++) {
+        if (Distance[i] <= MeanDistance) {
+            Pair.push(NewInput[i])
+        } else {
+            Class.push(Pair)
+            Pair = []
+            Pair.push(NewInput[i])
+        }
+        if (i + 1 === Distance.length) {
+            Class.push(Pair)
+        }
+    }
+
+    var DataSet = []
+
+    for (var i = 0; i < Class.length; i++) {
+      var max = 250
+      var min = 0
+      var Colors = 'rgb('+(Math.floor(Math.random()*(max-min)+min))+','+(Math.floor(Math.random()*(max-min)+min))+','+(Math.floor(Math.random()*(max-min)+min))+')'
+      var Data = {
+        borderColor: Colors,
+        backgroundColor: Colors,
+        pointRadius: 4
+      }
+      var ListInput = []
+      for (var j = 0; j < Class[i].length; j++) {
+         ListInput.push({x:Class[i][j][0],y:Class[i][j][1]})
+      }
+      Data.data = ListInput
+      Data.label = 'Cluster ' + i
+      DataSet.push(Data)
+    }
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        responsive: true,
+        data: {
+            datasets: DataSet
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
+            }
+        }
+    })
+</script>
