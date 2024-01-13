@@ -28,7 +28,7 @@ function SplitDataSet(Index, Input, Value, Output) {
   var Left = []
   var Right = []
   for (var i = 0; i < Input.length; i++) {
-    if (Input[i][Index] < Value) {
+    if (Input[i][Index] == Value) {
       Right.push(Output[i])
     } else {
       Left.push(Output[i])
