@@ -25,54 +25,94 @@ var Input = [
 ]
 
 function SplitDataSet(Index, Input, Value, Output) {
-  var Result = []
+  var Left = []
+  var Right = []
   for (var i = 0; i < Input.length; i++) {
-    if (Input[i][Index] === Value) {
-      Result.push([Input[i], 1, Output[i]])
+    if (Input[i][Index] < Value) {
+      Right.push(Output[i])
     } else {
-      Result.push([Input[i], -1, Output[i]])
+      Left.push(Output[i])
     }
   }
-  return Result
+  return [Left, Right]
 }
-
-function GetBestSplit(Input,Output,Attributes) {
+function GetBestSplit(Input, Output, Attributes) {
   var Splits = []
-
   for (var i = 0; i < Input.length; i++) {
     for (var j = 0; j < Attributes.length; j++) {
-      var Result = SplitDataSet(Attributes[j], Input, Input[i][Attributes[j]], Output)
-      Splits.push({ Index: Attributes[j], Value: Input[i][Attributes[j]], Groups: Result })
+      var Result = SplitDataSet(Attributes[j], Input, Input[i][Attributes[j]],
+        Output)
+      Splits.push({
+        Index: Attributes[j], Value: Input[i][Attributes[j]], Groups:
+          Result
+      })
     }
   }
-
-  var InitialError
+  var InitialGini
   var BestSplit
-
   for (var i = 0; i < Splits.length; i++) {
-    var False = 0
-
     var ResultToCheck = Splits[i].Groups
-
+    var GroupOneClassZero = 0
+    var GroupOneClassOne = 0
+    var GroupZeroClassZero = 0
+    var GroupZeroClassOne = 0
     for (var j = 0; j < ResultToCheck.length; j++) {
-      if (ResultToCheck[j][1] !== ResultToCheck[j][2]) {
-        False += 1
+      for (var k = 0; k < ResultToCheck[j].length; k++) {
+        if (j === 0) {
+          if (ResultToCheck[j][k] === 1) {
+            GroupOneClassOne += 1
+          } else {
+            GroupOneClassZero += 1
+          }
+        } else if (j === 1) {
+          if (ResultToCheck[j][k] === 1) {
+            GroupZeroClassOne += 1
+          } else {
+            GroupZeroClassZero += 1
+          }
+        }
       }
     }
-    if (InitialError === undefined) {
-      InitialError = False
+    if (ResultToCheck[0].length !== 0) {
+      GroupOneClassOne = GroupOneClassOne / ResultToCheck[0].length
+      GroupOneClassZero = GroupOneClassZero / ResultToCheck[0].length
+    }
+    if (ResultToCheck[1].length !== 0) {
+      GroupZeroClassOne = GroupZeroClassOne / ResultToCheck[1].length
+      GroupZeroClassZero = GroupZeroClassZero / ResultToCheck[1].length
+    }
+    var GiniGroupOne
+    var GiniGroupZero
+    if (ResultToCheck[0].length === 0) {
+      GiniGroupOne = (1 - 0) * ResultToCheck[0].length / Input.length
+    } else {
+      GiniGroupOne = (1 - ((GroupOneClassOne * GroupOneClassOne) +
+        (GroupOneClassZero * GroupOneClassZero))) * ResultToCheck[0].length /
+        Input.length
+    }
+    if (ResultToCheck[1].length === 0) {
+      GiniGroupZero = (1 - 0) * ResultToCheck[1].length / Input.length
+    } else {
+      GiniGroupZero = (1 - ((GroupZeroClassOne * GroupZeroClassOne) +
+        (GroupZeroClassZero * GroupZeroClassZero))) * ResultToCheck[1].length /
+        Input.length
+    }
+    var Gini = GiniGroupOne + GiniGroupZero
+    if (InitialGini === undefined) {
+      InitialGini = Gini
       BestSplit = Splits[i]
-    } else if (False < InitialError) {
+    } else if (Gini < InitialGini) {
       BestSplit = Splits[i]
-      InitialError = False
+      InitialGini = Gini
     }
   }
   return BestSplit
 }
 
 function DecisionTree(Input, Output, Attributes) {
-  if (Output.length === 1) {
-    return { type:'result', output: Output[0] }
+  var UniqueOutput = [...new Set(Output)]
+  if (UniqueOutput.length === 1) {
+    return { type: 'result', output: Output[0] }
   }
   if (Attributes.length === 0) {
     var Sum = 0
