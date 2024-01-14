@@ -1,201 +1,246 @@
 var fs = require("fs")
 var readline = require("readline")
+var bl = require("./booleanparser.js")
 
-function BooleanParser (Expression, Database, Flag) {
+function Header(File, callback) {
+    var Head = []
+    try {
+        if (fs.existsSync('./databases/' + File)) {
+            var LineCounter = 0
 
-  var Header = fs.readFileSync('./databases/'+Database).toString().split('\r\n')[0]
+            var lineReader = readline.createInterface({
+                input: fs.createReadStream('./databases/' + File)
+            })
 
-  var writeStream = fs.createWriteStream('./databases/' + Database + '.tmp')
+            lineReader.on('line', function (line) {
+                if (LineCounter !== 2) {
+                    Head.push(JSON.parse(line))
+                    LineCounter += 1
+                } else {
+                    lineReader.close()
+                }
+            })
 
-  var lineReader = readline.createInterface({
-     input: fs.createReadStream('./databases/' + Database)
-  })
+            lineReader.on('close', function () {
+                callback(Head)
+            })
 
-  lineReader.on('line', function (line) {
-
-    var RawEXP = Expression
-
-    var ARR = [JSON.parse(Header),JSON.parse(line)]
-  
-    var EXP = []
-  
-    for (var i = 0; i < RawEXP.length; i++) {
-      if (RawEXP[i] === 'OR' || RawEXP[i] === 'AND' && RawEXP[i] !== '(' && RawEXP[i] !== ')') {
-        if (i !== 0 && i !== RawEXP.length) {
-          EXP.push(RawEXP[i])
+        } else {
+            console.log('Unable to open : ' + File)
         }
-      } else if (RawEXP[i] === '(' || RawEXP[i] === ')') {
-        EXP.push(RawEXP[i])
-      } else {
-        var Regex = /(>=|<=|<|>|=|!=)/i
-        var Value = RawEXP[i].split(Regex)
-        if (ARR[0].indexOf(Value[0]) !== -1) {
-          EXP.push([ARR[0].indexOf(Value[0]), Value[2], Value[1]])
-        }
-      }
     }
-  
-    function Check(Arr, Condition) {
-      switch (Condition[2]) {
-        case '=':
-          if (Arr[Condition[0]] == Condition[1]) {
-            return 1
-          } else {
-            return 0
-          }
-        case '>=':
-          if (Arr[Condition[0]] >= Condition[1]) {
-            return 1
-          } else {
-            return 0
-          }
-        case '>':
-          if (Arr[Condition[0]] > Condition[1]) {
-            return 1
-          } else {
-            return 0
-          }
-        case '<=':
-          if (Arr[Condition[0]] <= Condition[1]) {
-            return 1
-          } else {
-            return 0
-          }
-        case '<':
-          if (Arr[Condition[0]] < Condition[1]) {
-            return 1
-          } else {
-            return 0
-          }
-        case '!=':
-          if (Arr[Condition[0]] != Condition[1]) {
-            return 1
-          } else {
-            return 0
-          }
-      }
+    catch (error) {
+        console.log('Check syntax')
     }
-
-    for (var i = 1; i < ARR.length; i++) {
-      var Operators = []
-      for (var j = 0; j < EXP.length; j++) {
-        if (EXP[j] !== 'AND' && EXP[j] !== 'OR' && EXP[j] !== ')' && EXP[j] !== '(') {
-          Operators.push(Check(ARR[i], EXP[j]))
-        }
-        if (EXP[j] === ')') {
-          Operators.push(')')
-        }
-        if (EXP[j] === '(') {
-          Operators.push('(')
-        }
-        if (EXP[j + 1] === 'AND') {
-          Operators.push('&&')
-        }
-        if (EXP[j + 1] === 'OR') {
-          Operators.push('||')
-        }
-      }
-  
-      var OpenParenthesis = []
-      var ClosedParenthesis = []
-  
-      function CheckParenthesis() {
-        OpenParenthesis = []
-        ClosedParenthesis = []
-        for (var i = 0; i < Operators.length; i++) {
-          if (Operators[i] === '(') {
-            for (var j = i + 1; j < Operators.length; j++) {
-              if (Operators[j] === ')') {
-                OpenParenthesis.push(i)
-                ClosedParenthesis.push(j)
-                break
-              } else if (Operators[j] === '(') {
-                break
-              }
-            }
-          }
-        }
-      }
-  
-      CheckParenthesis()
-  
-      if (OpenParenthesis.length !== 0) {
-        for (var l = 0; l < OpenParenthesis.length; l++) {
-          for (var j = OpenParenthesis[l]; j < ClosedParenthesis[l]; j++) {
-            if (Operators[j] === '&&' && Operators[j + 1] !== '(' && Operators[j + 1] !== ')') {
-              Operators[j - 1] = Operators[j - 1] && Operators[j + 1]
-              Operators.splice(j, 1)
-              Operators.splice(j, 1)
-              j = OpenParenthesis[l]
-              CheckParenthesis()
-            }
-            if (OpenParenthesis[l] - ClosedParenthesis[l] === -2) {
-              Operators.splice(OpenParenthesis[l], 1)
-              Operators.splice(ClosedParenthesis[l] - 1, 1)
-              OpenParenthesis.splice(l, 1)
-              ClosedParenthesis.splice(l, 1)
-              CheckParenthesis()
-            }
-          }
-          for (var j = OpenParenthesis[l]; j < ClosedParenthesis[l]; j++) {
-            if (Operators[j] === '||' && Operators[j + 1] !== '(' && Operators[j + 1] !== ')') {
-              Operators[j - 1] = Operators[j - 1] || Operators[j + 1]
-              Operators.splice(j, 1)
-              Operators.splice(j, 1)
-              j = OpenParenthesis[l]
-              CheckParenthesis()
-            }
-            if (OpenParenthesis[l] - ClosedParenthesis[l] === -2) {
-              Operators.splice(OpenParenthesis[l], 1)
-              Operators.splice(ClosedParenthesis[l] - 1, 1)
-              OpenParenthesis.splice(l, 1)
-              ClosedParenthesis.splice(l, 1)
-              CheckParenthesis()
-            }
-          }
-  
-          if (OpenParenthesis.length !== 0) {
-            l--
-          }
-        }
-      }
-  
-      for (var j = 0; j < Operators.length; j++) {
-        if (Operators[j] === '&&') {
-          Operators[j - 1] = Operators[j - 1] && Operators[j + 1]
-          Operators.splice(j, 1)
-          Operators.splice(j, 1)
-          j = 0
-        }
-      }
-      for (var j = 0; j < Operators.length; j++) {
-        if (Operators[j] === '||') {
-          Operators[j - 1] = Operators[j - 1] || Operators[j + 1]
-          Operators.splice(j, 1)
-          Operators.splice(j, 1)
-          j = 0
-        }
-      }
-  
-      var Test = Operators[0]
-      if (Flag === 'SELECT') {
-        if (Test === 1) {
-          console.log(ARR[i])
-        }
-      } else if (Flag === 'DELETE') {
-        if (Test !== 1) {
-          writeStream.write(line + '\r\n')
-        } 
-      }
-    }
-  })
-  lineReader.on('close', function () {
-    if (Flag === 'DELETE') {
-        fs.unlinkSync('./databases/' + Database)
-        fs.renameSync('./databases/' + Database + '.tmp', './databases/' + Database)
-    }
-    writeStream.end()
-  })
 }
 
-exports.BooleanParser = BooleanParser
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+})
+
+function Request() {
+    rl.question('', function (Instruction) {
+        var Request = Instruction.split(' ')
+        var Action = Request[0]
+        switch (Action) {
+            case 'ALL':
+                var Folder = fs.readdirSync('./databases/')
+                for (var i = 0; i < Folder.length; i++) {
+                    console.log(Folder[i])
+                }
+                Req()
+                break
+            case 'INIT':
+                try {
+                    if (!fs.existsSync('./databases/')){
+                        fs.mkdirSync('./databases/');
+                    }
+                    if (!fs.existsSync('./databases/' + Request[1])) {
+                        var ToInit = JSON.parse(Request[2])
+                        var writeStream = fs.createWriteStream('./databases/' + Request[1])
+                        for (var i = 0; i < ToInit.length; i++) {
+                            writeStream.write(JSON.stringify(ToInit[i]) + '\r\n')
+                        }
+                        writeStream.end()
+                        Req()
+                        break
+                    } else {
+                        console.log('DB already exists')
+                        Req()
+                        break
+                    }
+                } catch (error) {
+                    console.log('Check syntax')
+                    Req()
+                    break
+                }
+            case 'SCHEMA':
+                function Result(Value) {
+                    console.log(Value)
+                }
+                Header(Request[1], Result)
+                Req()
+                break
+            case 'SELECT':
+                if (Action + ' ' + Request[1] === 'SELECT ALL') {
+                    try {
+                        if (fs.existsSync('./databases/' + Request[3])) {
+                            var lineReader = readline.createInterface({
+                                input: fs.createReadStream('./databases/' + Request[3])
+                            })
+
+                            lineReader.on('line', function (line) {
+                                var json = JSON.parse(line)
+                                console.log(json)
+                            })
+
+                            lineReader.on('close', function () { })
+                            Req()
+                            break
+                        } else {
+                            console.log('No such file')
+                            Req()
+                            break
+                        }
+                    } catch (err) {
+                        console.log('Check syntax')
+                        Req()
+                        break
+                    }
+                } else {
+                    SearchDB('SELECT', Instruction)
+                    break
+                }
+            case 'INSERT':
+                InsertDB(Instruction)
+                break
+            case 'DELETE':
+                if (Action + ' ' + Request[1] === 'DELETE ALL') {
+                    try {
+                        if (fs.existsSync('./databases/' + Request[3])) {
+                            fs.unlinkSync('./databases/' + Request[3])
+                            Req()
+                            break
+                        } else {
+                            console.log('No such file')
+                            Req()
+                            break
+                        }
+                    } catch (error) {
+                        console.log('Check syntax')
+                        Req()
+                        break
+                    }
+                } else {
+                    SearchDB('DELETE', Instruction)
+                    break
+                }
+            default:
+                console.log('Check syntax')
+                Req()
+                break
+        }
+    })
+}
+
+Request()
+
+function Req() {
+    Request()
+}
+
+function SearchDB(Mode, Instruction) {
+    try {
+        var TextSplit = Instruction.split(' ').slice(2)
+        var ChooseDb = TextSplit[TextSplit.indexOf('FROM') + 1]
+        TextSplit.splice(TextSplit.indexOf('FROM') + 1, 1)
+        TextSplit.splice(TextSplit.indexOf('FROM'), 1)
+        if (TextSplit.length === 0) {
+            console.log('Check syntax')
+            return Request()
+        }
+        if (Mode === 'SELECT') {
+            bl.BooleanParser(TextSplit,ChooseDb,'SELECT')
+        } else if (Mode === 'DELETE') {
+            bl.BooleanParser(TextSplit,ChooseDb,'DELETE')
+        }
+        Request()
+    } catch (error) {
+        console.log(error)
+        console.log('Check syntax')
+        Request()
+    }
+}
+function InsertDB(Instruction) {
+    var Values
+    try {
+        var Data = Instruction.split(' ')
+        var Text = Data[2].toString()
+        var ChooseDb = Data[Data.indexOf('INTO') + 1]
+        Data.splice(Data.indexOf('INTO') + 1, 1)
+        Data.splice(Data.indexOf('INTO'), 1)
+        Values = JSON.parse(Text)
+        function Result(Head) {
+            for (var j = 0; j < Values.length; j++) {
+              var ToPush = []
+              for (var i = 0; i < Values[j].length; i++) {
+                if (!isNaN(Values[j][i]) && Head[1][i] == 'number') {
+                    ToPush.push(parseInt(Values[j][i]))
+                } else if (isNaN(Values[j][i]) && Head[1][i] == 'string') {
+                    ToPush.push(Values[j][i])
+                } else {
+                    console.log('Check syntax')
+                    return Request()
+                }
+              }
+              if (ToPush.length === Head[0].length) {
+                var writeStream = fs.createWriteStream('./databases/' + ChooseDb, { flags: 'a' })
+                writeStream.write(JSON.stringify(ToPush) + '\r\n')
+                writeStream.end()
+              } else {
+                console.log('Check syntax')
+              }
+            }
+        }
+        Header(ChooseDb, Result)
+        Request()
+    } catch (error) {
+        console.log('Check syntax')
+        Request()
+    }
+}
+
+/*
+SELECT ALL FROM DB.txt
+No such file
+INIT DB.txt [["id","name","lastname"],["number","string","string"],[0,"Tom","Wolf"],[2,"Leo","Simon"],[2,"Jessica","Wolf"]]
+SELECT ALL FROM DB.txt
+[ 'id', 'name', 'lastname' ]
+[ 'number', 'string', 'string' ]
+[ 0, 'Tom', 'Wolf' ]
+[ 2, 'Leo', 'Simon' ]
+[ 2, 'Jessica', 'Wolf' ]
+INSERT VALUES [[3,"Leo","Simon"],[4,"Jessica","Leonard"]] INTO DB.txt
+SELECT ALL FROM DB.txt
+[ 'id', 'name', 'lastname' ]
+[ 'number', 'string', 'string' ]
+[ 0, 'Tom', 'Wolf' ]
+[ 2, 'Leo', 'Simon' ]
+[ 2, 'Jessica', 'Wolf' ]
+[ 4, 'Jessica', 'Leonard' ]
+[ 3, 'Leo', 'Simon' ]
+DELETE WHERE id=0 OR lastname=Wolf FROM DB.txt
+SELECT ALL FROM DB.txt
+[ 'id', 'name', 'lastname' ]
+[ 'number', 'string', 'string' ]
+[ 2, 'Leo', 'Simon' ]
+[ 4, 'Jessica', 'Leonard' ]
+[ 3, 'Leo', 'Simon' ]
+SELECT WHERE id=2 OR lastname=Simon FROM DB.txt
+[ 2, 'Leo', 'Simon' ]
+[ 3, 'Leo', 'Simon' ]
+DELETE ALL FROM DB.txt
+SELECT ALL FROM DB.txt
+No such file
+*/
