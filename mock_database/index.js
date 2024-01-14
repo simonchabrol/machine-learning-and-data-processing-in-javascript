@@ -192,23 +192,25 @@ function InsertDB(Instruction) {
         Data.splice(Data.indexOf('INTO'), 1)
         Values = JSON.parse(Text)
         function Result(Head) {
-            var ToPush = []
-            for (var i = 0; i < Values.length; i++) {
-                if (!isNaN(Values[i]) && Head[1][i] == 'number') {
-                    ToPush.push(parseInt(Values[i]))
-                } else if (isNaN(Values[i]) && Head[1][i] == 'string') {
-                    ToPush.push(Values[i])
+            for (var j = 0; j < Values.length; j++) {
+              var ToPush = []
+              for (var i = 0; i < Values[j].length; i++) {
+                if (!isNaN(Values[j][i]) && Head[1][i] == 'number') {
+                    ToPush.push(parseInt(Values[j][i]))
+                } else if (isNaN(Values[j][i]) && Head[1][i] == 'string') {
+                    ToPush.push(Values[j][i])
                 } else {
                     console.log('Check syntax')
                     return Request()
                 }
-            }
-            if (ToPush.length === Head[0].length) {
+              }
+              if (ToPush.length === Head[0].length) {
                 var writeStream = fs.createWriteStream('./databases/' + ChooseDb, { flags: 'a' })
                 writeStream.write(JSON.stringify(ToPush) + '\r\n')
                 writeStream.end()
-            } else {
+              } else {
                 console.log('Check syntax')
+              }
             }
         }
         Header(ChooseDb, Result)
@@ -222,8 +224,6 @@ function InsertDB(Instruction) {
 /*
 SELECT ALL FROM DB.txt
 No such file
-SELECT ALL FROM TEST.txt
-No such file
 INIT DB.txt [["id","name","lastname"],["number","string","string"],[0,"Tom","Wolf"],[2,"Leo","Simon"],[2,"Jessica","Wolf"]]
 SELECT ALL FROM DB.txt
 [ 'id', 'name', 'lastname' ]
@@ -231,44 +231,30 @@ SELECT ALL FROM DB.txt
 [ 0, 'Tom', 'Wolf' ]
 [ 2, 'Leo', 'Simon' ]
 [ 2, 'Jessica', 'Wolf' ]
-INIT TEST.txt [["id","name","number"],["number","string","number"],[0,"Tom",10],[2,"Leo",20],[2,"Jessica",30]]
-SELECT ALL FROM TEST.txt
-[ 'id', 'name', 'number' ]
-[ 'number', 'string', 'number' ]
-[ 0, 'Tom', 10 ]
-[ 2, 'Leo', 20 ]
-[ 2, 'Jessica', 30 ]
-INSERT VALUES [2,"Leo","Simon"] INTO DB.txt
-INSERT VALUES [2,"Leo","Simon"] INTO TEST.txt
-Check syntax
-INSERT VALUES [2,"Leo",15] INTO TEST.txt
+INSERT VALUES [[3,"Leo","Simon"],[4,"Jessica","Leonard"]] INTO DB.txt
 SELECT ALL FROM DB.txt
 [ 'id', 'name', 'lastname' ]
 [ 'number', 'string', 'string' ]
 [ 0, 'Tom', 'Wolf' ]
 [ 2, 'Leo', 'Simon' ]
 [ 2, 'Jessica', 'Wolf' ]
-[ 2, 'Leo', 'Simon' ]
-SELECT ALL FROM TEST.txt
-[ 'id', 'name', 'number' ]
-[ 'number', 'string', 'number' ]
-[ 0, 'Tom', 10 ]
-[ 2, 'Leo', 20 ]
-[ 2, 'Jessica', 30 ]
-[ 2, 'Leo', 15 ]
-DELETE WHERE id=0 OR lastname=Simon FROM DB.txt
+[ 4, 'Jessica', 'Leonard' ]
+[ 3, 'Leo', 'Simon' ]
+DELETE WHERE id=0 OR lastname=Wolf FROM DB.txt
 SELECT ALL FROM DB.txt
 [ 'id', 'name', 'lastname' ]
 [ 'number', 'string', 'string' ]
-[ 2, 'Jessica', 'Wolf' ]
-DELETE WHERE id=0 AND number=30 FROM TEST.txt
-SELECT ALL FROM TEXT.txt
+[ 2, 'Leo', 'Simon' ]
+[ 4, 'Jessica', 'Leonard' ]
+[ 3, 'Leo', 'Simon' ]
+SELECT WHERE id=2 OR lastname=Simon FROM DB.txt
+[
+  [ 'id', 'name', 'lastname' ],
+  [ 'number', 'string', 'string' ],
+  [ 2, 'Leo', 'Simon' ],
+  [ 3, 'Leo', 'Simon' ]
+]
+DELETE ALL FROM DB.txt
+SELECT ALL FROM DB.txt
 No such file
-SELECT ALL FROM TEST.txt
-[ 'id', 'name', 'number' ]
-[ 'number', 'string', 'number' ]
-[ 0, 'Tom', 10 ]
-[ 2, 'Leo', 20 ]
-[ 2, 'Jessica', 30 ]
-[ 2, 'Leo', 15 ]
 */
