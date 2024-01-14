@@ -1,16 +1,21 @@
 var fs = require("fs")
+var readline = require("readline")
 
 function BooleanParser (Expression, Database, Flag) {
 
+  var Header = fs.readFileSync('./databases/'+Database).toString().split('\r\n')[0]
+
+  var writeStream = fs.createWriteStream('./databases/' + Database + '.tmp')
+
+  var lineReader = readline.createInterface({
+     input: fs.createReadStream('./databases/' + Database)
+  })
+
+  lineReader.on('line', function (line) {
+
     var RawEXP = Expression
 
-    var File = fs.readFileSync('./databases/' + Database).toString().split('\r\n')
-
-    var ARR = []
-
-    for (var i = 0; i < File.length - 1; i++) {
-       ARR.push(JSON.parse(File[i]))
-    }
+    var ARR = [JSON.parse(Header),JSON.parse(line)]
   
     var EXP = []
   
@@ -71,9 +76,7 @@ function BooleanParser (Expression, Database, Flag) {
       }
     }
 
-    var Outcome = []
-  
-    for (var i = 2; i < ARR.length; i++) {
+    for (var i = 1; i < ARR.length; i++) {
       var Operators = []
       for (var j = 0; j < EXP.length; j++) {
         if (EXP[j] !== 'AND' && EXP[j] !== 'OR' && EXP[j] !== ')' && EXP[j] !== '(') {
@@ -177,16 +180,22 @@ function BooleanParser (Expression, Database, Flag) {
       var Test = Operators[0]
       if (Flag === 'SELECT') {
         if (Test === 1) {
-            Outcome.push(ARR[i])
+          console.log(ARR[i])
         }
       } else if (Flag === 'DELETE') {
         if (Test !== 1) {
-            Outcome.push(ARR[i])
-        }
+          writeStream.write(line + '\r\n')
+        } 
       }
     }
-    Outcome.unshift(ARR[0],ARR[1])
-    return Outcome
+  })
+  lineReader.on('close', function () {
+    if (Flag === 'DELETE') {
+        fs.unlinkSync('./databases/' + Database)
+        fs.renameSync('./databases/' + Database + '.tmp', './databases/' + Database)
+    }
+    writeStream.end()
+  })
 }
 
 exports.BooleanParser = BooleanParser
