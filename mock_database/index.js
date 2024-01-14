@@ -1,5 +1,6 @@
 var fs = require("fs")
 var readline = require("readline")
+var bl = require("./booleanparser.js")
 
 function Header(File, callback) {
     var Head = []
@@ -150,9 +151,7 @@ function Req() {
 }
 
 function SearchDB(Mode, Instruction) {
-
     try {
-
         var TextSplit = Instruction.split(' ').slice(2)
 
         var ChooseDb = TextSplit[TextSplit.indexOf('FROM') + 1]
@@ -164,87 +163,18 @@ function SearchDB(Mode, Instruction) {
             return Request()
         }
 
-        var Keys = []
-        var Values = []
-        var Operators = []
-
-        function Result(Head) {
-            for (var i = 0; i < TextSplit.length; i++) {
-                if (TextSplit[i].includes('=')) {
-                    var Value = TextSplit[i].split('=')[1]
-                    var Key = TextSplit[i].split('=')[0]
-                    if (Head[0].includes(Key)) {
-                        Values.push(Value)
-                        Keys.push(Head[0].indexOf(Key))
-                    } else {
-                        console.log('Check syntax')
-                        return Request()
-                    }
-                }
-                if (TextSplit[i] === 'AND') {
-                    Operators.push('&&')
-                }
-                if (TextSplit[i] === 'OR') {
-                    Operators.push('||')
-                }
-            }
+        function Result() {
             if (Mode === 'SELECT') {
-                var lineReader = readline.createInterface({
-                    input: fs.createReadStream('./databases/' + ChooseDb)
-                })
-                var Results = []
-                lineReader.on('line', function (line) {
-                    var json = JSON.parse(line)
-                    if (Operators[0] === '&&') {
-                        if (json[Keys[0]] == Values[0]
-                            && json[Keys[1]] == Values[1]) {
-                            Results.push(json)
-                        }
-                    } else if (Operators[0] === '||') {
-                        if (json[Keys[0]] == Values[0]
-                            || json[Keys[1]] == Values[1]) {
-                            Results.push(json)
-                        }
-                    } else {
-                        if (json[Keys[0]] == Values[0]) {
-                            Results.push(json)
-                        }
-                    }
-                })
-                lineReader.on('close', function () {
-                    console.log(Results)
-                })
+               console.log(bl.BooleanParser(TextSplit,ChooseDb,'SELECT'))
             } else if (Mode === 'DELETE') {
-                var writeStream = fs.createWriteStream('./databases/' + ChooseDb + '.tmp')
-                var lineReader = readline.createInterface({
-                    input: fs.createReadStream('./databases/' + ChooseDb)
-                })
-                var Results = []
-                lineReader.on('line', function (line) {
-                    var json = JSON.parse(line)
-                    if (Operators[0] === '&&') {
-                        if (json[Keys[0]] != Values[0]
-                            || json[Keys[1]] != Values[1]) {
-                            writeStream.write(line + '\r\n')
-                        }
-                    } else if (Operators[0] === '||') {
-                        if (json[Keys[0]] != Values[0]
-                            && json[Keys[1]] != Values[1]) {
-                            writeStream.write(line + '\r\n')
-                        }
-                    } else {
-                        if (json[Keys[0]] != Values[0]) {
-                            writeStream.write(line + '\r\n')
-                        }
-                    }
-                })
-                lineReader.on('close', function () {
-                    fs.unlinkSync('./databases/' + ChooseDb)
-                    fs.renameSync('./databases/' + ChooseDb + '.tmp', './databases/' + ChooseDb)
-                })
+               var Result = bl.BooleanParser(TextSplit,ChooseDb,'DELETE')
+               var writeStream = fs.createWriteStream('./databases/' + ChooseDb)
+               for (var i = 0; i < Result.length; i++) {
+                 writeStream.write(JSON.stringify(Result[i]) + '\r\n')
+               }
+               writeStream.end()
             }
         }
-
         Header(ChooseDb, Result)
         Request()
     } catch (error) {
