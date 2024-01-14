@@ -137,7 +137,7 @@ function Request() {
                     break
                 }
             default:
-                console.log('Check syntax')
+                console.log('Check syntax')
                 Req()
                 break
         }
@@ -153,31 +153,21 @@ function Req() {
 function SearchDB(Mode, Instruction) {
     try {
         var TextSplit = Instruction.split(' ').slice(2)
-
         var ChooseDb = TextSplit[TextSplit.indexOf('FROM') + 1]
         TextSplit.splice(TextSplit.indexOf('FROM') + 1, 1)
         TextSplit.splice(TextSplit.indexOf('FROM'), 1)
-
         if (TextSplit.length === 0) {
             console.log('Check syntax')
             return Request()
         }
-
-        function Result() {
-            if (Mode === 'SELECT') {
-               console.log(bl.BooleanParser(TextSplit,ChooseDb,'SELECT'))
-            } else if (Mode === 'DELETE') {
-               var Result = bl.BooleanParser(TextSplit,ChooseDb,'DELETE')
-               var writeStream = fs.createWriteStream('./databases/' + ChooseDb)
-               for (var i = 0; i < Result.length; i++) {
-                 writeStream.write(JSON.stringify(Result[i]) + '\r\n')
-               }
-               writeStream.end()
-            }
+        if (Mode === 'SELECT') {
+            bl.BooleanParser(TextSplit,ChooseDb,'SELECT')
+        } else if (Mode === 'DELETE') {
+            bl.BooleanParser(TextSplit,ChooseDb,'DELETE')
         }
-        Header(ChooseDb, Result)
         Request()
     } catch (error) {
+        console.log(error)
         console.log('Check syntax')
         Request()
     }
@@ -248,12 +238,8 @@ SELECT ALL FROM DB.txt
 [ 4, 'Jessica', 'Leonard' ]
 [ 3, 'Leo', 'Simon' ]
 SELECT WHERE id=2 OR lastname=Simon FROM DB.txt
-[
-  [ 'id', 'name', 'lastname' ],
-  [ 'number', 'string', 'string' ],
-  [ 2, 'Leo', 'Simon' ],
-  [ 3, 'Leo', 'Simon' ]
-]
+[ 2, 'Leo', 'Simon' ]
+[ 3, 'Leo', 'Simon' ]
 DELETE ALL FROM DB.txt
 SELECT ALL FROM DB.txt
 No such file
