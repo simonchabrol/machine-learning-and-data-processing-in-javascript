@@ -5,7 +5,11 @@ function BooleanParser (Expression, Database, Flag) {
 
   var Header = fs.readFileSync('./databases/'+Database).toString().split('\r\n')[0]
 
-  var writeStream = fs.createWriteStream('./databases/' + Database + '.tmp')
+  var LineCounter = 0
+
+  if (Flag === 'DELETE') {
+    var writeStream = fs.createWriteStream('./databases/' + Database + '.tmp')
+  }
 
   var lineReader = readline.createInterface({
      input: fs.createReadStream('./databases/' + Database)
@@ -179,22 +183,23 @@ function BooleanParser (Expression, Database, Flag) {
   
       var Test = Operators[0]
       if (Flag === 'SELECT') {
-        if (Test === 1) {
+        if (Test === 1 && LineCounter > 1) {
           console.log(ARR[i])
         }
       } else if (Flag === 'DELETE') {
-        if (Test !== 1) {
+        if (Test !== 1 || LineCounter < 1) {
           writeStream.write(line + '\r\n')
         } 
       }
     }
+    LineCounter += 1
   })
   lineReader.on('close', function () {
     if (Flag === 'DELETE') {
         fs.unlinkSync('./databases/' + Database)
         fs.renameSync('./databases/' + Database + '.tmp', './databases/' + Database)
+        writeStream.end()
     }
-    writeStream.end()
   })
 }
 
