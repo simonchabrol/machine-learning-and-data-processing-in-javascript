@@ -108,6 +108,11 @@ for (var k = 0; k < EXPList.length; k++) {
       }
     }
 
+    if (Operators.length !== EXP.length) {
+      console.log('Invalid statement')
+      return
+    }
+
     var OpenParenthesis = []
     var ClosedParenthesis = []
 
@@ -130,6 +135,9 @@ for (var k = 0; k < EXPList.length; k++) {
     }
 
     CheckParenthesis()
+
+    var PreviousOpenParenthesis
+    var PreviousClosedParenthesis
 
     if (OpenParenthesis.length !== 0) {
       for (var l = 0; l < OpenParenthesis.length; l++) {
@@ -167,7 +175,13 @@ for (var k = 0; k < EXPList.length; k++) {
         }
 
         if (OpenParenthesis.length !== 0) {
+          if (OpenParenthesis === PreviousOpenParenthesis && ClosedParenthesis === PreviousClosedParenthesis) {
+             console.log('Invalid statement')
+             return
+          }
           l--
+          PreviousClosedParenthesis = ClosedParenthesis
+          PreviousOpenParenthesis = OpenParenthesis
         }
       }
     }
