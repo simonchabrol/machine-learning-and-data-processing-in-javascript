@@ -1,0 +1,116 @@
+<canvas id="myChart" width="10" height="10"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+
+    var Input = []
+
+    var Centroids = []
+
+    var NumClass = 3
+
+    var max = 1
+    var min = 0
+
+    for (var i = 0; i < NumClass; i++) {
+        Centroids.push({ x: Math.random() * (max - min) + min, y: Math.random() * (max - min) + min })
+    }
+
+    var Radius = 0.1
+
+    for (var i = 0; i < Centroids.length; i++) {
+        var x = Centroids[i].x
+        var y = Centroids[i].y
+        for (var j = 0; j < 100; j++) {
+            Input.push([Math.random() * ((x + Radius) - (x - Radius)) + (x - Radius), Math.random() * ((y + Radius) - (y - Radius)) + (y - Radius)])
+        }
+    }
+
+    var CopyInput = [...Input]
+
+    for (var i = 0; i < CopyInput.length; i++) {
+        for (var j = 0; j < 1000; j++) {
+            CopyInput[i] = MeanShift(CopyInput[i], Input)
+        }
+    }
+
+    function MeanShift(CopyInput, OriginalInput) {
+        var ShiftX = 0
+        var ShiftY = 0
+        var ScaleFactor = 0
+
+        for (var i = 0; i < OriginalInput.length; i++) {
+            var Distance = 0
+            var OriginalValue = OriginalInput[i]
+            for (var j = 0; j < OriginalValue.length; j++) {
+                Distance += Math.abs(CopyInput[j] - OriginalValue[j])
+            }
+            var Weight = Math.exp(-((Math.pow(Distance, 2)) / 2 * Math.pow(10, 2)))
+            ShiftX += OriginalInput[i][0] * Weight
+            ShiftY += OriginalInput[i][1] * Weight
+            ScaleFactor += Weight
+        }
+        ShiftX = ShiftX / ScaleFactor
+        ShiftY = ShiftY / ScaleFactor
+        return [ShiftX, ShiftY]
+    }
+
+    var Groups = []
+
+    for (var i = 0; i < CopyInput.length; i++) {
+        Groups.push([])
+        for (var j = i + 1; j < CopyInput.length; j++) {
+            var Distance = 0
+            var FirstValue = CopyInput[i]
+            var SecondValue = CopyInput[j]
+            for (var k = 0; k < FirstValue.length; k++) {
+                Distance += Math.abs(FirstValue[k] - SecondValue[k])
+            }
+            if (Distance < 0.0000001) {
+                Groups[Groups.length - 1].push(Input[j])
+                CopyInput.splice(j, 1)
+                Input.splice(j, 1)
+                j--
+            }
+        }
+        Groups[Groups.length - 1].unshift(Input[i])
+    }
+
+    console.log(Groups)
+
+    var DataSet = []
+
+    for (var i = 0; i < Groups.length; i++) {
+        var max = 250
+        var min = 0
+        var Colors = 'rgb(' + (Math.floor(Math.random() * (max - min) + min)) + ',' + (Math.floor(Math.random() * (max - min) + min)) + ',' + (Math.floor(Math.random() * (max - min) + min)) + ')'
+        var Data = {
+            borderColor: Colors,
+            backgroundColor: Colors,
+            pointRadius: 4
+        }
+        var ListInput = []
+        for (var j = 0; j < Groups[i].length; j++) {
+            ListInput.push({ x: Groups[i][j][0], y: Groups[i][j][1] })
+        }
+        Data.data = ListInput
+        Data.label = 'Cluster ' + i
+        DataSet.push(Data)
+    }
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        responsive: true,
+        data: {
+            datasets: DataSet
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
+            }
+        }
+    })
+</script>
