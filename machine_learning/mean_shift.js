@@ -29,4 +29,25 @@ function MeanShift(CopyInput,OriginalInput) {
    return [ShiftX,ShiftY]
 } 
 
-console.log(CopyInput)
+var Groups = []
+
+for (var i = 0; i < CopyInput.length; i++) {
+  Groups.push([])
+  for (var j = i + 1; j < CopyInput.length; j++) {
+     var Distance = 0
+     var FirstValue = CopyInput[i]
+     var SecondValue = CopyInput[j]
+     for (var k = 0; k < FirstValue.length; k++) {
+       Distance += Math.abs(FirstValue[k]-SecondValue[k])
+     } 
+     if (Distance < 0.0000001) {
+       Groups[Groups.length-1].push(Input[j])
+       CopyInput.splice(j,1)
+       Input.splice(j,1)
+       j--
+     }
+  }
+  Groups[Groups.length-1].unshift(Input[i])
+}
+
+console.log(Groups)
