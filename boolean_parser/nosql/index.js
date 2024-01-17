@@ -168,8 +168,8 @@ for (var k = 0; k < EXPList.length; k++) {
 
                 if (OpenParenthesis.length !== 0) {
                     if (OpenParenthesis === PreviousOpenParenthesis && ClosedParenthesis === PreviousClosedParenthesis) {
-                          console.log('Invalid statement')
-                           return
+                        console.log('Invalid statement')
+                        return
                     }
                     l--
                     PreviousClosedParenthesis = ClosedParenthesis
