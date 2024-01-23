@@ -6,8 +6,7 @@
     for (var j = 0; j < R.length; j++) {
         for (var i = 0; i < 200; i++) {
             var Random = Math.random() * (R[j] + 0.4 - R[j]) + R[j]
-            Data.push([(Random) * Math.sin(i), (Random) *
-                Math.cos(i)])
+            Data.push([(Random) * Math.sin(i), (Random) * Math.cos(i)])
         }
     }
     // var Data = [[0.64, 4.49], [4.42, 0.6], [2.52, 2.52]]
@@ -50,9 +49,9 @@
     var KernelCentroid = []
 
     for (var i = 0; i < SimilarityMatrix.length; i++) {
-      for (var k = 0; k < SimilarityMatrix[i].length; k++) {
-         KernelCentroid.push(Math.min(...SimilarityMatrix[i][k]))
-      }
+        for (var k = 0; k < SimilarityMatrix[i].length; k++) {
+            KernelCentroid.push(Math.min(...SimilarityMatrix[i][k]))
+        }
     }
 
     for (var i = 0; i < kMeans; i++) {
@@ -66,6 +65,8 @@
         ClustersKernel.push([])
         Distances.push([])
     }
+
+    console.log(Centroids)
 
     var Done = 0
 
@@ -90,20 +91,24 @@
         }
         for (var j = 0; j < Clusters.length; j++) {
             var Cluster = Clusters[j]
-            Cluster.sort(function (a, b) {
-                var c
-                a.some(function (d, i) {
-                    return c = d - b[i]
+            if (Cluster.length > 0) {
+                Cluster.sort(function (a, b) {
+                    var c
+                    a.some(function (d, i) {
+                        return c = d - b[i]
+                    })
+                    return c
                 })
-                return c
-            })
-            var FirstValue = Cluster[0]
-            var LastValue = Cluster[Cluster.length - 1]
-            Sum = 0
-            for (var l = 0; l < FirstValue.length; l++) {
-                Sum += Math.abs(FirstValue[l] - LastValue[l])
+                var FirstValue = Cluster[0]
+                var LastValue = Cluster[Cluster.length - 1]
+                Sum = 0
+                for (var l = 0; l < FirstValue.length; l++) {
+                    Sum += Math.abs(FirstValue[l] - LastValue[l])
+                }
+                Distances[j].push(Sum)
+            } else {
+                Distances[j].push(0)
             }
-            Distances[j].push(Sum)
         }
         Average = 0
         Sum = 0
@@ -115,7 +120,7 @@
             Cluster = ClustersKernel[j]
             var Sum = 0
             for (var k = 0; k < Cluster.length; k++) {
-               Sum += ClustersKernel[j][k]
+                Sum += ClustersKernel[j][k]
             }
             Centroids[j] = Sum / Clusters[j].length
         }
