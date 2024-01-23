@@ -1,0 +1,178 @@
+<canvas id="myChart" width="10" height="10"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+    var Data = []
+    var R = [1, 2]
+    for (var j = 0; j < R.length; j++) {
+        for (var i = 0; i < 200; i++) {
+            var Random = Math.random() * (R[j] + 0.4 - R[j]) + R[j]
+            Data.push([(Random) * Math.sin(i), (Random) *
+                Math.cos(i)])
+        }
+    }
+    // var Data = [[0.64, 4.49], [4.42, 0.6], [2.52, 2.52]]
+    // var Data = [[0.64, 4.49], [4.42, 0.6], [2.52, 2.52], [2.51,2.14], [2.84, 2.36], [2.76, 2.76], [2.42, 2.89], [2.08, 2.63], [2.2,2.28], [3.88, 0.47], [2.48, 0.41], [1.33, 0.59], [0.66, 1.31],[0.42, 2.65], [0.46, 3.46], [0.56, 4.08], [1.49, 4.62], [2.94,4.47], [4.04, 4.1], [4.49, 3.32], [4.75, 2], [4.83, 1.01], [4.66, 2.51], [4.57, 2.92], [4.82, 1.2], [4.69, 1.63]]
+    // var Data = [[0.64, 4.49], [4.42, 0.6], [2.52, 2.52]]
+
+    var Average = 0
+
+    var kMeans = 2
+    var Centroids = []
+
+    var Clusters = []
+    var ClustersKernel = []
+    var Distances = []
+
+    var DataCopy = [...Data]
+
+    var SimilarityMatrix = []
+
+    for (var i = 0; i < Data.length; i++) {
+
+        var Scores = []
+
+        var TestValue = Data[i]
+
+        for (var j = 0; j < Data.length; j++) {
+            var Count = 0
+            var RepositoryInput = Data[j]
+            for (var k = 0; k < TestValue.length; k++) {
+                Count += Math.abs(TestValue[k] - RepositoryInput[k])
+            }
+
+            var RBF = Math.exp(-((Math.pow(Count, 2)) / 2 * Math.pow(0.4, 2)))
+            Scores.push(RBF)
+        }
+
+        SimilarityMatrix.push([Scores])
+    }
+
+    var KernelCentroid = []
+
+    for (var i = 0; i < SimilarityMatrix.length; i++) {
+      for (var k = 0; k < SimilarityMatrix[i].length; k++) {
+         KernelCentroid.push(Math.min(...SimilarityMatrix[i][k]))
+      }
+    }
+
+    for (var i = 0; i < kMeans; i++) {
+        var Take = Math.floor(Math.random() * KernelCentroid.length)
+        if (Data[0].length === 1) {
+            Centroids.push([KernelCentroid[Take]])
+        } else {
+            Centroids.push(KernelCentroid[Take])
+        }
+        Clusters.push([])
+        ClustersKernel.push([])
+        Distances.push([])
+    }
+
+    var Done = 0
+
+    while (Done !== 1) {
+        var PrevAverage = Average
+        for (var i = 0; i < Data.length; i++) {
+            var TestValue = KernelCentroid[i]
+            var CentroidDistance = []
+            for (var j = 0; j < Centroids.length; j++) {
+                var TestCentroid = Centroids[j]
+                var Sum = 0
+                Sum += Math.abs(TestCentroid - TestValue)
+                CentroidDistance.push(Sum)
+            }
+            var Min = Math.max(...CentroidDistance)
+            for (var j = 0; j < Clusters.length; j++) {
+                if (CentroidDistance[j] === Min) {
+                    Clusters[j].push(Data[i])
+                    ClustersKernel[j].push(TestValue)
+                }
+            }
+        }
+        for (var j = 0; j < Clusters.length; j++) {
+            var Cluster = Clusters[j]
+            Cluster.sort(function (a, b) {
+                var c
+                a.some(function (d, i) {
+                    return c = d - b[i]
+                })
+                return c
+            })
+            var FirstValue = Cluster[0]
+            var LastValue = Cluster[Cluster.length - 1]
+            Sum = 0
+            for (var l = 0; l < FirstValue.length; l++) {
+                Sum += Math.abs(FirstValue[l] - LastValue[l])
+            }
+            Distances[j].push(Sum)
+        }
+        Average = 0
+        Sum = 0
+        for (var j = 0; j < Distances.length; j++) {
+            Sum += Distances[j][0]
+        }
+        Average = Sum / kMeans
+        for (var j = 0; j < Clusters.length; j++) {
+            Cluster = ClustersKernel[j]
+            var Sum = 0
+            for (var k = 0; k < Cluster.length; k++) {
+               Sum += ClustersKernel[j][k]
+            }
+            Centroids[j] = Sum / Clusters[j].length
+        }
+        if (Average === PrevAverage) {
+            console.log(Clusters)
+            Done = 1
+        } else {
+            Clusters = []
+            Distances = []
+            for (var i = 0; i < kMeans; i++) {
+                Clusters.push([])
+                Distances.push([])
+            }
+        }
+    }
+
+    var ClassesNames = []
+    for (var i = 0; i < kMeans; i++) {
+        ClassesNames.push('Cluster ' + i)
+    }
+    var NumClasses = Clusters.length
+
+    var Classes = []
+
+    for (var i = 0; i < NumClasses; i++) {
+        Classes.push([])
+    }
+    for (var i = 0; i < Classes.length; i++) {
+        for (var j = 0; j < Clusters[i].length; j++) {
+            Classes[i].push({
+                x: Clusters[i][j][0], y: Clusters[i][j][1]
+            })
+        }
+    }
+    var DataSets = []
+    var Colors = ['rgb(0, 0, 255)', 'rgb(0, 255, 0)', 'rgb(255, 0,0) ']
+    for (var i = 0; i < Classes.length; i++) {
+        DataSets.push({
+            borderColor: Colors[i],
+            backgroundColor: Colors[i],
+            label: ClassesNames[i],
+            data: Classes[i],
+        })
+    }
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: DataSets
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
+            }
+        }
+    })
+</script>
