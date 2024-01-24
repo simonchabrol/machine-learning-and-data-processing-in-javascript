@@ -79,9 +79,9 @@
                 Sum += Math.abs(TestCentroid - TestValue)
                 CentroidDistance.push(Sum)
             }
-            var Max = Math.max(...CentroidDistance)
+            var Min = Math.min(...CentroidDistance)
             for (var j = 0; j < Clusters.length; j++) {
-                if (CentroidDistance[j] === Max) {
+                if (CentroidDistance[j] === Min) {
                     Clusters[j].push(Data[i])
                     ClustersKernel[j].push(TestValue)
                 }
