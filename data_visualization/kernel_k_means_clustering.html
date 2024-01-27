@@ -169,7 +169,15 @@
         }
     }
     var DataSets = []
-    var Colors = ['rgb(0, 0, 255)', 'rgb(0, 255, 0)', 'rgb(255, 0,0) ']
+    
+    var Colors = []
+
+    for (var i = 0; i < kMeans; i++) {
+        var max = 250
+        var min = 0
+        Colors.push('rgb(' + (Math.floor(Math.random() * (max - min) + min)) + ',' + (Math.floor(Math.random() * (max - min) + min)) + ',' + (Math.floor(Math.random() * (max - min) + min)) + ')')
+    }
+
     for (var i = 0; i < Classes.length; i++) {
         DataSets.push({
             borderColor: Colors[i],
