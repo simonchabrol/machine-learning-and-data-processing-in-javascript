@@ -10,6 +10,38 @@
         }
     }
 
+    var NewSet = []
+
+    for (var i = 0; i < Data.length; i++) {
+        NewSet.push([])
+    }
+
+    var Min = []
+    var Max = []
+
+    for (var i = 0; i < Data[0].length; i++) {
+        var List = []
+        for (var j = 0; j < Data.length; j++) {
+            List.push(Data[j][i])
+        }
+        Min.push(Math.min(...List))
+        Max.push(Math.max(...List))
+    }
+
+    var MinMax = [-1, 1]
+
+    for (var i = 0; i < Data[0].length; i++) {
+        for (var j = 0; j < Data.length; j++) {
+            NewSet[j].push(MinMax[0] + (
+                ((Data[j][i] - Min[i]) * (MinMax[1] - MinMax[0])) /
+                (Max[i] - Min[i])
+            )
+            )
+        }
+    }
+
+    Data = NewSet
+
     var Average = 0
 
     var kMeans = 3
