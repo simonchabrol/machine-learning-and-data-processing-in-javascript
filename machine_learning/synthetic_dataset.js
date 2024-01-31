@@ -185,3 +185,22 @@ var b = 1.5
 for (var i = 0; i < 20; i+=0.1) {
     Data.push([(a + b*i)*Math.cos(i),(a + b*i)*Math.sin(i)])
 }
+
+/*
+Full moon
+*/
+
+var Data = []
+var R = [1,2,3]
+
+for (var j = 0; j < R.length; j++) {
+   for (var i = 0; i < 360; i++) {
+       var Random = Math.random() * (R[j] + 0.4 - R[j]) + R[j] 
+       if ( j >= 1 && (Random) * Math.cos(i) < 0) {
+          Data.push([(Random)*Math.sin(i),(Random)*Math.cos(i)])
+       }
+       if (j === 0) {
+          Data.push([(Random)*Math.sin(i),(Random)*Math.cos(i)])
+       }
+    }
+ }
