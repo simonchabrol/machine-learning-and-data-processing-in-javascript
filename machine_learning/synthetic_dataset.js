@@ -204,3 +204,23 @@ for (var j = 0; j < R.length; j++) {
        }
     }
  }
+
+/*
+Double moon
+*/
+
+var Data = []
+var R = [1,1]
+
+for (var j = 0; j < R.length; j++) {
+    for (var i = 0; i < 360; i++) {
+       var Random = Math.random() * (R[j] + 0.4 - R[j]) + R[j] 
+       if ( j === 1 && (Random) * Math.cos(i) < 0) {
+           Data.push([(Random)*Math.sin(i)+0.5,(Random)*Math.cos(i)])
+       }
+       if ( j === 1 && (Random) * Math.cos(i) > 0) {
+          Data.push([(Random)*Math.sin(i)-0.5,(Random)*Math.cos(i)])
+       }
+    }
+ }
+
