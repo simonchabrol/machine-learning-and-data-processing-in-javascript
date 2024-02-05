@@ -4,7 +4,7 @@
     var Data = []
     var R = [1, 2]
     for (var j = 0; j < R.length; j++) {
-        for (var i = 0; i < 50; i++) {
+        for (var i = 0; i < 200; i++) {
             var Random = Math.random() * (R[j] + 0.4 - R[j]) + R[j]
             Data.push([(Random) * Math.sin(i), (Random) * Math.cos(i)])
         }
