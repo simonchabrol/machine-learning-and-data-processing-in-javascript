@@ -49,8 +49,6 @@
         [-2.0,2.0],
     ]
 
-    var Average = 0
-
     var kMeans = 2
     var Centroids = []
 
@@ -115,15 +113,11 @@
         }
     }
 
-    console.log('Initial assignment')
-    console.log(Assignement)
-
     var Done = 0
 
     var MaxIteration = 10
 
     for (var train = 0; train < MaxIteration; train++) {
-        console.log(train)
         var PrevAverage = Average
         var DistancesToClusters = []
         for (var i = 0; i < kMeans; i++) {
