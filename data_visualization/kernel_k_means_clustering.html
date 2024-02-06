@@ -149,7 +149,7 @@
                 DistancesToClusters[i].push(SimilarityMatrix[i].flat()[j] - 2 * FirstSum / 7 + SecondSum / Math.pow(7,2))
             }
         }
-        var Assignement = []
+        Assignement = []
         for (var j = 0; j < Data.length; j++) {
            var DistancesClusters = []
            for (var k = 0; k < DistancesToClusters.length; k++) {
