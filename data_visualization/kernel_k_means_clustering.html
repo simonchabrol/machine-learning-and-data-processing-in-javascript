@@ -69,7 +69,7 @@
                 Count += Math.abs(TestValue[k] - RepositoryData[k])
             }
 
-            var RBF = Math.exp(-((Math.pow(Count, 2)) / 2 * Math.pow(0.5, 2)))
+            var RBF = Math.exp(-((Math.pow(Count, 2)) / 2 * Math.pow(2, 2)))
             Scores.push(RBF)
         }
 
@@ -143,7 +143,7 @@
 
                 var FirstSum = 0
 
-                for (var k = 0; k < CheckIndexes.length; k++) {
+                for (var k = 0; k < SimilarityMatrix.length; k++) {
                    FirstSum += Indexes[k] * SimilarityMatrix[k].flat()[j]
                 }
 
@@ -151,7 +151,7 @@
                     return a + b
                 })
 
-                DistancesToClusters[i].push(SimilarityMatrix[i].flat()[j] - 2 * FirstSum / SumIndexes + SecondSum / Math.pow(SumIndexes,2))
+                DistancesToClusters[i].push(SimilarityMatrix[i].flat()[j] - 2 * FirstSum / 7 + SecondSum / Math.pow(7,2))
             }
         }
         var Assignement = []
