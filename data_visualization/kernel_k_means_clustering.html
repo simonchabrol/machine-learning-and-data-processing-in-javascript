@@ -123,9 +123,11 @@
         for (var i = 0; i < kMeans; i++) {
             for (var j = 0; j < Data.length; j++) {
                 var Indexes = []
+                var CheckIndexes = []
                 for (var k = 0; k < Assignement.length; k++) {
                     if (Assignement[k] === i) {
                         Indexes.push(1)
+                        CheckIndexes.push(0)
                     } else {
                         Indexes.push(0)
                     }
@@ -141,7 +143,7 @@
 
                 var FirstSum = 0
 
-                for (var k = 0; k < Indexes.length; k++) {
+                for (var k = 0; k < CheckIndexes.length; k++) {
                    FirstSum += Indexes[k] * SimilarityMatrix[k].flat()[j]
                 }
 
