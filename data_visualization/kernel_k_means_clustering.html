@@ -144,7 +144,12 @@
                 for (var k = 0; k < SimilarityMatrix.length; k++) {
                    FirstSum += Indexes[k] * SimilarityMatrix[k].flat()[j]
                 }
-                DistancesToClusters[i].push(SimilarityMatrix[i].flat()[j] - 2 * FirstSum / 7 + SecondSum / Math.pow(7,2))
+
+                var SumIndexes = Indexes.reduce(function (a, b) {
+                    return a + b
+                })
+                
+                DistancesToClusters[i].push(SimilarityMatrix[j].flat()[j] - 2 * FirstSum / SumIndexes + SecondSum / Math.pow(SumIndexes,2))
             }
         }
         Assignement = []
