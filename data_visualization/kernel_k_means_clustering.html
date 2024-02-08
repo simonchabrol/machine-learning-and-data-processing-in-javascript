@@ -1,41 +1,18 @@
 <canvas id="myChart" width="10" height="10"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script>
+    
+    var R = [1,2]
     var Data = []
-    var R = [1, 2]
     for (var j = 0; j < R.length; j++) {
-        for (var i = 0; i < 200; i++) {
-            var Random = Math.random() * (R[j] + 0.4 - R[j]) + R[j]
-            Data.push([(Random) * Math.sin(i), (Random) * Math.cos(i)])
+       for (var i = 0; i < 50; i++) {
+        if (R[j] === 1) {
+          var Random = Math.random() * (0.5 + 0) - 0.5
+        } else {
+          var Random = Math.random() * (R[j]+0.4 - R[j]) + R[j]
         }
-    }
-
-    var Data = []
-    var R = [1, 2, 3]
-    for (var j = 0; j < R.length; j++) {
-        for (var i = 0; i < 200; i++) {
-            var Random = Math.random() * (R[j] + 0.4 - R[j]) + R[j]
-            if (j >= 1 && (Random) * Math.cos(i) < 0) {
-                Data.push([(Random) * Math.sin(i), (Random) * Math.cos(i)])
-            }
-            if (j === 0) {
-                Data.push([(Random) * Math.sin(i), (Random) * Math.cos(i)])
-            }
-        }
-    }
-
-    var Data = []
-    var R = [1, 1]
-    for (var j = 0; j < R.length; j++) {
-        for (var i = 0; i < 200; i++) {
-            var Random = Math.random() * (R[j] + 0.4 - R[j]) + R[j]
-            if (j === 1 && (Random) * Math.cos(i) < 0) {
-                Data.push([(Random) * Math.sin(i) + 0.5, (Random) * Math.cos(i)])
-            }
-            if (j === 1 && (Random) * Math.cos(i) > 0) {
-                Data.push([(Random) * Math.sin(i) - 0.5, (Random) * Math.cos(i)])
-            }
-        }
+        Data.push([(Random)*Math.sin(i),(Random)*Math.cos(i)])
+       }
     }
 
     var Data = [
