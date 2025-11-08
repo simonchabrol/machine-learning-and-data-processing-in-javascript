@@ -4,7 +4,7 @@ var Input = [[1, 0, 0, 1, 0, 1],
              [0, 0, 1, 0, 1, 0],            
              [0, 1, 1, 0, 1, 1]]       
 
-var Output = [[1], [1], [1], [0], [0]]
+var Output = [1,1,1,0,0]
 
 var LearningRate = 0.001
 
@@ -31,28 +31,25 @@ function Perceptron (Input, Output) {
       FinalSum = 0
    }
 
-  while (TargetCalculated !== 0) {
+   var TargetCalculated = Output - FinalSum
 
-    var TargetCalculated = Output - FinalSum
+   for (var i = 0; i < Input.length; i++) {
+      Weights[i] = Weights[i] + TargetCalculated * Input[i] * LearningRate
+   }
 
-    for (var i = 0; i < Input.length; i++) {
-       Weights[i] = Weights[i] + TargetCalculated * Input[i] * LearningRate
-    }
-
-    InitialSum = 0 
-    for (var i = 0; i < Input.length; i++) {   
-       InitialSum = InitialSum + (Input[i] * Weights[i]) 
-    } 
-    if ( InitialSum > 0) {
-       FinalSum = 1
-    }
-    else {
+   InitialSum = 0 
+   for (var i = 0; i < Input.length; i++) {   
+      InitialSum = InitialSum + (Input[i] * Weights[i]) 
+   } 
+   if ( InitialSum > 0) {
+      FinalSum = 1
+   }
+   else {
       FinalSum = 0
-    }
-  }
+   }
 }
 
-for (var a = 0; a < 500; a++) {
+for (var a = 0; a < 1000; a++) {
   for (var b = 0; b < Input.length; b++) {  
      Perceptron(Input[b], Output[b])
   }
