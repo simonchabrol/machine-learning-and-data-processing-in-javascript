@@ -36,7 +36,6 @@ var Input = [
     [0.5355946398659966,0.8559463986599665], 
     [0.3178391959798994,0.9899497487437185]]
 
-
 var X = []
 var Y = []
 
@@ -45,53 +44,44 @@ for (var i = 0; i < Input.length; i++) {
     Y.push(Input[i][1])
 }
 
-var RegressionDataX = []
-var RegressionDataY = []
-
-var Gammma
-
-var Middle = X.length / 2 
-
-if (X.length % 2) { 
-    Gamma = Middle 
-} else { 
-    Gamma = ((Middle - 1) + Middle) / 2 
+var Middle = X.length / 2
+var Gamma
+if (X.length % 2) {
+    Gamma = Middle
+} else {
+    Gamma = ((Middle - 1) + Middle) / 2
 }
 
-var TestX = X
-
-for (var i = 0; i < TestX.length; i++) {
-  var Scores = []
-  var TestValue = TestX[i]
-  for (var j = 0; j < X.length; j++) {
-    var RepositoryInput = X[j]
-    var Count = Math.abs(TestValue - RepositoryInput) / 2
-    var RBF = Math.exp(-((Math.pow(Count, 2)) / 2 * Math.pow(Gamma, 2)))
-    Scores.push(RBF)
-  }
-  var ScoreY = 0
-  for (var l = 0; l < Scores.length; l++) {
-    ScoreY += Scores[l] * Y[l]
-  }
-  var ScoreSum = 0
-  for (var l = 0; l < X.length; l++) {
-    ScoreSum += Scores[l]
-  }
-
-  RegressionDataX.push(TestValue)
-  RegressionDataY.push(ScoreY / ScoreSum)
-}
-
-var Dataset = []
-
-for (var i = 0; i < X.length; i++) {
-    Dataset.push({x:X[i],y:Y[i]})
+// Génération d'un ensemble dense de points X pour une courbe continue
+var nCurvePoints = 200
+var xMin = Math.min.apply(null, X)
+var xMax = Math.max.apply(null, X)
+var TestX = []
+for (var i = 0; i < nCurvePoints; i++) {
+    TestX.push(xMin + (xMax - xMin) * i / (nCurvePoints - 1))
 }
 
 var RegressionDataset = []
+for (var i = 0; i < TestX.length; i++) {
+    var Scores = []
+    var TestValue = TestX[i]
+    for (var j = 0; j < X.length; j++) {
+        var Count = Math.abs(TestValue - X[j]) / 2
+        var RBF = Math.exp(-((Math.pow(Count, 2)) / 2 * Math.pow(Gamma, 2)))
+        Scores.push(RBF)
+    }
+    var ScoreY = 0
+    var ScoreSum = 0
+    for (var l = 0; l < Scores.length; l++) {
+        ScoreY += Scores[l] * Y[l]
+        ScoreSum += Scores[l]
+    }
+    RegressionDataset.push({ x: TestValue, y: ScoreY / ScoreSum })
+}
 
+var Dataset = []
 for (var i = 0; i < X.length; i++) {
-    RegressionDataset.push({x:RegressionDataX[i],y:RegressionDataY[i]})
+    Dataset.push({ x: X[i], y: Y[i] })
 }
 
 var ctx = document.getElementById('myChart').getContext('2d');
@@ -105,9 +95,12 @@ var scatterChart = new Chart(ctx, {
             data: Dataset,
         },{
             borderColor: 'rgb(255, 0, 0)',
-            backgroundColor: 'rgb(255, 0, 0)',
+            backgroundColor: 'rgba(0,0,0,0)',
             label: 'Kernel regression',
             data: RegressionDataset,
+            showLine: true,
+            pointRadius: 0,
+            borderWidth: 2,
         }]
     },
     options: {
