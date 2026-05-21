@@ -21,11 +21,12 @@
     var ctx = document.getElementById('myChart').getContext('2d');
     var scatterChart = new Chart(ctx, {
         type: 'scatter',
-        responsive:true,
         data: {
             datasets: DataSet
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: true,
             scales: {
                 xAxes: [{
                     type: 'linear',
