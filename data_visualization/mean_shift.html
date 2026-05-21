@@ -1,4 +1,6 @@
-<canvas id="myChart" width="10" height="10"></canvas>
+<div style="width: 90%; max-width: 500px; margin: auto;">
+  <canvas id="myChart"></canvas>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0"></script>
 <script>
 
@@ -100,11 +102,12 @@
     var ctx = document.getElementById('myChart').getContext('2d');
     var scatterChart = new Chart(ctx, {
         type: 'scatter',
-        responsive: true,
         data: {
             datasets: DataSet
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: true,
             scales: {
                 xAxes: [{
                     type: 'linear',
