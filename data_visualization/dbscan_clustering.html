@@ -1,8 +1,8 @@
 // DBSCAN algorithm as described by Wikipedia : https://en.wikipedia.org/wiki/DBSCAN
 
-<canvas id="myChart" width="300" height="100"></canvas>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0"></script>
-<script>
+<div style="width: 90%; max-width: 500px; margin: auto;">
+  <canvas id="myChart"></canvas>
+</div>
 
     var Input = [
         [0.2550251256281406, 0.8894472361809045],
@@ -148,6 +148,8 @@
             datasets: DataSets
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: true,
             scales: {
                 xAxes: [{
                     type: 'linear',
