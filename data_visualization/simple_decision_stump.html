@@ -173,21 +173,20 @@
 
     var ctx = document.getElementById('myChart').getContext('2d');
     var scatterChart = new Chart(ctx, {
-            type: 'scatter',
-            data: {
-                datasets: DataSet
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                aspectRatio: 1,
-                scales: {
-                    xAxes: [{
-                        type: 'linear',
-                        position: 'bottom'
-                    }]
-                }
+        type: 'scatter',
+        data: {
+            datasets: DataSet
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 1,
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
             }
-        })
-
+        }
+    })
 </script>
