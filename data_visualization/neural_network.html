@@ -1,4 +1,4 @@
-<canvas id="myChart" width="400" height="400"></canvas>
+<canvas id="myChart" width="50" height="50"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0"></script>
 <script>
 
@@ -255,7 +255,7 @@
     var scatterChart = new Chart(ctx, {
         type: 'scatter',
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
         data: {
             datasets: DataSet
         },
