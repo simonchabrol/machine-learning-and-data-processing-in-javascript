@@ -31,11 +31,15 @@ for (var k = 0; k < EXPList.length; k++) {
 
   var EXP = []
 
+  var Invalid = false
+
   for (var i = 0; i < RawEXP.length; i++) {
-    if (RawEXP[i] === 'OR' || RawEXP[i] === 'AND' && RawEXP[i] !== '(' && RawEXP[i] !== ')') {
-      if (i !== 0 && i !== RawEXP.length) {
-        EXP.push(RawEXP[i])
+    if (RawEXP[i] === 'OR' || RawEXP[i] === 'AND') {
+      if (i === 0 || i === RawEXP.length - 1) {
+        Invalid = true
+        break
       }
+      EXP.push(RawEXP[i])
     } else if (RawEXP[i] === '(' || RawEXP[i] === ')') {
       EXP.push(RawEXP[i])
     } else {
@@ -43,6 +47,9 @@ for (var k = 0; k < EXPList.length; k++) {
       var Value = RawEXP[i].split(Regex)
       if (ARR[0].indexOf(Value[0]) !== -1) {
         EXP.push([ARR[0].indexOf(Value[0]), Value[2], Value[1]])
+      } else {
+        Invalid = true
+        break
       }
     }
   }
@@ -86,6 +93,25 @@ for (var k = 0; k < EXPList.length; k++) {
           return 0
         }
     }
+  }
+
+  if (!Invalid) {
+    var Depth = 0
+    for (var p = 0; p < EXP.length; p++) {
+      if (EXP[p] === '(') Depth++
+      if (EXP[p] === ')') Depth--
+      if (Depth < 0) { 
+        Invalid = true
+        break 
+      }
+    }
+    if (Depth !== 0) Invalid = true
+  }
+
+  if (Invalid || EXP.length === 0) {
+    console.log('Invalid statement')
+    console.log('\r')
+    continue
   }
 
   for (var i = 1; i < ARR.length; i++) {
@@ -136,11 +162,17 @@ for (var k = 0; k < EXPList.length; k++) {
 
     CheckParenthesis()
 
-    var PreviousOpenParenthesis
-    var PreviousClosedParenthesis
+    var PreviousOpenParenthesis = undefined
+    var PreviousClosedParenthesis = undefined
+    var Safety = 0
 
     if (OpenParenthesis.length !== 0) {
       for (var l = 0; l < OpenParenthesis.length; l++) {
+        Safety++
+        if (Safety > 200) { 
+          console.log('Invalid statement')
+          break 
+        }
         for (var j = OpenParenthesis[l]; j < ClosedParenthesis[l]; j++) {
           if (Operators[j] === '&&' && Operators[j + 1] !== '(' && Operators[j + 1] !== ')') {
             Operators[j - 1] = Operators[j - 1] && Operators[j + 1]
@@ -175,9 +207,10 @@ for (var k = 0; k < EXPList.length; k++) {
         }
 
         if (OpenParenthesis.length !== 0) {
-          if (OpenParenthesis === PreviousOpenParenthesis && ClosedParenthesis === PreviousClosedParenthesis) {
+          if (JSON.stringify(OpenParenthesis) === JSON.stringify(PreviousOpenParenthesis) &&
+              JSON.stringify(ClosedParenthesis) === JSON.stringify(PreviousClosedParenthesis)) {
              console.log('Invalid statement')
-             return
+             break
           }
           l--
           PreviousClosedParenthesis = ClosedParenthesis
@@ -203,10 +236,16 @@ for (var k = 0; k < EXPList.length; k++) {
       }
     }
 
+    if (Operators.length !== 1) {
+      console.log('Invalid statement')
+      continue
+    }
+
     var Test = Operators[0]
     if (Test === 1) {
       console.log(ARR[i])
     }
+    
   }
   console.log('\r')
 }
